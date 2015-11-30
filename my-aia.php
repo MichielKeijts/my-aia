@@ -21,6 +21,10 @@ define( 'MY_AIA__PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'MY_AIA__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 // start the script by including all files
-include ( MY_AIA__PLUGIN_DIR . "includes/include-all.php");
+include ( MY_AIA__PLUGIN_DIR . "include-all.php");
 
+// load admin settings
+//if (is_admin()) {
+    include (MY_AIA__PLUGIN_DIR . 'admin/include-all-admin.php');
+//}
 // As all the stuff happens in the classes..

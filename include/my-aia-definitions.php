@@ -12,3 +12,7 @@ define("MY_AIA_TAXONOMY_SPORTWEEKEIGENSCHAP", "sport");
 define("MY_AIA_TAXONOMY_OVERNACHTING", "overnachting");
 define("MY_AIA_TAXONOMY_DOELGROEP", "doelgroep");
 define("MY_AIA_TAXONOMY_TAAL", "taal");
+
+// -- CUSTOM POST TYPEPS -- 
+define('MY_AIA_POST_TYPE_PARTNER','partner');
+define('MY_AIA_POST_TYPE_PARTNER_SLUG','partner');

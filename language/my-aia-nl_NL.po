@@ -1,0 +1,151 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: My AIA\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-11-30 14:13+0100\n"
+"PO-Revision-Date: 2015-11-30 14:14+0100\n"
+"Language-Team: Athletes in Action\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_c\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.6\n"
+"Last-Translator: \n"
+"Language: nl_NL\n"
+"X-Poedit-SearchPath-0: my-aia\n"
+
+#: my-aia/admin/classes/my-aia-admin.php:8
+msgid "My AIA is a plugin which combines functionality of Buddypress, Events-Manager and more."
+msgstr "Mijn Athletes in Action is een WP plugin die de functionaliteit van Buddypress, Events-Manager en meer combineert tot één"
+
+#: my-aia/admin/classes/my-aia-admin.php:15
+#: my-aia/admin/classes/my-aia-admin.php:16
+msgid "MyAIA"
+msgstr "Mijn AIA"
+
+#: my-aia/admin/classes/my-aia-admin.php:15
+#: my-aia/admin/classes/my-aia-admin.php:16
+msgid "My AIA"
+msgstr "Mijn AIA"
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:47
+#: my-aia/include/custom-post-types/my-aia-partner.php:50
+#: my-aia/include/custom-post-types/my-aia-partner.php:52
+msgid "Partners"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:48
+msgid "Display events on your blog."
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:51
+msgid "Partner"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:53
+msgid "Add Partner"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:54
+msgid "Add New Partner"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:55
+msgid "Edit"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:56
+msgid "Edit Partner"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:57
+msgid "New Partner"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:58
+msgid "View"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:59
+msgid "View Partner"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:60
+msgid "Search Partners"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:61
+msgid "No Partners Found"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:62
+msgid "No Partners Found in Trash"
+msgstr ""
+
+#: my-aia/include/custom-post-types/my-aia-partner.php:63
+msgid "Parent Partner"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:18
+msgid "Sport Tags"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:19
+msgid "Sport Tag"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:21
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:22
+msgid "Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:23
+msgid "Search Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:24
+msgid "Popular Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:25
+msgid "All Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:26
+msgid "Parent Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:27
+msgid "Parent Sport:"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:28
+msgid "Edit Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:29
+msgid "Update Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:30
+msgid "Add New Sport"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:31
+msgid "New Sport Name"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:32
+msgid "Seperate Sport with commas"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:33
+msgid "Add or remove events"
+msgstr ""
+
+#: my-aia/include/custom-taxonomies/my-aia-sport.php:34
+msgid "Choose from most used event tags"
+msgstr ""

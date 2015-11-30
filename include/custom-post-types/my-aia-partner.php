@@ -3,7 +3,6 @@
  * MY AIA 
  * @Package my-aia
  * @Author Michiel Keijts (c)2015
- * 
  */
 
 //Custom Post Type and Taxonomy Names

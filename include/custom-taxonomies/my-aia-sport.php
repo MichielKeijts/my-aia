@@ -5,11 +5,13 @@
  */
 
 function my_aia_register_taxonomy_sport() {
+	global $wp_rewrite;
 	// create a new taxonomy
     register_taxonomy(MY_AIA_TAXONOMY_SPORT,array(EM_POST_TYPE_EVENT,'event-recurring'),array( 
         'hierarchical' => false, 
         'public' => true,
         'show_ui' => true,
+		'show_admin_column' => true,
         'query_var' => true,
         'rewrite' => false, // no rewrite//array('slug' => MY_AIA_TAXONOMY_SPORT_SLUG,'with_front'=>false),
         //'update_count_callback' => '',
@@ -33,11 +35,6 @@ function my_aia_register_taxonomy_sport() {
             'add_or_remove_items'=>__('Add or remove events','my-aia'),
             'choose_from_the_most_used'=>__('Choose from most used event tags','my-aia'),
         ),
-        'capabilities' => array(
-            'manage_terms'  =>  'edit_sport_categories',
-            'edit_terms'    =>  'edit_sport_categories',
-            'delete_terms'  =>  'delete_sport_categories',
-            'assign_terms'  =>  'edit_sports',
-        )
+        'capabilities' => MY_AIA::get_capabilities("sport","taxonomy")
     ));
 }

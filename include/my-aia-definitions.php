@@ -16,3 +16,6 @@ define("MY_AIA_TAXONOMY_TAAL", "taal");
 // -- CUSTOM POST TYPEPS -- 
 define('MY_AIA_POST_TYPE_PARTNER','partner');
 define('MY_AIA_POST_TYPE_PARTNER_SLUG','partner');
+
+// -- CAPABILITY --
+define("MY_AIA_CAPABILITY_ADMIN", "my_aia_admin");

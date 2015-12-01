@@ -33,17 +33,7 @@ function my_aia_plugin_init(){
 		'has_archive' => true,//get_option('my-aia_cp_events_has_archive', false) == true,
 		'supports' => array('custom-fields','title','editor','excerpt','comments','thumbnail','author'),
 		'capability_type' => 'partner',
-		'capabilities' => array(
-			'publish_posts' => 'publish_partners',
-			'edit_posts' => 'edit_partners',
-			'edit_others_posts' => 'edit_others_partners',
-			'delete_posts' => 'delete_partners',
-			'delete_others_posts' => 'delete_others_partners',
-			'read_private_posts' => 'read_private_partners',
-			'edit_post' => 'edit_partner',
-			'delete_post' => 'delete_partner',
-			'read_post' => 'read_partner',		
-		),
+		'capabilities' => MY_AIA::get_capabilities('partner'),
 		'label' => __('Partners','my-aia'),
 		'description' => __('Display events on your blog.','my-aia'),
 		'labels' => array (

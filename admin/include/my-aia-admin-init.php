@@ -5,5 +5,5 @@
  */
 
 // Define actions
-add_action( 'admin_init', 'MY_AIA_ADMIN::show_menu');
+add_action( 'admin_menu', 'MY_AIA_ADMIN::show_menu');
  

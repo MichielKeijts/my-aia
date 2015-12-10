@@ -16,7 +16,11 @@
  */
 function my_aia_install() { 
 	my_aia_register_capabilities();
+	echo "<br>Capabilities inserted";
+	
 	my_aia_insert_taxonomies();
+	
+	echo "<br>Taxonomies written";
 	
 	update_option('my_aia_version',MY_AIA_VERSION);
 }
@@ -38,8 +42,20 @@ function my_aia_register_capabilities() {
 }
 
 /**
- * Function to insert all the custom taxonomies
+ * Function to insert all the custom taxonomies based on defaults
+ * (default: ./inlude/custom-taxonomies/defaults/
  */
 function my_aia_insert_taxonomies() {
+	// loop over all custom taxonomies
+	foreach (MY_AIA::$CUSTOM_TAXONOMIES as $name) {
+		$filename = sprintf("my-aia-%s.txt", strtolower($name));
+		$lines =  file(MY_AIA_PLUGIN_DIR . 'include/custom-taxonomies/defaults/' . $filename);
+		foreach ($lines as $term) {
+			// insert term 
+			// wp does not overwrite term with same name
+			wp_insert_term($term, $name);
+		}
+	}
 	
+	return true;
 }

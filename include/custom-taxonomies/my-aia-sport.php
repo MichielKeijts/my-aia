@@ -32,9 +32,9 @@ function my_aia_register_taxonomy_sport() {
             'add_new_item'=>__('Add New Sport','my-aia'),
             'new_item_name'=>__('New Sport Name','my-aia'),
             'seperate_items_with_commas'=>__('Seperate Sport with commas','my-aia'),
-            'add_or_remove_items'=>__('Add or remove events','my-aia'),
-            'choose_from_the_most_used'=>__('Choose from most used event tags','my-aia'),
+            'add_or_remove_items'=>__('Add or remove sports','my-aia'),
+            'choose_from_the_most_used'=>__('Choose from most used sports','my-aia'),
         ),
-        'capabilities' => MY_AIA::get_capabilities("sport","taxonomy")
+        'capabilities' => MY_AIA::get_capabilities(MY_AIA_TAXONOMY_SPORT,"taxonomy")
     ));
 }

@@ -22,12 +22,14 @@ include ('include/my-aia-install.php');
 include ('include/custom-post-types/my-aia-partner.php');
 
 // Include custom taxonomies
-//include ('include/custom-taxonomies/my-aia-doelgroep.php');
-//include ('include/custom-taxonomies/my-aia-kerkstroming.php');
-//include ('include/custom-taxonomies/my-aia-overnachting.php');
+include ('include/custom-taxonomies/my-aia-doelgroep.php');
+include ('include/custom-taxonomies/my-aia-kerkstroming.php');
+include ('include/custom-taxonomies/my-aia-overnachting.php');
 include ('include/custom-taxonomies/my-aia-sport-level.php');
 include ('include/custom-taxonomies/my-aia-sport.php');
-//include ('include/custom-taxonomies/my-aia-taal.php');
+include ('include/custom-taxonomies/my-aia-taal.php');
+include ('include/custom-taxonomies/my-aia-sportweek-eigenschap.php');
+include ('include/custom-taxonomies/my-aia-sportbetrokkenheid.php');
 
 // Classes: Load MY_AIA class
 include ( 'classes/my-aia.php' );

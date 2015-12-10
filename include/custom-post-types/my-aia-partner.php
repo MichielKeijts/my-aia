@@ -5,21 +5,8 @@
  * @Author Michiel Keijts (c)2015
  */
 
-//Custom Post Type and Taxonomy Names
-
-//if( !defined('MY_AIA_POST_TYPE_PARTNER') ) define('EM_POST_TYPE_LOCATION','location');
-//if( !defined('EM_TAXONOMY_CATEGORY') ) define('EM_TAXONOMY_CATEGORY','event-categories');
-//if( !defined('EM_TAXONOMY_TAG') ) define('EM_TAXONOMY_TAG','event-tags');
-
-//Slugs
-//define('MY_AIA_POST_TYPE_PARTNER_SLUG','partner');//get_option('my-aia_cp_events_slug', 'events'));
-//define('MY_AIA_POST_TYPE_EVENT_SLUG','partner');//get_option('my-aia_cp_locations_slug', 'locations'));
-
-
 // Registration of Custom Post Type
-//add_action('init','my_aia_plugin_init',1);
-function my_aia_plugin_init(){
-	//define('EM_ADMIN_URL',admin_url().'edit.php?post_type='.MY_AIA_POST_TYPE_PARTNER_SLUG); //we assume the admin url is absolute with at least one querystring
+function my_aia_register_posttype_partner(){
 	$partner_post_type = array(	
 		'public' => true,
 		'hierarchical' => false,

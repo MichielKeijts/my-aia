@@ -7,7 +7,7 @@
 function my_aia_register_taxonomy_sport() {
 	global $wp_rewrite;
 	// create a new taxonomy
-    register_taxonomy(MY_AIA_TAXONOMY_SPORT,array(EM_POST_TYPE_EVENT,'event-recurring'),array( 
+    register_taxonomy(MY_AIA_TAXONOMY_SPORT,array(EM_POST_TYPE_EVENT,'event-recurring','user'),array( 
         'hierarchical' => false, 
         'public' => true,
         'show_ui' => true,
@@ -38,3 +38,59 @@ function my_aia_register_taxonomy_sport() {
         'capabilities' => MY_AIA::get_capabilities(MY_AIA_TAXONOMY_SPORT,"taxonomy")
     ));
 }
+
+/**
+ * Adds an additional settings section on the edit user/profile page in the admin.  This section allows users to 
+ * select a sport from a checkbox of terms from the sport taxonomy.  This is just one example of 
+ * many ways this can be handled.
+ *
+ * @param object $user The user object currently being edited.
+ */
+function my_aia_edit_user( $user, $is_self_profile, $user_id) {
+	add_meta_box(
+		'metabox_id',
+		__( 'Metabox Title', 'buddypress' ),
+		'my_aia_edit_user_taxonomy_metabox', // function that displays the contents of the meta box
+		get_current_screen()->id
+	);
+}
+
+function my_aia_edit_user_taxonomy_metabox($user, $taxonomy='sport') {
+	$tax = get_taxonomy( $taxonomy );
+
+	/* Make sure the user can assign terms of the sport taxonomy before proceeding. */
+	if ( !current_user_can( $tax->cap->assign_terms ) ) {
+		echo "GEEN TOEGAGN";
+	}
+		//return "GEEN TOEGANG";
+	
+	/* Get the terms of the 'sport' taxonomy. */
+	$terms = get_terms( $taxonomy, array( 'hide_empty' => false ) ); ?>
+
+	<h3><?php _e( 'Sport' ); ?></h3>
+
+	<table class="form-table">
+
+		<tr>
+			<th><label for="sport"><?php _e( 'Select Sport' ); ?></label></th>
+
+			<td><?php
+
+			/* If there are any sport terms, loop through them and display checkboxes. */
+			if ( !empty( $terms ) ) {
+
+				foreach ( $terms as $term ) { ?>
+					<input type="radio" name="sport" id="sport-<?php echo esc_attr( $term->slug ); ?>" value="<?php echo esc_attr( $term->slug ); ?>" <?php checked( true, is_object_in_term( $user->ID, 'sport', $term ) ); ?> /> <label for="sport-<?php echo esc_attr( $term->slug ); ?>"><?php echo $term->name; ?></label> <br />
+				<?php }
+			}
+
+			/* If there are no sport terms, display a message. */
+			else {
+				_e( 'There are no sports available.' );
+			}
+
+			?></td>
+		</tr>
+
+	</table>
+<?php }

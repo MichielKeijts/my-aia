@@ -5,5 +5,8 @@
  */
 
 // Define actions
-add_action( 'admin_menu', 'MY_AIA_ADMIN::show_menu');
+
+// init action in construct
+$my_aia_admin = new MY_AIA_ADMIN();
+
  

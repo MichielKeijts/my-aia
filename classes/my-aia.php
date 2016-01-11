@@ -7,7 +7,7 @@
 /*
  * Main function which holds all the different settings for AIA
  */
-class MY_AIA {
+class MY_AIA{
 	/**
 	 * List of all custom taxonomies
 	 */
@@ -64,10 +64,7 @@ class MY_AIA {
 				my_aia_install();
 			}
 		}
-		//remove_role('aamrole_5638947443221');
-		//xdebug_var_dump($wp_roles->roles['administrator']);
-		//exit();
-		
+	
 		$wp_rewrite->flush_rules();
 	}
     /**

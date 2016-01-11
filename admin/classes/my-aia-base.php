@@ -5,28 +5,20 @@
  */
 
 /**
- * Class MY_AIA_ADMIN
- * Holder for the Administration pages
+ * Class MY_AIA_BASE
+ * - Holder for the MY_AIA class variables, shared among classes.
+ * - 
  */
-class MY_AIA_ADMIN {
-	/**
-	 * $TABS
-	 * @var array ('slug','name')
-	 */
-	private $TABS = array(
-		''	=> 'My AIA',
-		'members'	=> 'Leden',
-	);
-	
-	private $SUBPAGES = array(
-		'my-aia'	=> '',
-		
-	);
-	
-	
+class MY_AIA BASE {
 	public function __construct() {
-		add_action( 'admin_menu', array($this,'show_menu'));
+		
 	}
+	
+	public function render($object) {
+		
+	}
+	
+	protected function opti
 	
 	/**
 	 * Render the MY_AIA_SETTINGS
@@ -40,14 +32,14 @@ class MY_AIA_ADMIN {
 	 * @return void
 	 */
 	public function render_page( $page = 'my-aia-settings', $option_group = null ) {
-	/*	?>
+		?>
 		<div class="wrap <?php echo $this->get_current_tab(); ?>">
 			<div id="icon-my-aia" class="icon32"><br></div>
 			<div>
 				<h2 class="nav-tab-wrapper">
 					<?php $this->render_tabs(); ?>
 					<span class="alignright by">
-						<a class="my-aia-link" href="http://normit.nl" target="_blank" title="Normit : <?php _e( 'Custom Webapplications with a heart', 'my-aia' ); ?>">
+						<a class="my-aia-link" href="http://normit.nl" target="_blank" title="Normit : <?php _e( 'Custom Webapplication with a heart', 'my-aia' ); ?>">
 							<img src="<?php echo MY_AIA_PLUGIN_URL; ?>admin/assets/img/my-aia-logo.png" alt="My AIA" />
 						</a>
 					</span>
@@ -99,7 +91,7 @@ class MY_AIA_ADMIN {
 
 			</div>
 
-		</div><!-- .bp-media-admin --><?php*/
+		</div><!-- .bp-media-admin --><?php
 	}
 	
 	private function get_current_tab() {

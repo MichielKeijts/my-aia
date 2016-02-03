@@ -32,6 +32,7 @@ include ('include/custom-taxonomies/my-aia-sportweek-eigenschap.php');
 include ('include/custom-taxonomies/my-aia-sportbetrokkenheid.php');
 
 // Classes: Load MY_AIA class
+include ( 'classes/my-aia-processflow.php' );
 include ( 'classes/my-aia.php' );
 
 // FINALLY: Initiate my-aia

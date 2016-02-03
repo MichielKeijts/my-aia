@@ -26,7 +26,7 @@ define( 'MY_AIA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 include ( MY_AIA_PLUGIN_DIR . "include-all.php");
 
 // load admin settings
-//if (is_admin()) {
+if (is_admin()) {
     include (MY_AIA_PLUGIN_DIR . 'admin/include-all-admin.php');
-//}
+}
 // As all the stuff happens in the classes..

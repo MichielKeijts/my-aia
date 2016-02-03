@@ -7,7 +7,7 @@
 /*
  * Main function which holds all the different settings for AIA
  */
-class MY_AIA{
+class MY_AIA {
 	/**
 	 * List of all custom taxonomies
 	 */

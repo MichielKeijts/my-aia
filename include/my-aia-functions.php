@@ -74,7 +74,8 @@ function my_custom_field_register(){
 		'req_validation' => 'ninja_forms_field_upload_req_validation',
 	);
 
-	ninja_forms_register_field('_upload', $args);
+	if (function_exists('ninja_forms_register_field')) return ninja_forms_register_field('_upload', $args);
+	return false;
 }
 
 function my_aia_test_notification ($nf_notification_types) {

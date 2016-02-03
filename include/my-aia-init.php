@@ -23,5 +23,4 @@ add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user' );
 
 add_action ( 'init', 'MY_AIA::init');
 
-
 add_action ('nf_notification_types', 'my_aia_test_notification');

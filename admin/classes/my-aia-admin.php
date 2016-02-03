@@ -10,6 +10,12 @@
  */
 class MY_AIA_ADMIN {
 	/**
+	 * View class
+	 * @var \MY_AIA_ADMIN_VIEW
+	 */
+	private $view;
+	
+	/**
 	 * $TABS
 	 * @var array ('slug','name')
 	 */
@@ -24,8 +30,11 @@ class MY_AIA_ADMIN {
 	);
 	
 	
+	
 	public function __construct() {
 		add_action( 'admin_menu', array($this,'show_menu'));
+		
+		$this->view = new MY_AIA_ADMIN_VIEW();
 	}
 	
 	/**
@@ -39,67 +48,11 @@ class MY_AIA_ADMIN {
 	 *
 	 * @return void
 	 */
-	public function render_page( $page = 'my-aia-settings', $option_group = null ) {
-	/*	?>
-		<div class="wrap <?php echo $this->get_current_tab(); ?>">
-			<div id="icon-my-aia" class="icon32"><br></div>
-			<div>
-				<h2 class="nav-tab-wrapper">
-					<?php $this->render_tabs(); ?>
-					<span class="alignright by">
-						<a class="my-aia-link" href="http://normit.nl" target="_blank" title="Normit : <?php _e( 'Custom Webapplications with a heart', 'my-aia' ); ?>">
-							<img src="<?php echo MY_AIA_PLUGIN_URL; ?>admin/assets/img/my-aia-logo.png" alt="My AIA" />
-						</a>
-					</span>
-				</h2>
-			</div>
-
-			<div class="clearfix rtm-row-container">
-				<div id="bp-media-settings-boxes" class="bp-media-settings-boxes-container rtm-setting-container">
-					<form id="bp_media_settings_form" name="bp_media_settings_form" method="post" enctype="multipart/form-data">
-						<div class="bp-media-metabox-holder">
-							<div class="rtm-button-container top">
-									<?php if ( isset( $_GET[ 'settings-saved' ] ) && $_GET[ 'settings-saved' ] ) { ?>
-										<div class="rtm-success rtm-fly-warning rtm-save-settings-msg"><?php _e( 'Settings saved successfully!', 'buddypress-media' ); ?></div>
-									<?php } ?>
-									<input type="hidden" name="rtmedia-options-save" value="true">
-									<input type="submit" class="rtmedia-settings-submit button button-primary button-big" value="<?php _e( 'Save Settings', 'buddypress-media' ); ?>">
-								</div>
-								<?php
-								settings_fields( $option_group );
-								if ( 'rtmedia-settings' == $page ) {
-									echo '<div id="rtm-settings-tabs">';
-									$sub_tabs = $this->settings_sub_tabs();
-									RTMediaFormHandler::rtForm_settings_tabs_content( $page, $sub_tabs );
-									echo '</div>';
-								} else {
-									do_settings_sections( $page );
-								}
-								?>
-
-								<div class="rtm-button-container bottom">
-									<div class="rtm-social-links alignleft">
-										<a href="http://twitter.com/rtcamp" class="twitter" target= "_blank"><span class="dashicons dashicons-twitter"></span></a>
-										<a href="https://www.facebook.com/rtCamp.solutions" class="facebook" target="_blank"><span class="dashicons dashicons-facebook"></span></a>
-										<a href="http://profiles.wordpress.org/rtcamp" class="wordpress" target= "_blank"><span class="dashicons dashicons-wordpress"></span></a>
-										<a href="https://rtcamp.com/feed" class="rss" target="_blank"><span class="dashicons dashicons-rss"></span></a>
-									</div>
-
-									<input type="hidden" name="rtmedia-options-save" value="true">
-									<input type="submit" class="rtmedia-settings-submit button button-primary button-big" value="<?php _e( 'Save Settings', 'buddypress-media' ); ?>">
-								</div>
-							</div>
-						</form>
-					<?php endif; ?>
-				</div>
-
-				<div class="metabox-holder bp-media-metabox-holder rtm-sidebar">
-					<?php //$this->admin_sidebar(); ?>
-				</div>
-
-			</div>
-
-		</div><!-- .bp-media-admin --><?php*/
+	public function settings() {
+		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/admin.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
+		$this->view->render('tests/test');		
 	}
 	
 	private function get_current_tab() {
@@ -141,13 +94,13 @@ class MY_AIA_ADMIN {
 			__('My AIA','my-aia'), 
 			'manage_options', 
 			'my-aia-admin',
-			array($this, 'render_page'), 
+			array($this, 'settings'), 
 			plugins_url( 'my-aia/assets/images/my-aia24.png' ), 
 			10
 		);
-		add_submenu_page('my-aia-admin',__('Reset','my-aia'),		__('Reset','my-aia'), 'manage_options', 'my-aia-reset', 'MY_AIA_ADMIN::reset' );
+		add_submenu_page('my-aia-admin',__('Reset','my-aia'),		__('Reset','my-aia'), 'manage_options', 'my-aia-reset', array($this, 'reset') );
 		add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), 'my_aia_admin', 'my-aia-partners', 'MY_AIA_ADMIN::show_admin_menu' );
-		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'my_aia_admin', 'my-aia-settings', 'MY_AIA_ADMIN::show_admin_menu' );
+		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'my_aia_admin', 'my-aia-settings', array($this, 'settings') );
 		add_submenu_page('my-aia-admin',__('Sportweken','my-aia'),	__('Sportweken','my-aia'), 'my_aia_admin', 'my-aia-sportweken', 'MY_AIA_ADMIN::show_admin_menu' );
 	}
 }

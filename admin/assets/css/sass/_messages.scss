@@ -1,0 +1,69 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 8-feb-2016, 11:24:25
+    Author     : Michiel
+*/
+
+#flash-messages-holder {
+	float:right;
+	min-width:400px;
+	text-align: left;
+}
+
+div.message.info {
+	border-color: #0085BA;
+	background-color: #caf0ff;
+	color: #0085BA;
+}
+div.message.success {
+	border-color: #00FF00;
+	color: #00FF00;
+	background-color: #cfffcf;
+}
+div.message.error {
+	border-color: red;
+	color: red;
+	background-color: #ffbfbf;
+}
+div.message.notice {
+	border-color: #f9e711;
+	color: f9e711;
+	background-color: #f9f3b0;
+}
+
+div.message  {
+	width:100%;
+	display:inline-block;
+	padding:5px;
+	
+	.btn {
+		height:20px;
+		width:40px;
+		padding:5px 2px 5px 2px;
+		float:left;
+	}
+	.btn.up,
+	.btn.down {
+		float:right;
+	}
+	
+	.btns {
+		width:80px;
+		height:40px;
+		float:right;
+	}
+	
+	.counter {
+		float:left;
+		height:40px;
+	}
+}
+
+input.rtmedia-settings-submit {
+	float:right;
+}
+

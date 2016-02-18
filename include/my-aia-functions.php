@@ -82,3 +82,25 @@ function my_aia_test_notification ($nf_notification_types) {
 	$nf_notification_types['custom_post'] = require_once (MY_AIA_PLUGIN_DIR . 'include/ninja-forms/custom-post-notification.php');
 	return $nf_notification_types;
 }
+
+/**
+ * Returns the lower_case_and_underscore style of $name. 
+ *  - to _
+ *  spaces to _
+ * @param string $name
+ * @return string
+ */
+function lowercase_underscore ($name) {
+	return str_replace(array('-',' '), array('_','_'), strtolower($name));
+}
+
+/**
+ * Returns the wp-style-style of $name. 
+ *  underscores to -
+ *  spaces to -
+ * @param string $name
+ * @return string
+ */
+function lowercase_wordpressize ($name) {
+	return str_replace(array('_',' '), array('-','-'), strtolower($name));
+}

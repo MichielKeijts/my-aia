@@ -22,7 +22,11 @@ function my_aia_install() {
 	
 	echo "<br>Taxonomies written";
 	
-	update_option('my_aia_version',MY_AIA_VERSION);
+	delete_option('my_aia_version');
+	delete_option('my-aia-registered-hooks');
+	
+	add_option('my-aia-version',MY_AIA_VERSION);
+	add_option('my-aia-registered-hooks', array());
 }
 
 function my_aia_register_capabilities() {

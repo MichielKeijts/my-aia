@@ -1,0 +1,11 @@
+[
+	{"id":5,"text":"AND", "type":"folder","children":[
+			{"id":2,"text":"AND","type":"folder","children":[
+					{"id":23,"text":"Voorwaarde","type":"condition", "data":{"field1":"TRUE","function1":"constant","field2":"Y-m-d","function2":"date","operator":"=="}},
+					{"id":33,"text":"Voorwaarde", "type":"condition", "data":{"field1":"FALSE","function1":"constant","field2":"m","function2":"date","operator":"=="}}
+				]
+			},
+			{"id":3,"text":"Voorwaarde", "type":"condition", "data":{"field1":"TRUE","function1":"constant","field2":"Y-m-d","function2":"date","operator":"=="}}
+		]
+	}
+]

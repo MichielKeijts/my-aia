@@ -9,11 +9,7 @@
  * Holder for the Administration pages
  */
 class MY_AIA_ADMIN {
-	/**
-	 * View class
-	 * @var \MY_AIA_ADMIN_VIEW
-	 */
-	private $view;
+
 	
 	/**
 	 * $TABS
@@ -28,13 +24,13 @@ class MY_AIA_ADMIN {
 		'my-aia'	=> '',
 		
 	);
-	
-	
-	
+	private $action;
+
 	public function __construct() {
-		add_action( 'admin_menu', array($this,'show_menu'));
+		add_action( 'admin_menu', array($this, 'show_menu'));
 		
-		$this->view = new MY_AIA_ADMIN_VIEW();
+		// handle the request
+		$this->request_handler();
 	}
 	
 	/**
@@ -49,10 +45,80 @@ class MY_AIA_ADMIN {
 	 * @return void
 	 */
 	public function settings() {
+		
 		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
-		wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/admin.js', '', MY_AIA_VERSION );
-		wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
-		$this->view->render('tests/test');		
+		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'admin/assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
+		
+		//wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/admin.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'admin/assets/js/jstree.min.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
+				
+		// make subset of filters to be defined as hook
+		$hooks=array();
+		foreach ($GLOBALS['wp_filter'] as $filter=>$val) {
+			if (strpos($filter, 'save')===FALSE)
+				continue;
+			array_push($hooks, $filter);
+		}	
+		
+		
+		$this->set('menu_bar',array('Nieuw'=>'','Overzicht'=>''));
+		
+		$this->set_flash('Dit is een belangrijk bericht!');
+		$this->set('hooks', $hooks);
+		
+		$this->set('hook_name', $_REQUEST['hook_name']);
+		
+		echo $this->view->render('tests/test');		
+	}
+	
+	/**
+	 * MAIN FUNTION 
+	 * deals with all the requests and parses the right controller
+	 */
+	public function request_handler() {
+		// default:
+		$controller = 'page';
+		$this->action = 'index';
+		
+		if (isset($_REQUEST['controller']))	$controller = $_REQUEST['controller'];
+		if (isset($_REQUEST['action']))		$this->action = $_REQUEST['action'];
+		
+		// try and see if class/file exists
+		$classfilename = sprintf('%sadmin/controller/my-aia-%s-controller.php', MY_AIA_PLUGIN_DIR, $controller);
+		$this->className = sprintf('MY_AIA_%s_CONTROLLER', strtoupper($controller));
+		if (!file_exists($classfilename)) 
+			return false; // @TODO error handler
+
+		// load class and perform action
+		include_once ($classfilename);
+		$this->controller = new $this->className();
+		
+		call_method_if_exists($this->controller, 'before_filter'); 
+		
+		// done. other handling is done in $this->request_render();
+	}
+	
+	/** 
+	 * Filter the request. First parse the events
+	 * - before_filter
+	 * - before_render
+	 * - render function
+	 * - afterRender callback
+	 */
+	public function request_render() {
+		call_method_if_exists($this->controller, 'before_filter');
+		call_method_if_exists($this->controller, 'before_render'); 
+		
+		// call the action and render
+		$this->controller->{$this->action}();
+		
+		// call the render function
+		$this->controller->render($this->action);
+		
+		
+		call_method_if_exists($this->controller, 'after_render');
 	}
 	
 	private function get_current_tab() {
@@ -64,18 +130,8 @@ class MY_AIA_ADMIN {
 		}
 	}
 	
-	/**
-	 * Display the various tabs
-	 */
-	private function render_tabs() {
-		//nav-tab-active
-		foreach ($this->TABS as $slug=>$tab) {
-			?><a href="/wp-admin/admin.php?page=my-aia-admin&tab=<?= $slug ?>" class="nav-tab <?php if ($this->get_current_tab()==$slug) echo "nav-tab-active"; ?>"><?= $tab ?></a><?php
-		}
-	}
-	
 	public function show_admin_menu() {
-		echo "Welkom in het ADMIN menu voor Mijn AIA";
+		//echo "Welkom in het ADMIN menu voor Mijn AIA";
 		return true;
 	}
 	
@@ -94,7 +150,7 @@ class MY_AIA_ADMIN {
 			__('My AIA','my-aia'), 
 			'manage_options', 
 			'my-aia-admin',
-			array($this, 'settings'), 
+			array($this, 'request_render'), 
 			plugins_url( 'my-aia/assets/images/my-aia24.png' ), 
 			10
 		);
@@ -102,5 +158,38 @@ class MY_AIA_ADMIN {
 		add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), 'my_aia_admin', 'my-aia-partners', 'MY_AIA_ADMIN::show_admin_menu' );
 		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'my_aia_admin', 'my-aia-settings', array($this, 'settings') );
 		add_submenu_page('my-aia-admin',__('Sportweken','my-aia'),	__('Sportweken','my-aia'), 'my_aia_admin', 'my-aia-sportweken', 'MY_AIA_ADMIN::show_admin_menu' );
+		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
 	}
+
+	
+	
+	/**
+	 * Wrapper for $this->view->set. Set view variables
+	 * @param string $var name of variable
+	 * @param mixed $val vlue of the variabele
+	 */
+	private function set($var, $val=NULL) {
+		$this->controller->view->set($var, $val);
+	}
+}
+
+function test() {
+	//echo "dit is een text!";
+	
+	exit();
+}
+//add_action('wp_ajax_my_aia_admin_static_condition_save', "test");
+
+
+/**
+ * Try and find a method of a function and call it. 
+ * @param class $obj
+ * @param string $method
+ * @return mixed FALSE if function not exists, function output otherwise 
+ */
+function call_method_if_exists($obj, $method) {
+	if (method_exists($obj, $method))
+		return $obj->$method();
+	
+	return FALSE;
 }

@@ -8,5 +8,3 @@
 
 // init action in construct
 $my_aia_admin = new MY_AIA_ADMIN();
-
- 

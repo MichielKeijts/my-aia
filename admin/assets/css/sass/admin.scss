@@ -4,6 +4,13 @@
 // *** Utility Classes *** //
 @import "utility";
 
+@import "mixins/vendor-prefixes";
+@import "mixins/panels";
+@import "mixins/clearfix";
+@import "mixins/background-variant";
+@import "mixins/border-radius";
+@import "mixins/gradients";
+
 // *** Layout *** //
 @import "layout";
 
@@ -40,5 +47,12 @@
 // *** Responsive *** //
 @import "rtl";
 
+// fonts
+@import "rtm_font_icons";
+
+@import "messages";
+
+@import "panels";
+
 // *** License *** //
-@import "license";
+//@import "license";

@@ -39,7 +39,7 @@ function my_aia_register_posttype_partner(){
 			'not_found_in_trash' => __('No Partners Found in Trash','my-aia'),
 			'parent' => __('Parent Partner','my-aia'),
 		),
-		'menu_icon' => 'my-aia-icon',
+		//'menu_icon' => 'my-aia-icon',
 		'yarpp_support'=>true
 	);
 	

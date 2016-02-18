@@ -14,7 +14,7 @@ class MY_AIA {
 	static $CUSTOM_TAXONOMIES = array(
 		MY_AIA_TAXONOMY_SPORT, 
 		MY_AIA_TAXONOMY_SPORT_LEVEL,
-		MY_AIA_SPORTBETROKKENHEID,
+		MY_AIA_TAXONOMY_SPORTBETROKKENHEID,
 		MY_AIA_TAXONOMY_KERKSTROMING,
 		MY_AIA_TAXONOMY_OVERNACHTING,
 		MY_AIA_TAXONOMY_SPORTWEEK_EIGENSCHAP,
@@ -46,6 +46,8 @@ class MY_AIA {
 		'public',	// add role for public (for all google bots and so on, to define it clearly)
 	);
 	
+	static $processflow;
+	
 	private static $instance;
 	
 	public function instance() {
@@ -60,13 +62,78 @@ class MY_AIA {
 		
 		//Upgrade/Install Routine
 		if( is_admin() && current_user_can('list_users') ){
-			if( MY_AIA_VERSION > get_option('my_aia_version', 0)) {
+			if( MY_AIA_VERSION > get_option('my-aia-version', 0)) {
 				my_aia_install();
 			}
 		}
 	
 		$wp_rewrite->flush_rules();
+		
+		// register hooks for process flow
+		self::register_hooks();
 	}
+	
+	/**
+	 * Register the hooks for the process
+	 */
+	static function register_hooks() {
+		add_option('my-aia-registered-hooks', array('save_post'));
+		add_option('my-aia-hook-save_post');
+		update_option('my-aia-hook-save_post', 
+				
+		array(
+			array(
+				'conditions'	=> array(
+					'AND' => array(
+						array(
+							'field1'=>'post_type',
+							'field2'=>'partner',
+							'function1'=>NULL,
+							'function2'=>'turn_to_post',
+							'comparison'=>NULL
+						),
+						array(
+							'field1'=>'TRUE',
+							'field2'=>'FALSE',
+							'function1'=>NULL,
+							'function2'=>NULL,
+							'comparison'=>'!='
+						)
+					)
+				),
+				'filter'		=> array(
+					'AND' => array(
+						array('post_date'=>'2015-10-20 15:21:26'),
+						array('OR'=>array(
+							'post_author'=>1,
+							'post_type'=>'get_partner'
+						))
+					)
+				),
+				'actions'		=> 'publish_post'
+			)
+		));
+		
+		
+		$hooks = get_option('my-aia-registered-hooks', NULL);
+		
+		if (empty($hooks) || !is_array($hooks)) return false;
+		
+		foreach ($hooks as $hook=>$actions) {
+			$hookfile=sprintf('%sclasses/processflow/my-aia-%s.php',MY_AIA_PLUGIN_DIR, str_replace('_','-',$hook));
+			if (file_exists($hookfile)) {
+				include_once $hookfile;
+				
+				// include actions to the hook
+				foreach ($actions as $action) {
+					$class = sprintf("MY_AIA_PROCESSFLOW_%s",  strtoupper($hook));
+					$class::create_hook();
+				}
+			}					
+		}		
+	}
+	
+	
     /**
 	* Load plugin textdomain.
 	*
@@ -112,6 +179,11 @@ class MY_AIA {
 		}
 		
 		return $capabilities;
+	}
+	
+	// random test function
+	static function get_partner () {
+		return 'partner';
 	}
 }
 

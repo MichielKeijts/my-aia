@@ -10,14 +10,9 @@
 // my-aia definitions (e.g. MY_AIA_..)
 //include ('include/my-aia-admin-definitions.php');
 
-
-
 // Classes
+include ( 'controller/my-aia-app-controller.php' );
 include ( 'classes/my-aia-admin.php' );
-include ( 'classes/my-aia-admin-view.php' );
-
-// Use Main AIA
-include ( 'classes/my-aia-admin-view.php' );
 
 // Finally INIT
 include ( 'include/my-aia-admin-init.php' );

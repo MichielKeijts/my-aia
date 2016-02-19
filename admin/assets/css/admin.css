@@ -4661,3 +4661,31 @@ input.rtmedia-settings-submit {
 .panel-danger > .panel-footer + .panel-collapse > .panel-body {
   border-bottom-color: red;
 }
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-feb-2016, 11:47:13
+    Author     : Michiel
+*/
+/* line 12, sass/_custom.scss */
+#my-aia-menu-bar {
+  background: #f3f3f3;
+  border-bottom: 1px solid #dedede;
+  box-shadow: 0 1px 0 #fcfcfc inset;
+  overflow: hidden;
+  padding: 10px 10px 10px 10px;
+  min-height: 28px;
+}
+/* line 20, sass/_custom.scss */
+#my-aia-menu-bar ul {
+  margin: 0px;
+}
+/* line 23, sass/_custom.scss */
+#my-aia-menu-bar ul > li {
+  float: left;
+  margin: 0px 6px;
+}

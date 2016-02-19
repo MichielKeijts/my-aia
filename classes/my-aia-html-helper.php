@@ -34,6 +34,15 @@ class MY_AIA_HTML_HELPER {
 	private $controller;
 	
 	/**
+	 * 
+	 * @param \MY_AIA_APP_CONTROLLER $controller
+	 */
+	public function __construct($controller) {
+		$this->controller=$controller;
+	}
+
+
+	/**
 	 * Create a <a></a> link and returns it.
 	 * 
 	 * @param string $text
@@ -42,14 +51,18 @@ class MY_AIA_HTML_HELPER {
 	 * @return string
 	 */
 	public function link ($text, $link, $options="") {
-		$link_text=$this->admin_link;
+		$linktext=$this->admin_link;
 		
 		if (is_array($link)) {
 			$linktext .= "&controller=".(isset($link['controller'])?$link['controller']:$this->controller->classname);
-			$linktext .= "&action=".(isset($link['action'])?$link['action']:$this->controller->action);
+			$linktext .= "&action=".(isset($link['action'])?$link['action']:'index');
 		} else {
-			$link_text = $link;
+			$linktext = $link;
 		}		
-		return sprintf('<a href="%s" title="%s">%s</a>', $link_text, $text);
+		
+		$options['title'] = isset($options['title'])?$options['title']:$text;
+		$options['class'] = isset($options['class'])?$options['class']:"";
+		
+		return sprintf('<a href="%s" title="%s" class="%s">%s</a>', $linktext, $options['title'], $options['class'], $text);
 	}
 }

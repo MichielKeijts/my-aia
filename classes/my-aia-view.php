@@ -34,7 +34,17 @@ class MY_AIA_VIEW {
 	 */
 	private $_flash_messages = array();
 	
+	/**
+	 * Holder for the rendered body
+	 * @var string
+	 */
 	private $_rendered_body = "";
+	
+	/**
+	 * Reference to the caller (controller)
+	 * @var \MY_AIA_APP_CONTROLLER
+	 */
+	private $controller;
 	
 	/**
 	 * $TABS
@@ -51,11 +61,24 @@ class MY_AIA_VIEW {
 	);
 	
 	/**
-	 * Create an ADMIN_VIEW
+	 * HTML helper holder
+	 * @var \MY_AIA_HTML_HELPER 
 	 */
-	public function __construct() {
-		//self::$_instance = self;
+	private $Html;
+	
+	/**
+	 * Create an ADMIN_VIEW
+	 * @param \MY_AIA_APP_CONTROLLER $controller
+	 */
+	public function __construct(&$controller) {
+		// self::$_instance = self;
 		$this->_viewVars = Array();
+		
+		// copy controller
+		$this->controller = &$controller;
+		
+		// initiate helper
+		$this->Html = new MY_AIA_HTML_HELPER($this->controller);
 	}
 	
 	/**
@@ -135,7 +158,10 @@ class MY_AIA_VIEW {
 	 * @return string rendered element
 	 */
 	public function element($name, $vars=NULL) {
-		$name	= sprintf('%sadmin/views/elements/%s.ctp', MY_AIA_PLUGIN_DIR, $name); // path to absolute dir
+		$name	= sprintf('%sadmin/view/elements/%s.ctp', MY_AIA_PLUGIN_DIR, $name); // path to absolute dir
+		
+		// set the variables
+		extract($this->_viewVars);
 		
 		if (ob_get_length())
 			$_current_output=ob_get_clean();

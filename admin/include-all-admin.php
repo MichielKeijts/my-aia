@@ -12,8 +12,8 @@
 
 // Classes
 include ( 'controller/my-aia-app-controller.php' );
-include ( 'classes/my-aia-admin.php' );
+include ( 'lib/my-aia-admin.php' );
 
 // Finally INIT
-include ( 'include/my-aia-admin-init.php' );
+include ( 'lib/my-aia-admin-init.php' );
 

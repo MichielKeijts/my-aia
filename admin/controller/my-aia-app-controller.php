@@ -31,8 +31,6 @@ class MY_AIA_APP_CONTROLLER {
 	 */
 	protected $view;
 	
-	protected $Html;
-
 	protected $layout = 'default';
 	
 	/**
@@ -43,8 +41,7 @@ class MY_AIA_APP_CONTROLLER {
 
 
 	public function __construct() {
-		$this->view = new MY_AIA_VIEW();
-		$this->Html = new MY_AIA_HTML_HELPER();
+		$this->view = new MY_AIA_VIEW($this);
 	}
 	
 	/**
@@ -83,7 +80,7 @@ class MY_AIA_APP_CONTROLLER {
 	 * @param string $var name of variable
 	 * @param mixed $val vlue of the variabele
 	 */
-	private function set($var, $val=NULL) {
+	protected function set($var, $val=NULL) {
 		$this->view->set($var, $val);
 	}
 		
@@ -93,5 +90,20 @@ class MY_AIA_APP_CONTROLLER {
 	 */
 	public function get_controller_name() {
 		return $this->classname;
+	}
+	
+	
+	/**
+	 * Before Render function
+	 * called to include all the styles etc from Wordpress
+	 */
+	public function before_render() {		
+		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
+		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'admin/assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
+		
+		//wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/admin.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'admin/assets/js/jstree.min.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
 	}
 }

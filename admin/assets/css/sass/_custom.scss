@@ -1,0 +1,27 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19-feb-2016, 11:47:13
+    Author     : Michiel
+*/
+
+
+#my-aia-menu-bar {
+	background: #f3f3f3;
+	border-bottom: 1px solid #dedede;
+	box-shadow: 0 1px 0 #fcfcfc inset;
+	overflow: hidden;
+	padding: 10px 10px 10px 10px;
+	min-height: 28px;
+
+	ul {
+		margin:0px;
+	}
+	ul > li {
+		float:left;
+		margin: 0px 6px;
+	}
+}

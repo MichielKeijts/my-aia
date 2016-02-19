@@ -26,8 +26,10 @@
  */
 class MY_AIA_PROCESSFLOW_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 
-	
-	protected $classname = 'processflow';
+	/**
+	 * Name of the class
+	 */
+	public $classname = 'processflow';
 	
 	/**
 	 * Before Filter function
@@ -41,7 +43,7 @@ class MY_AIA_PROCESSFLOW_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	 * Before Render function
 	 * called to include all the styles etc from Wordpress
 	 */
-	public function before_render() {
+	public function before_render() {		
 		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
 		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'admin/assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
 		
@@ -49,14 +51,35 @@ class MY_AIA_PROCESSFLOW_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'admin/assets/js/jstree.min.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
+		
+		// setting the menu bar for this controller
+		$menu_bar = array(
+			'add' => __('Nieuw','my-aia'),
+			'index' => __('Hooks Overzicht'),
+		);
+		
+		$this->set('menu_bar', $menu_bar);
 	}
 	
 	/** 
 	 * Main index. Overview of the Processflow admin
 	 */
-	public function index() {
+	public function add() {
+		// make subset of filters to be defined as hook
+		$hooks=array();
+		foreach ($GLOBALS['wp_filter'] as $filter=>$val) {
+			if (strpos($filter, 'save')===FALSE)
+				continue;
+			array_push($hooks, $filter);
+		}	
+		
+		$this->view->set_flash('Dit is een belangrijk bericht!');
+		$this->set('hooks', $hooks);
+		
+		$this->set('hook_name', isset($_REQUEST['hook_name'])?$_REQUEST['hook_name']:"save_post");
 		// only a placeholder..
 		//$this->template='index';
+		$this->template = 'edit';
 	}
 	
 	/**
@@ -64,19 +87,19 @@ class MY_AIA_PROCESSFLOW_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	 * hooks are editable using the plugin and are therefore flexible. 
 	 * This function returns a list of the possible hooks
 	 */
-	public function hooks_index(){
-		
-		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
-		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'admin/assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
-		
-		//wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/admin.js', '', MY_AIA_VERSION );
-		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
-		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'admin/assets/js/jstree.min.js', '', MY_AIA_VERSION );
-		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
-		
+	public function index(){
+		$this->view->set('data', array('hooks'=>get_option('my-aia-registered-hooks',array())));
+	}
+	
+	/**
+	 * Overview of the actual registered hooks in the plugin. This means that the
+	 * hooks are editable using the plugin and are therefore flexible. 
+	 * This function returns a list of the possible hooks
+	 */
+	public function edit() {
 		$this->view->set('data', array('hooks'=>get_option('my-aia-registered-hooks',array())));
 		
-		$this->template = 'overview_hooks';
+		$this->template = 'edit';
 	}
 	
 	/**

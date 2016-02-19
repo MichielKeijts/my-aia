@@ -195,6 +195,7 @@ function condition_save() {
 		ajaxurl, 
 		{
 			'action': 'my_aia_admin_static_condition_save',
+			'controller': 'processflow',
 			'hook_name': hook_name,
 			'hook_description': jQuery('input[name=hook_description]').val(),
 			'data':   data

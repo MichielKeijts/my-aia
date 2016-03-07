@@ -8,6 +8,33 @@
  * Class MY_AIA_PROCESSFLOW
  * - Parent class for all the different flows (ie. save_post, publish_post, etc)
  * - Registering hooks for processing 
+ * 
+ * Hooks are saved in the option MY_AIA_REGISTERED_HOOKS. This is an array:
+ * 
+ * '<HOOK_NAME>' = > array(
+ *		[0] => <ID>
+ *		[1] => ..
+ *		[<order>]
+ * ),
+ * 'save_post' = > array(
+ *		[0] => 123efb234cef4
+ *		[1] => 144bbffeb3872
+ *		[<order>]
+ * )
+ * 
+ * The corresponding ID's refer tot the options named:
+ *			my-aia-registered-hook-<ID>
+ *
+ * The <ID> has to be gerenerated before save in the Admin-processflow 
+ * controller. It is a unique id made by PHP uniqid() function
+ *  
+ * array(my-aia-registered-hook-<ID>):
+ * 'id' => <ID>
+ * 'description' => ..
+ * 'static_condition' => ..
+ * 'conditional_actions' =>..
+ * 'actions' => ..
+ * 'extra' => ...
  */
 class MY_AIA_PROCESSFLOW {
 
@@ -19,10 +46,24 @@ class MY_AIA_PROCESSFLOW {
 
 	protected static $data;		
 	
-	protected static function parse_processes($hook_name, $data=NULL) {
+	/**
+	 * Default initialisation for processflow data
+	 * @var type 
+	 */
+	protected static $_defaults = array(
+		'id' => "",
+		'description' => "",
+		'hook_name' => "",
+		'static_condition' => array(),
+		'conditional_actions' => array(),
+		'actions' => array(),
+		'extra' => array()
+	);
+	
+	protected static function parse_processes($id, $data=NULL) {
 		if (!empty($data)) self::$data=$data;
 		
-		self::$processes = get_option('my-aia-hook-'.$hook_name);
+		self::$processes = get_option('my-aia-registered-hook-'.$id);
 		
 		if (!is_array(self::$processes)) self::$processes = array(self::$processes);
 		
@@ -68,12 +109,16 @@ class MY_AIA_PROCESSFLOW {
 	 * '0..N|AND|OR' => array
 	 *		'0..N|AND|OR' => array ..
 	 *			array(
-	 *				key:	=> name of the field
-	 *				value:	
+	 *				field1:	=> name of the field
+	 *				function1:	
 	 *					user_function	referring to a user function
 	 *					constant		referring to a constant
+	 *				comparisson: !=/==/<=/</>/>=
+	 *				field2:	.. same as field 1
+	 *				function2:	.. same as function 1
+	 *				
 	 * @param array $conditions
-	 * @return bool Conditions Met
+	 * @return bool Conditions met
 	 */
 	protected static function check_conditions($conditions) {
 		$conditions_met = TRUE;		// initalisation of retun var
@@ -281,23 +326,93 @@ class MY_AIA_PROCESSFLOW {
 	
 	/**
 	 * Save the list of $data
+	 * $data has the form
 	 * @param string $hook_name name of the hook
 	 * @param array $data to be saved
 	 * @return boolean
 	 */
-	public static function save_static_condition($hook_name, $data) {
-		self::$data=$data;	// set data
-		$option = self::save_static_condition_get_next('#');		
+	public static function save_condition($id, $hook_name, $hook_description, $data) {
+		$option = self::$_defaults;
+		$option['id'] = $id; 
+		$option['description'] = $hook_description;
+		$option['hook_name'] = $hook_name;
+		$option['static_condition'] = self::save_static_condition($id, $data['static_condition']);
+		//$option['conditional_actions'] = self::save_static_condition_get_next('#'); // @TODO
+		$option['actions'] = array();//self::save_static_condition_get_next('#');
+		//$option['extra'] = self::save_static_condition_get_next('#'); //@TODO
 		
 		// save option and no autoload, update or add new
-		if (get_option('my-aia-hook-'.$hook_name,FALSE)) 
-			return update_option('my-aia-hook-'.$hook_name, $option, FALSE);
+		if (get_option('my-aia-registered-hook-'.$id,FALSE)) 
+			return update_option('my-aia-registered-hook-'.$id, $option, FALSE);
 		
-		return add_option('my-aia-hook-'.$hook_name, $option, NULL, FALSE);
+		return add_option('my-aia-registered-hook-'.$id, $option, NULL, FALSE);
 	}
 	
 	/**
-	 * Recursively step into conditions
+	 * Wrapper for saving a static condition
+	 * $data form:
+		2 => 
+			array (size=3)
+			  'type' => string 'folder' (length=6)
+			  'text' => string 'AND' (length=3)
+			  'children' => 
+				array (size=2)
+				  0 => string '23' (length=2)
+				  1 => string '33' (length=2)
+		  3 => 
+			array (size=7)
+			  'type' => string 'condition' (length=9)
+			  'text' => string 'Voorwaarde' (length=10)
+			  'field1' => string 'TRUE' (length=4)
+			  'field2' => string 'Y-m-d' (length=5)
+			  'function1' => string 'constant' (length=8)
+			  'function2' => string 'date' (length=4)
+			  'operator' => string '==' (length=2)
+		  5 => 
+			array (size=3)
+			  'type' => string 'folder' (length=6)
+			  'text' => string 'AND' (length=3)
+			  'children' => 
+				array (size=2)
+				  0 => string '2' (length=1)
+				  1 => string '3' (length=1)
+		  23 => 
+			array (size=7)
+			  'type' => string 'condition' (length=9)
+			  'text' => string 'Voorwaarde' (length=10)
+			  'field1' => string 'TRUE' (length=4)
+			  'field2' => string 'Y-m-d' (length=5)
+			  'function1' => string 'constant' (length=8)
+			  'function2' => string 'date' (length=4)
+			  'operator' => string '==' (length=2)
+		  33 => 
+			array (size=7)
+			  'type' => string 'condition' (length=9)
+			  'text' => string 'Voorwaarde' (length=10)
+			  'field1' => string 'FALSE' (length=5)
+			  'field2' => string 'm' (length=1)
+			  'function1' => string 'constant' (length=8)
+			  'function2' => string 'date' (length=4)
+			  'operator' => string '==' (length=2)
+		  '#' => 
+			array (size=2)
+			  'type' => string '#' (length=1)
+			  'children' => 
+				array (size=1)
+				  0 => string '5' (length=1)
+	 * 
+	 * @param string $id
+	 * @param array $data
+	 * @return array Condition
+	 */
+	private static function save_static_condition($id, $data) {
+		self::$data=$data;	// set data
+		return self::save_static_condition_get_next('#');
+	}
+	
+	/**
+	 * Recursively step into conditions and save them.
+	 * Uses self::$data;
 	 * @param string $id
 	 */
 	private static function save_static_condition_get_next($id) {
@@ -319,5 +434,86 @@ class MY_AIA_PROCESSFLOW {
 		}
 		// return the part of the array
 		return $return;
+	}
+	
+	/**
+	 * Wrapper for getting a static condition in JSON format for JSTREE
+	 * @param int $id
+	 * @return array Condition (JSON)
+	 */
+	public static function get_static_condition($id) {
+		$data = get_option('my-aia-registered-hook-'.$id,FALSE);
+		if (!$data)
+			return false; 
+		
+		self::$data=0;	
+		
+		if (isset($data['OR']));
+		
+		return self::get_static_condition_get_next($data['static_condition']);
+	}
+	
+	/*[
+	{"id":5,"text":"AND", "type":"folder","children":[
+			{"id":2,"text":"AND","type":"folder","children":[
+					{"id":23,"text":"Voorwaarde","type":"condition", "data":{"field1":"TRUE","function1":"constant","field2":"Y-m-d","function2":"date","operator":"=="}},
+					{"id":33,"text":"Voorwaarde", "type":"condition", "data":{"field1":"FALSE","function1":"constant","field2":"m","function2":"date","operator":"=="}}
+				]
+			},
+			{"id":3,"text":"Voorwaarde", "type":"condition", "data":{"field1":"TRUE","function1":"constant","field2":"Y-m-d","function2":"date","operator":"=="}}
+		]
+	}
+]*/
+	
+	/**
+	 * Recursively parse into conditions
+	 * @param string $id
+	 * @param int $i
+	 * @return array
+	 */
+	private static function get_static_condition_get_next($data) {
+		$json_array = array();
+	
+		if (array_key_exists('OR', $data)) {
+			$json_array = array(
+				'id' => self::$data++,
+				'text' => 'OR',
+				'type' => 'folder',
+				'children' => self::get_static_condition_get_next($data['OR'])
+			);
+		} elseif (array_key_exists('AND', $data)) {
+			$json_array = array(
+				'id' => self::$data++,
+				'text' => 'OR',
+				'type' => 'folder',
+				'children' => self::get_static_condition_get_next($data['AND'])
+			);
+		} else {
+			foreach ($data as $key=>$element) {
+				if ($key=='AND' || $key=='OR') 
+					continue;
+				if (array_key_exists('field1', $element)) {
+					$json_array[]=array_merge($element,
+						array(
+							'id' => self::$data++,
+							'text' => $element['text'],
+							'type' => 'condition',
+						)
+					);
+				} else {
+				
+				
+					$json_array[]=array_merge($element,
+						array(
+							'id' => self::$data++,
+							'text' => $element['text'],
+							'type' => 'condition',
+						)
+					);
+				}
+			}
+		}
+		
+		return $json_array;
 	}
 }

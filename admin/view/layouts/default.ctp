@@ -9,11 +9,12 @@
 					<form id="bp_media_settings_form" name="bp_media_settings_form" method="post" enctype="multipart/form-data">
 						<div class="bp-media-metabox-holder">
 							<div class="rtm-button-container top">
+								<h2><?= $title; ?></h2>
 									<?php if ( isset( $_GET[ 'settings-saved' ] ) && $_GET[ 'settings-saved' ] ) { ?>
 										<div class="rtm-success rtm-fly-warning rtm-save-settings-msg"><?php _e( 'Settings saved successfully!', 'buddypress-media' ); ?></div>
 									<?php } ?>
 									<input type="hidden" name="rtmedia-options-save" value="true">
-									<input type="submit" class="rtmedia-settings-submit button button-primary button-big" value="<?php _e( 'Save Settings', 'buddypress-media' ); ?>">
+									<input type="submit" class="my_aia_submit_button button button-primary button-big" value="<?php _e( 'Save Settings', 'buddypress-media' ); ?>">
 									<?php echo $this->element('_flash'); ?>
 								</div>
 								<?= $content; ?>
@@ -37,7 +38,7 @@
 									</div>
 
 									<input type="hidden" name="rtmedia-options-save" value="true">
-									<input type="submit" class="rtmedia-settings-submit button button-primary button-big" value="<?php _e( 'Save Settings', 'buddypress-media' ); ?>">
+									<input type="submit" class="my_aia_submit_button button button-primary button-big" value="<?php _e( 'Save Settings', 'buddypress-media' ); ?>">
 								</div>
 							</div>
 						</form>

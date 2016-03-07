@@ -18,7 +18,8 @@ add_action( 'init', 'my_aia_register_posttype_partner' );
 add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );
 
 // Used for user-taxonomy
-add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user' );
+add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user', 3);
+
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 
 add_action ( 'init', 'MY_AIA::init');

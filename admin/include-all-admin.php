@@ -12,7 +12,9 @@
 
 // Classes
 include ( 'controller/my-aia-app-controller.php' );
+include ( 'modifications/buddypress/my-aia-admin-buddypress.php' );
 include ( 'lib/my-aia-admin.php' );
+
 
 // Finally INIT
 include ( 'lib/my-aia-admin-init.php' );

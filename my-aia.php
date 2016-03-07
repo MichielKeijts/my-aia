@@ -22,6 +22,8 @@ define( 'MY_AIA_VERSION', 0.1);
 define( 'MY_AIA_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'MY_AIA_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
+define( 'BUDDYPRESS_DIR', plugin_dir_path( __FILE__ ).'../buddypress/'  );
+
 // start the script by including all files
 include ( MY_AIA_PLUGIN_DIR . "include-all.php");
 

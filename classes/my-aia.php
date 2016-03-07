@@ -126,8 +126,8 @@ class MY_AIA {
 				
 				// include actions to the hook
 				foreach ($actions as $action) {
-					$class = sprintf("MY_AIA_PROCESSFLOW_%s",  strtoupper($hook));
-					$class::create_hook();
+					$processflow = sprintf("MY_AIA_PROCESSFLOW_%s",  strtoupper($hook));
+					$processflow::create_hook();
 				}
 			}					
 		}		

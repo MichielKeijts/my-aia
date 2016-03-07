@@ -28,19 +28,12 @@ class MY_AIA_ADMIN {
 
 	public function __construct() {
 		add_action( 'admin_menu', array($this, 'show_menu'));
-		
 		// handle the request
 		$this->request_handler();
 	}
 	
 	/**
 	 * Render the MY_AIA_SETTINGS
-	 *
-	 * @access public
-	 * @global      string 'buddypress-media'
-	 *
-	 * @param  type $page
-	 * @param  type $option_group
 	 *
 	 * @return void
 	 */
@@ -159,6 +152,9 @@ class MY_AIA_ADMIN {
 		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'my_aia_admin', 'my-aia-settings', array($this, 'settings') );
 		add_submenu_page('my-aia-admin',__('Sportweken','my-aia'),	__('Sportweken','my-aia'), 'my_aia_admin', 'my-aia-sportweken', 'MY_AIA_ADMIN::show_admin_menu' );
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
+		
+		
+		remove_action( 'admin_notices', 'update_nag', 3 );
 	}
 
 	

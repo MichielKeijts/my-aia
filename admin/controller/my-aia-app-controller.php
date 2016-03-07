@@ -33,6 +33,9 @@ class MY_AIA_APP_CONTROLLER {
 	
 	protected $layout = 'default';
 	
+	protected $classname = 'app';
+
+
 	/**
 	 * lowercased_underscored name of the controller
 	 * @var type 
@@ -98,12 +101,15 @@ class MY_AIA_APP_CONTROLLER {
 	 * called to include all the styles etc from Wordpress
 	 */
 	public function before_render() {		
+		wp_enqueue_style( 'my-aia-admin-jquery-ui', MY_AIA_PLUGIN_URL . 'admin/assets/css/jquery-ui.min.css', '', MY_AIA_VERSION );
 		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
 		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'admin/assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
 		
-		//wp_enqueue_script( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/js/admin.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-jquery-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/jquery_ui/jquery-ui.min.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'admin/assets/js/jstree.min.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
+		
+		$this->set('title','Titel . _viewVars["titel"]');
 	}
 }

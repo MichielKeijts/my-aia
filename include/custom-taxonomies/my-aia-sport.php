@@ -46,16 +46,22 @@ function my_aia_register_taxonomy_sport() {
  *
  * @param object $user The user object currently being edited.
  */
-function my_aia_edit_user( $user, $is_self_profile, $user_id) {
-	add_meta_box(
+function my_aia_edit_user( $user) {
+	return my_aia_edit_user_taxonomy_metabox($user);
+	/*add_meta_box(
 		'metabox_id',
 		__( 'Metabox Title', 'buddypress' ),
 		'my_aia_edit_user_taxonomy_metabox', // function that displays the contents of the meta box
 		get_current_screen()->id
-	);
+	);*/
 }
 
 function my_aia_edit_user_taxonomy_metabox($user, $taxonomy='sport') {
+	global $current_user;
+	if (!is_a($user, "WP_user")) {
+		$user = $current_user;
+	}
+	
 	$tax = get_taxonomy( $taxonomy );
 
 	/* Make sure the user can assign terms of the sport taxonomy before proceeding. */

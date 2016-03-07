@@ -26,6 +26,8 @@
  */
 class MY_AIA_PAGE_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 
+	public $classname = 'processflow';
+	
 	/**
 	 * Before Filter function
 	 * called before most of the wordpress logic happens.

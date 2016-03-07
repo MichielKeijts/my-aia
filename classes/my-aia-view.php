@@ -44,7 +44,7 @@ class MY_AIA_VIEW {
 	 * Reference to the caller (controller)
 	 * @var \MY_AIA_APP_CONTROLLER
 	 */
-	private $controller;
+	public $controller;
 	
 	/**
 	 * $TABS
@@ -72,13 +72,13 @@ class MY_AIA_VIEW {
 	 */
 	public function __construct(&$controller) {
 		// self::$_instance = self;
-		$this->_viewVars = Array();
+		$this->_viewVars = Array('data'=>array());
 		
 		// copy controller
 		$this->controller = &$controller;
 		
 		// initiate helper
-		$this->Html = new MY_AIA_HTML_HELPER($this->controller);
+		$this->Html = new MY_AIA_HTML_HELPER($this, $this->controller);
 	}
 	
 	/**
@@ -102,6 +102,40 @@ class MY_AIA_VIEW {
 		foreach ($var as $key=>$val) {
 			$this->_viewVars[$key]=$val;
 		}
+	}
+	
+	/**
+	 * Get VIEW Variabele
+	 * @param string $var Name of the var
+	 * @param mixed $val Value of the var
+	 * @return mixed value of $var or $val (default FALSE)
+	 */
+	public function get($var, $val=false) {
+		if (empty($var))
+			return $val;
+		
+		if (array_key_exists($var, $this->_viewVars)) {
+			return $this->_viewVars[$var];
+		}
+		
+		return $val;
+	}
+	
+	/**
+	 * Get VIEW Variabele
+	 * @param string $var Name of the var
+	 * @param mixed $val Value of the var
+	 * @return mixed value of $var or $val (default FALSE)
+	 */
+	public function get_data($var, $val=false) {
+		if (empty($var))
+			return $val;
+		
+		if (array_key_exists($var, $this->_viewVars['data'])) {
+			return $this->_viewVars['data'][$var];
+		}
+		
+		return $val;
 	}
 	
 	/**

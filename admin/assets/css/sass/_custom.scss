@@ -25,3 +25,14 @@ and open the template in the editor.
 		margin: 0px 6px;
 	}
 }
+
+.sortable {
+	:active {
+		cursor:move;
+	}
+	cursor: pointer;
+	
+	a.button {
+		margin-bottom:6px;
+	}
+}

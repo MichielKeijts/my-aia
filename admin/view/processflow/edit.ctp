@@ -1,4 +1,4 @@
-		<div class="clearfix rtm-vertical-tabs rtm-admin-tab-container rtm-settings-tab-container">
+			<div class="clearfix rtm-vertical-tabs rtm-admin-tab-container rtm-settings-tab-container">
 				<ul class="rtm-tabs my-aia-tabs">
 					<li class="active">
 						<a id="tab-rtmedia-display" title="Selecteer een Hook" href="#my-aia-content-hook-select" class="rtmedia-tab-title display">
@@ -38,7 +38,8 @@
 								<td>
 									<fieldset>
 										<span class="rtm-field-wrap">
-											<input type="text" name="hook_description" value="" placeholder="Naam">
+											<?= $this->Html->input('id', array('type'=>'hidden')); ?>
+											<?= $this->Html->input('description',array('placeholder'=>__('Naam'))); ?>
 										</span>
 
 										<span class="rtm-tooltip">
@@ -60,11 +61,7 @@
 										</div>
 										<fieldset>
 											<span class="rtm-field-wrap">
-												<select name="hook_name">
-													<?php foreach ($hooks as $hook): ?>
-													<option value="<?= $hook; ?>" <?= (isset($hook_name)&&$hook_name==$hook)?"selected":""?> ><?= $hook; ?></option>
-													<?php endforeach; ?>
-												</select>
+												<?= $this->Html->select('hook_name',array('placeholder'=>__('Naam'), 'options'=>$hooks)); ?>
 											</span>
 
 											<span class="rtm-tooltip">
@@ -198,9 +195,6 @@
 											</fieldset>
 
 										</div>
-										<div class="panel-footer">
-											<button id='condition-save' class='button-primary'>Opslaan</button>
-										</div>
 									</div>									
 								</td>
 							</tr>
@@ -217,6 +211,71 @@
 
 					<div class="rtm-content hidden" id="my-aia-content-actions">				
 						<div class="rtm-option-wrapper">
+							
+							<h3 class="rtm-option-title"><?= __("Selecteer Acties","my-aia"); ?></h3>
+							<p> De onderstaande acties worden uitgevoerd in de volgorde zoals hieronder aangegeven, maar ze hebben directe invloed op elkaar. Maw: je kunt niet
+							de ouput van de bovenliggende gebruiken in de onderliggende. </p>
+							
+							
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<button class='button button-primary button-big' id='condition-add-folder'><i class='glyphicon glyphicon-plus-sign'></i> Actie Toevoegen</button>
+									<button class='button button-cancel button-big' id='condition-delete'><i class='glyphicon glyphicon-remove'></i> Verwijderen</button>
+								</div>
+								<div class="panel-body">
+									<ol class="list-group ui-sortable sortable">
+									<?php foreach ($data['acties'] as $actie): ?>
+										<li class="list-group-item" data-id='<?= $actie['id']; ?>'>
+											<?= $this->Html->link($processflow['description'], array('action'=>'edit','id'=>$processflow['id'])); ?>
+											<?= $this->Html->link(__('Delete'), array('action'=>'edit','id'=>$processflow['id']), array('class'=>'button right')); ?>
+										</li>
+									<?php endforeach; ?>
+									</ol>
+								</div>
+								<div class="panel-footer"></div>
+							</div>
+							
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3><?= __('Tags toevoegen'); ?></h3></div>
+								<div class="panel-body">
+				
+									<div class="input-group input-group-lg">
+										<span class="input-group-addon" id="sizing-addon1">Naam</span>
+										<input type="text" class="form-control" placeholder="Naam" aria-describedby="sizing-addon2" name='to_name'>
+									</div>
+								</div>
+								<div class="panel-footer">
+									Een lijst met codes om te implementeren				
+									<code>
+										$user_name
+										$user_email
+										$form_email
+									</code>
+								</div>
+							</div>
+							
+							<div class="panel panel-default">
+								<div class="panel-heading"><h3>Email Opties</h3></div>
+								<div class="panel-body">
+									<div class="input-group input-group-lg">
+										<span class="input-group-addon" id="sizing-addon1">@</span>
+										<input type="text" class="form-control" placeholder="Email" aria-describedby="sizing-addon1" name='to_email'>
+									</div>
+									
+									<div class="input-group input-group-lg">
+										<span class="input-group-addon" id="sizing-addon1">Naam</span>
+										<input type="text" class="form-control" placeholder="Naam" aria-describedby="sizing-addon2" name='to_name'>
+									</div>
+								</div>
+								<div class="panel-footer">
+									Een lijst met codes om te implementeren				
+									<code>
+										$user_name
+										$user_email
+										$form_email
+									</code>
+								</div>
+							</div>
 						</div>
 					</div><!--//rtm-content-->
 

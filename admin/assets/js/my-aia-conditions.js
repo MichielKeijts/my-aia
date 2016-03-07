@@ -42,10 +42,13 @@ function condition_tree_init() {
 				"stripes" : true
 			},
 			"data" : {
-				"url" : "/wp-content/plugins/my-aia/admin/assets/js/root.json",
-				"dataType" : "json", // needed only if you do not supply JSON headers
-				'data' : function (node) {
-					return { 'id' : node.id };
+				"url" : ajaxurl,
+				"dataType" : "json", // needed only if you do not supply JSON headers,
+				"method": 'post',
+				'data' : {
+					controller: 'processflow',
+					action: 'my_aia_admin_static_condition_load',
+					id: '56d41c11a41f3'
 				}
 			},
 			
@@ -81,7 +84,8 @@ function condition_tree_init() {
 		} 
 	});
 	
-	jQuery('#condition-save').on("click.jstree", function (e) {e.preventDefault(); condition_save();});
+	jQuery('.my_aia_submit_button').click(function (e) {e.preventDefault(); condition_save();});
+	//jQuery('#condition-save').on("click", function (e) {e.preventDefault(); condition_save();});
 	//jQuery('#conditions_tree').on("create_node.jstree", function (node) { condition_edit(node);	});
 }
 
@@ -163,10 +167,11 @@ function condition_save() {
 	
 	
 	var data={};
+	var _data = {'static_condition':'', 'conditional_actions':'','actions':''};
 	var ref=jQuery('#conditions_tree').jstree(true)._model.data;
 	var key="";
 	
-	// build data
+	// build data static condition
 	for (var i=0; i<Object.keys(ref).length; i++) {
 		key=Object.keys(ref)[i];
 		
@@ -189,16 +194,18 @@ function condition_save() {
 			};
 		}
 	}
+	_data.static_condition = data;
 	
 	// the actual query
 	jQuery.post(
 		ajaxurl, 
 		{
-			'action': 'my_aia_admin_static_condition_save',
+			'action': 'my_aia_admin_hook_save',
 			'controller': 'processflow',
+			'id': jQuery('input[name=id]').val(),
 			'hook_name': hook_name,
-			'hook_description': jQuery('input[name=hook_description]').val(),
-			'data':   data
+			'description': jQuery('input[name=description]').val(),
+			'data':   _data
 		}, 
 		function(response){
 			alert('The server responded: ' + response);
@@ -221,10 +228,46 @@ function my_aia_initiate_tabs() {
 }
 
 /**
+ * Initiate (render) the sortable elements, according to JQuery UI
+ * @returns {undefined}
+ */
+function initiate_sortable() {
+	jQuery('.sortable').sortable();
+	
+	// the actual query
+	jQuery('.my_aia_submit_button').click(function(e) {
+		e.preventDefault();
+		
+		var hook_name = jQuery('.my-aia-tabs .active span').data('hook_name');
+		var data = new Array();
+
+		jQuery('.my-aia-tabs-content .active ol > li').each(function(){ 
+			data[data.length] = jQuery(this).data('id');
+		});
+
+		jQuery.post(
+			ajaxurl, 
+			{
+				'action': 'my_aia_admin_processflow_order_save',
+				'controller': 'processflow',
+				'hook_name': hook_name,
+				'data':   data
+			}, 
+			function(response){
+				alert('The server responded: ' + response);
+			}
+		);
+	
+	});
+}	
+
+/**
  * Main Init Function for Admin
  */
 jQuery(document).ready( function () {
 	my_aia_initiate_tabs();
 	
 	condition_tree_init();
+	
+	initiate_sortable();
 });

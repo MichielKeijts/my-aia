@@ -34,11 +34,18 @@ class MY_AIA_HTML_HELPER {
 	private $controller;
 	
 	/**
-	 * 
-	 * @param \MY_AIA_APP_CONTROLLER $controller
+	 * View holder
+	 * @var MY_AIA_VIEW
 	 */
-	public function __construct($controller) {
-		$this->controller=$controller;
+	private $view;
+	
+	/**
+	 * 
+	 * @param \MY_AIA_VIEW 
+	 */
+	public function __construct(&$view, &$controller) {
+		$this->view = &$view;
+		$this->controller = &$controller;
 	}
 
 
@@ -56,7 +63,17 @@ class MY_AIA_HTML_HELPER {
 		if (is_array($link)) {
 			$linktext .= "&controller=".(isset($link['controller'])?$link['controller']:$this->controller->classname);
 			$linktext .= "&action=".(isset($link['action'])?$link['action']:'index');
+			
+			// add other params
+			foreach ($link as $key=>$value) {
+				if ($key=='controller' || $key=='action') 
+					continue; // we already added them manually
+				
+				$linktext = sprintf('%s&%s=%s', $linktext, $key, $value);
+			}
+			
 		} else {
+			// assume static link
 			$linktext = $link;
 		}		
 		
@@ -64,5 +81,82 @@ class MY_AIA_HTML_HELPER {
 		$options['class'] = isset($options['class'])?$options['class']:"";
 		
 		return sprintf('<a href="%s" title="%s" class="%s">%s</a>', $linktext, $options['title'], $options['class'], $text);
+	}
+	
+	/**
+	 * Create a form input element (textarea, input, etc) and returns it.
+	 * 
+	 * @param string $text
+	 * @param mixed $link (array keys controller/action or a link
+	 * @param array $extra_options (not implemented yet!) array ('class'=>..,'title'=>..)
+	 * @return string
+	 */
+	public function input ($name, $extra_options=null) {
+		$options = array(
+			'type'	=> 'text',
+			'allowempty' => false,
+			'emptytext' => "",
+			'label'	=> false,
+			'class' => '',
+			'placeholder' => '',
+			'options' => array()
+		);
+		
+		// merge params
+		if (is_array($extra_options)) {
+			$options = array_merge($options, $extra_options);
+		} 
+		
+		// get the variabele
+		if ($this->view->get_data($name, NULL) != NULL) {
+			$value = $this->view->get_data($name);
+		} else {
+			$value = "";
+		}
+		
+		$element = "";
+		switch ($options['type']) {
+			case "select":
+				$element  = sprintf('<select name="%s" class="%s">',$name, $options['class']);
+			case "radio":
+				if ($options['allowempty'])
+					array_unshift($option['options'], $options['emptytext']);
+				
+				foreach ($options['options'] as $key=>$val) {
+					$checked = $value==$key?"selected":"";
+					if ($options['type']=='select') 
+						$element  .= sprintf('<option value="%s" %s>%s</option>', $key, $checked, $val);
+					else 
+						$element  .= sprintf('<input type="radio" name="%s" value="%s" class="%s" %>',$name, $val, $options['class'], $checked);
+				}
+				
+				if ($options['type']=='select') 
+					$element .= "</select>";
+				break;			
+			case "textarea":
+				$element  .= sprintf('<textarea name="%s" class="%s" placeholder="">%s</textarea>', $name, $options['class'], $options['placeholder'], $value);
+				break;
+			case "checkbox":
+			case "hidden":
+			case "text":
+				$element  .= sprintf('<input type="%s" name="%s" value="%s" class="%s" placeholder="">', $options['type'],$name, $value, $options['class'], $options['placeholder']);
+				break;
+			default:
+				$element = $name;
+		}
+			
+		return $element;
+	}
+	
+	/**
+	 * Create a form select element (textarea, input, etc) and returns it.
+	 * 
+	 * @param string $name
+	 * @param array $extra_options (not implemented yet!) array ('class'=>..,'title'=>..)
+	 * @return string
+	 */
+	public function select($name, $extra_options=array()) {
+		$extra_options['type'] = 'select';
+		return $this->input($name, $extra_options);
 	}
 }

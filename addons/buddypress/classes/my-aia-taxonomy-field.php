@@ -1,6 +1,6 @@
 <?php
 /**
- * MY_AIA modification and addon to BuddyPress
+ * MY_AIA addon to BuddyPress
  * 
  * BuddyPress XProfile Classes.
  *
@@ -60,7 +60,7 @@ class MY_AIA_BUDDYPRESS_TAXONOMY_FIELD extends BP_XProfile_Field_Type {
 	 *                              that you want to add.
 	 */
 	public function edit_field_html( array $raw_properties = array() ) {
-
+		global $field;
 		// User_id is a special optional parameter that we pass to
 		// {@link bp_the_profile_field_options()}.
 		if ( isset( $raw_properties['user_id'] ) ) {
@@ -71,42 +71,48 @@ class MY_AIA_BUDDYPRESS_TAXONOMY_FIELD extends BP_XProfile_Field_Type {
 		}
 
 		$r = bp_parse_args( $raw_properties, array(
-			'multiple' => 'multiple',
+			//'multiple' => 'false',
 			'id'       => bp_get_the_profile_field_input_name() . '[]',
 			'name'     => bp_get_the_profile_field_input_name() . '[]',
 		) ); 
 		
+		$taxonomy_name = bp_xprofile_get_meta(bp_get_the_profile_field_id(), 'field', 'taxonomy_name');
+		$taxonomy_display_select = bp_xprofile_get_meta( bp_get_the_profile_field_id(), 'field', 'taxonomy_display_select');
+		$taxonomy_options = get_terms($taxonomy_name, array( 'hide_empty' => false ));
 		
-		add_metabox();
+		// @TODO show multiple select, in future ajax_search box
+		if ($taxonomy_display_select!=1) {
+			$r = bp_parse_args( $raw_properties, array('multiple'=>'true'));
+		}
 		
+		$values = explode(', ',bp_unserialize_profile_field($field->data->value));
 		?>
-
-
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>[]">
 			<?php bp_the_profile_field_name(); ?>
 			<?php bp_the_profile_field_required_label(); ?>
 		</label>
 
-		<?php
-
-		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() ); ?>
-
-		<select <?php echo $this->get_edit_field_html_elements( $r ); ?>>
-			<?php bp_the_profile_field_options( array(
-				'user_id' => $user_id
-			) ); ?>
+		<?php	
+			/** This action is documented in bp-xprofile/bp-xprofile-classes */
+			do_action( bp_get_the_profile_field_errors_action() );
+			
+		?>
+		<select <?php echo $this->get_edit_field_html_elements( $r ); ?> >
+			<?php
+			foreach ( $taxonomy_options as $taxonomy ) {
+				$selected = in_array($taxonomy->term_id,$values)?"selected":"";
+				echo "<option value='{$taxonomy->term_id}' {$selected}>" . $taxonomy->name . '</option>';
+			}
+			?>
 		</select>
-
 		<?php if ( ! bp_get_the_profile_field_is_required() ) : ?>
-
 			<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>[]' );">
 				<?php esc_html_e( 'Clear', 'buddypress' ); ?>
 			</a>
-
 		<?php endif; ?>
-	<?php
+
+		<?php
 	}
 
 	/**
@@ -191,13 +197,24 @@ class MY_AIA_BUDDYPRESS_TAXONOMY_FIELD extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		$r = bp_parse_args( $raw_properties, array(
 			'multiple' => 'multiple'
-		) ); ?>
+		) );
+		
+		//$taxonomy_name = bp_xprofile_get_meta( bp_the_profile_field_id(), 'field', 'taxonomy_name');
+		//$taxonomy_display_select = bp_xprofile_get_meta( $current_field->id, 'field', 'taxonomy_display_select');
+		//$taxonomy_options = get_taxonomy($taxonomy_name);
+		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php esc_html_e( 'Select', 'buddypress' ); ?></label>
-		<select <?php echo $this->get_edit_field_html_elements( $r ); ?>>
-			<?php bp_the_profile_field_options(); ?>
+		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"></label>
+			<select <?php echo $this->get_edit_field_html_elements( $r ); ?> >
+			<?php
+
+			/*foreach ( $taxonomy_options as $key=>$taxonomy ) {
+				$selected = $taxonomy_name==$key?"selected":"";
+				echo "<option name='{$key}' {$selected}>" . $taxonomy . '</option>';
+			}*/
+
+			?>
 		</select>
-
 		<?php
 	}
 
@@ -221,23 +238,35 @@ class MY_AIA_BUDDYPRESS_TAXONOMY_FIELD extends BP_XProfile_Field_Type {
 
 		$class            = $current_field->type != $type ? 'display: none;' : '';
 		$current_type_obj = bp_xprofile_create_field_type( $type );
+		
+		
+		$taxonomy_name = bp_xprofile_get_meta( $current_field->id, 'field', 'taxonomy_name');
+		$taxonomy_display_select = bp_xprofile_get_meta( $current_field->id, 'field', 'taxonomy_display_select');
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
 			<h3><?php esc_html_e( 'Please enter options for this Field:', 'buddypress' ); ?></h3>
 			<div class="inside">
 				<p>
-					<label for="taxonomy_name_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddypress' ); ?></label>
-					<select name="taxonomy_name_<?php echo esc_attr( $type ); ?>" id="taxonomy_name_<?php echo esc_attr( $type ); ?>" >
+					<label for="taxonomy_name"><?php esc_html_e( 'Taxnonomy'); ?>:</label>
+					<select name="taxonomy_name" id="taxonomy_name_<?php echo esc_attr( $type ); ?>" >
 						<?php
 
 						$taxonomies = get_taxonomies(); 
 						foreach ( $taxonomies as $key=>$taxonomy ) {
-							echo "<option name='{$key}'>" . $taxonomy . '</option>';
+							$selected = $taxonomy_name==$key?"selected":"";
+							echo "<option name='{$key}' {$selected}>" . $taxonomy . '</option>';
 						}
 
 						?>
 					</select>
+				</p>
+				
+				<p>
+					<label for="taxonomy_display_select"><?php esc_html_e( 'Toon als SELECT box? (anders normale taxonomy box)'); ?>:</label>
+					<input type="checkbox" name="taxonomy_display_select" id="taxonomy_display_select_<?php echo esc_attr( $type ); ?>" value="1" 
+					<?= $taxonomy_display_select==1?"checked":"" ?>
+						   />
 				</p>
 
 				<?php
@@ -253,5 +282,33 @@ class MY_AIA_BUDDYPRESS_TAXONOMY_FIELD extends BP_XProfile_Field_Type {
 		</div>
 
 		<?php
+	}
+	
+	/**
+	 * Allow field types to modify the appearance of their values.
+	 *
+	 * By default, this is a pass-through method that does nothing. Only
+	 * override in your own field type if you need to provide custom
+	 * filtering for output values.
+	 *
+	 * @since 2.1.0
+	 * @since 2.4.0 Added `$field_id` parameter.
+	 *
+	 * @param mixed $field_value Field value.
+	 * @param int   $field_id    ID of the field.
+	 *
+	 * @return mixed
+	 */
+	public static function display_filter( $field_value, $field_id = '' ) {
+		$newValue="";
+		$values = explode(', ', $field_value);
+		
+		// we have taxonomy ID, convert to slug, 
+		foreach ($values as $value)	 {
+			$term = get_term($value);
+			$newValue = sprintf('%s <a href="/members/?members_search=%s">%s</a>', $newValue, $value, $term->name);
+		}
+		
+		return $newValue;
 	}
 }

@@ -1,7 +1,8 @@
 <?php
 /*
- * @Package my-aia
- * @Author Michiel Keijts (c)2015
+ * @package	my-aia
+ * @author Michiel Keijts (c)2016
+ * @copyright (C) Normit 2016
  */
 
 // Define actions
@@ -18,10 +19,17 @@ add_action( 'init', 'my_aia_register_posttype_partner' );
 add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );
 
 // Used for user-taxonomy
-add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user', 3);
+add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user', 3);						// s
+add_action( 'bp_xprofile_get_field_types', "my_aia_bp_xprofile_get_field_types", 99, 1);	// show extra field types for BuddyPress
+add_action( 'xprofile_fields_saved_field', "my_aia_xprofile_fields_saved_field", 99, 1);
+
+// Used for adding Ninja Forms to EM_Booking formulier
+add_action( 'em_booking_validate'	, "my_aia_em_validate_ninja_form", 99, 2);			// add ninja form validation to EM Booking process
+add_action( 'em_booking_get_post'	, "my_aia_em_booking_add_from_post", 99, 2);		// add ninja form data to EM Booking object (Meta)
+add_action( 'em_booking_form_custom', "my_aia_em_bookings_show_ninja_form", 99, 1 );	// add ninja form to EM booking form
 
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 
 add_action ( 'init', 'MY_AIA::init');
 
-add_action ('nf_notification_types', 'my_aia_test_notification');
+//add_action ('nf_notification_types', 'my_aia_test_notification');

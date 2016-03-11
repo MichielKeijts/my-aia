@@ -38,5 +38,10 @@ include ( 'classes/my-aia-html-helper.php' );
 include ( 'classes/my-aia-view.php' );
 include ( 'classes/my-aia.php' );
 
+// Modifications: Load modifications for other plugins (add ons)
+include ( 'addons/buddypress/my-aia-buddypress.php' );
+include ( 'addons/events-manager/my-aia-events-manager.php' );
+include ( 'addons/ninja-forms/my-aia-ninja-forms.php' );
+
 // FINALLY: Initiate my-aia
 include ( 'include/my-aia-init.php' );

@@ -104,4 +104,4 @@ function lowercase_underscore ($name) {
 function lowercase_wordpressize ($name) {
 	return str_replace(array('_',' '), array('-','-'), strtolower($name));
 }
-
+?>

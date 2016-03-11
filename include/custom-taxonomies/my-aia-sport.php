@@ -47,6 +47,7 @@ function my_aia_register_taxonomy_sport() {
  * @param object $user The user object currently being edited.
  */
 function my_aia_edit_user( $user) {
+	return false;
 	return my_aia_edit_user_taxonomy_metabox($user);
 	/*add_meta_box(
 		'metabox_id',

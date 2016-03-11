@@ -5,7 +5,6 @@
  */
 
 // Define actions
-add_action( 'bp_xprofile_get_field_types', "my_aia_bp_xprofile_get_field_types", 99, 1);
 
 
 // init action in construct

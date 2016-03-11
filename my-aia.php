@@ -1,7 +1,10 @@
 <?php
 /*
  * @package MyAIA
+ * @author Michiel Keijts
+ * @copyright (C) 2016, Normit
  */
+
 /*
 Plugin Name: MyAIA
 Plugin URI:  http://michielkeijts.nl/my-aia

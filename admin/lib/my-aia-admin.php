@@ -38,7 +38,6 @@ class MY_AIA_ADMIN {
 	 * @return void
 	 */
 	public function settings() {
-		
 		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'admin/assets/css/admin.css', '', MY_AIA_VERSION );
 		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'admin/assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
 		
@@ -137,6 +136,10 @@ class MY_AIA_ADMIN {
 		echo "<br>Complete.";
 	}
 	
+	/**
+	 * Show Menu and more. Basically, most of the stuff adding callable actions
+	 * is declared here.
+	 */
 	public function show_menu() {
 		add_menu_page(
 			__('My AIA','my-aia'), 
@@ -153,6 +156,10 @@ class MY_AIA_ADMIN {
 		add_submenu_page('my-aia-admin',__('Sportweken','my-aia'),	__('Sportweken','my-aia'), 'my_aia_admin', 'my-aia-sportweken', 'MY_AIA_ADMIN::show_admin_menu' );
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
 		
+		// Enable Events Manager Addons
+		my_aia_events_manager_add_ninja_form_widget();
+		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
+		
 		
 		remove_action( 'admin_notices', 'update_nag', 3 );
 	}
@@ -168,14 +175,6 @@ class MY_AIA_ADMIN {
 		$this->controller->view->set($var, $val);
 	}
 }
-
-function test() {
-	//echo "dit is een text!";
-	
-	exit();
-}
-//add_action('wp_ajax_my_aia_admin_static_condition_save', "test");
-
 
 /**
  * Try and find a method of a function and call it. 

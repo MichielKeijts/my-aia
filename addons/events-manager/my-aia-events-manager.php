@@ -22,10 +22,10 @@
  */
 function my_aia_em_bookings_show_ninja_form(\EM_Event $EM_Event) {
 	if( function_exists( 'ninja_forms_display_form' ) ){ 
-		if (isset ($EM_Event->attributes['NINJA_FORM_ID'])) {
+		if (isset ($EM_Event->attributes['ninja_forms_form'])) {
 			// remove the nonce, as it will overwrite the EM Event nonce. Not desirable
 			remove_action("ninja_forms_display_after_open_form_tag", "nf_form_nonce");
-			ninja_forms_display_form( $EM_Event->attributes['NINJA_FORM_ID'] ); 
+			ninja_forms_display_form( $EM_Event->attributes['ninja_forms_form'] ); 
 		}
 	}
 }
@@ -154,4 +154,48 @@ function my_aia_ninja_forms_validate(){
 	}
 
 	return (bool) !$ninja_forms_processing->get_all_errors();
+}
+
+
+/**
+ * Adds the Ninja Forms widget to the booking form
+ */
+function my_aia_events_manager_add_ninja_form_widget() {
+	add_meta_box('em-event-attributes-ninja-form', __('Formulier','my-aia'), "ninja_forms_inner_custom_box", EM_POST_TYPE_EVENT, 'normal', 'high');
+}
+
+/**
+ * Display the contents of the form submission (meta content) of the booking,
+ * done by Ninja Forms. Saved in the form:
+ *	$Ninjaforms::field::ADMIN_LABEL  =  {data}
+ * 
+ * This is loaded from the $EM_Booking->booking_meta[$key] = $value
+ * 
+ * @param \EM_Booking $EM_Booking
+ */
+function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) {
+	$EM_Event = $EM_Booking->get_event();
+	
+	?>
+						</div>
+					</div> 	
+					<div class="stuffbox">
+						<h3>
+							<?php esc_html_e( 'Reserverings Details uit formulier (Ninja Formulier)', 'my-aia'); ?>
+						</h3>
+						<div class="inside">
+							<div class="em-booking-person-details">
+								<table class="em-form-fields">
+									<tr>
+										<td style="padding-left:10px; vertical-align: top;">
+											<table>
+												<?php foreach ($EM_Booking->booking_meta as $key=>$value): ?>
+												<tr><th><?php _e($key,'my-aia'); ?> : </th><td><?php echo $value; ?></td></tr>
+												<?php endforeach; ?>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</div>
+	<?php	// LEAVE the </div> (2x), as whe are hooked inside the <div class="stuffbox"> !	
 }

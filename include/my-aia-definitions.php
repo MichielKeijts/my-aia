@@ -23,3 +23,7 @@ define("MY_AIA_CAPABILITY_ADMIN", "my_aia_admin");
 
 // --- OTHER CONSTANTS
 define( "MY_AIA_REGISTERED_HOOKS" , 'my-aia-registered-hooks');
+
+
+// --- CSV DELIMITER
+define( "EM_CSV_DELIMITER", ";");	// For Events Manager

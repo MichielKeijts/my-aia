@@ -27,6 +27,8 @@ add_action( 'xprofile_fields_saved_field', "my_aia_xprofile_fields_saved_field",
 add_action( 'em_booking_validate'	, "my_aia_em_validate_ninja_form", 99, 2);			// add ninja form validation to EM Booking process
 add_action( 'em_booking_get_post'	, "my_aia_em_booking_add_from_post", 99, 2);		// add ninja form data to EM Booking object (Meta)
 add_action( 'em_booking_form_custom', "my_aia_em_bookings_show_ninja_form", 99, 1 );	// add ninja form to EM booking form
+add_action( 'init', 'my_aia_ninja_form_upload_field_register' );
+
 
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 

@@ -138,6 +138,7 @@ class MY_AIA_HTML_HELPER {
 				break;
 			case "checkbox":
 			case "hidden":
+			case "password":
 			case "text":
 				$element  .= sprintf('<input type="%s" name="%s" value="%s" class="%s" placeholder="">', $options['type'],$name, $value, $options['class'], $options['placeholder']);
 				break;

@@ -108,8 +108,7 @@ class MY_AIA_APP_CONTROLLER {
 		wp_enqueue_script( 'my-aia-admin-jquery-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/jquery_ui/jquery-ui.min.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'admin/assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'admin/assets/js/jstree.min.js', '', MY_AIA_VERSION );
-		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
-		
-		$this->set('title','Titel . _viewVars["titel"]');
+	
+		$this->set('title',$_viewVars["titel"]);
 	}
 }

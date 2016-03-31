@@ -50,6 +50,9 @@ class MY_AIA_PROCESSFLOW_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	public function before_render() {		
 		parent::before_render();
 		
+		// extra script
+		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-conditions.js', '', MY_AIA_VERSION );
+		
 		// setting the menu bar for this controller
 		$menu_bar = array(
 			'add' => __('Nieuw','my-aia'),

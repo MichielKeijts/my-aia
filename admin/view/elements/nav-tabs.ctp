@@ -6,9 +6,10 @@
 ?>
 <h2 class="nav-tab-wrapper">
 	<?php 
-		echo $this->Html->link(__('Algemeen'), array('controller'=>'page'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='page'?' nav-tab-active':''))); 
-		echo $this->Html->link(__('Procesflow'), array('controller'=>'processflow'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='processflow'?' nav-tab-active':'')));
-		echo $this->Html->link(__('Email'), array('controller'=>'email'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='email'?' nav-tab-active':'')));
+		echo $this->Html->link(__('Algemeen','my-aia'), array('controller'=>'page'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='page'?' nav-tab-active':''))); 
+		echo $this->Html->link(__('Procesflow','my-aia'), array('controller'=>'processflow'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='processflow'?' nav-tab-active':'')));
+		echo $this->Html->link(__('Email','my-aia'), array('controller'=>'email'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='email'?' nav-tab-active':'')));
+		echo $this->Html->link(__('Sync','my-aia'), array('controller'=>'sync'), array('class'=>'nav-tab'.($this->controller->get_controller_name()=='sync'?' nav-tab-active':'')));
 	?>
 	<span class="alignright by">
 		<a class="my-aia-link" href="http://normit.nl" target="_blank" title="Normit : <?php _e( 'Custom Webapplications with a heart', 'my-aia' ); ?>">

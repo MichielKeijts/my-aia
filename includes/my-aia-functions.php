@@ -104,4 +104,43 @@ function lowercase_underscore ($name) {
 function lowercase_wordpressize ($name) {
 	return str_replace(array('_',' '), array('-','-'), strtolower($name));
 }
+
+
+/*
+ * Saves and autocreates options
+ * @param array $fields 
+ * @param int	$method (default INPUT_POST)
+ * @return bool 
+ */
+function my_aia_save_options ($fields, $method=INPUT_POST) {
+	foreach ($fields as $var=>$params) {
+		if (!$param['autoload']) $autoload = FALSE;
+		else $autoload = TRUE;
+		
+		if ($value = filter_input($method, $var)) {
+			update_option('my_aia_'.$var, $value, $autoload);
+		}
+	}
+	return true;
+}
+
+
+/*
+ * Saves and autocreates options
+ * @param array $fields 
+ * @param int	$method (default INPUT_POST)
+ * @return array $data 
+ */
+function my_aia_get_options_data ($fields) {
+	$data = array();
+	foreach ($fields as $var=>$params) {
+		if (!isset($param['default'])) {
+			$data[$var] = get_option('my_aia_'.$var);
+		} else {
+			$data[$var] = get_option('my_aia_'.$var, $param['default']);
+		}
+	}
+	return $data;
+}
+
 ?>

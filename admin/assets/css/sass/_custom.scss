@@ -8,6 +8,9 @@ and open the template in the editor.
     Author     : Michiel
 */
 
+* {
+	box-sizing: border-box;
+}
 
 #my-aia-menu-bar {
 	background: #f3f3f3;
@@ -35,4 +38,92 @@ and open the template in the editor.
 	a.button {
 		margin-bottom:6px;
 	}
+}
+
+.sync_field{
+	float: left;
+	width: 100%;
+	padding: 2px;
+	&:hover {
+		background-color: #CFFFCF;
+	}
+}
+
+.field_connection{
+	float:left;
+	width:20%;
+	text-align: center;
+	padding-top:4px;
+}
+
+.remove {
+	float:left;
+	width:30px;
+	height:30px;
+}
+
+.droppable_field {
+	float:left;
+	width:37.5%;
+	border: 1px solid #66ff66;
+}
+.droppable_field.right {
+	background-color: #00e0ff;
+	border-color:#ff9900
+}
+
+//init
+.field_container .field,
+.droppable_field {
+	min-width:200px;
+	padding:8px;
+	min-height:24px;
+	border-radius: 4px;
+}
+
+.internal_fields .field,
+.droppable_field.field
+{
+	border-radius: 4px;
+	background-color: #F9F3B0;
+	border-color: #F9E711;
+}
+
+.droppable_field {
+	background-color: #F9F3B0;
+	border-color: #F9E711;
+}
+
+.external_fields .field,
+.droppable_field.right.field
+{
+	border-radius: 4px;
+	background-color: #CAF0FF;
+	border-color: #0085BA;
+}
+
+.droppable_field.right {
+	background-color: #CAF0FF;
+	border-color: #0085BA;
+}
+
+.ui-state-hover {
+	background-color: #00ff00 !important;
+}
+
+.right {
+	float:right;
+}
+
+.ui-draggable {
+	z-index:10000;
+}
+
+.glyphicon {
+	font-size: 24px;
+}
+
+.field_container .glyphicon {
+	font-size:16px;
+	cursor: move;
 }

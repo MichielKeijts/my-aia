@@ -160,8 +160,71 @@ function my_aia_ninja_forms_validate(){
 /**
  * Adds the Ninja Forms widget to the booking form
  */
-function my_aia_events_manager_add_ninja_form_widget() {
+function my_aia_events_manager_add_form_widget() {
+	// ninja form
 	add_meta_box('em-event-attributes-ninja-form', __('Formulier','my-aia'), "ninja_forms_inner_custom_box", EM_POST_TYPE_EVENT, 'normal', 'high');
+	
+	
+	// custom attributes form
+	//remove_meta_box('em-event-attributes', EM_POST_TYPE_EVENT, 'normal');
+	//add_meta_box('em-event-attributes', __('Attributes','my-aia'), "my_aia_events_manager_add_attributes_form", EM_POST_TYPE_EVENT, 'normal', 'high');
+}
+
+function my_aia_events_manager_add_attributes_form() {
+	$attributes = em_get_attributes();
+	
+	$fields = $attributes['fields'];
+	$values = $attributes['values'];
+	
+	// strip fields which are not used!
+	$displayed_fields = array('ninja_forms_form','sugar_id','')
+	
+	?>
+		<table class="form-data">
+			<thead>
+				<tr>
+					<td valign="top"><?= __('Attribute Name','my-aia'); ?></td>
+					<td valign="top"><?= __('Attribute Value','my-aia'); ?></td>
+				</tr>
+			</thead>
+			<tbody>
+	<?php
+		foreach ($fields as $field):
+			switch ($field['type']) {
+				case "%b":
+					?>
+					<tr>
+						<td><label for="<?= $field['name']; ?>"><?= $field['label']; ?>:</label></td>
+						<td><input type='checkbox' id="<?= $field['name']; ?>" name="em_attributes[<?= $field['name']; ?>" <?= $values[	$field['name']	]>0?'checked':''; ?>  /></td>
+					</tr>
+					<?php
+					break;
+				case "%s":
+				default:
+					?>
+					<tr>
+						<td><label for="<?= $field['name']; ?>"><?= $field['label']; ?>:</label></td>
+						<td><input type='checkbox' name="em_attributes[<?= $field['name']; ?>]" value="<?= $values['voorbereidings_event']; ?>" /></td>
+					</tr>
+					<?php
+			}
+		endforeach; // loop over $fields
+	?>
+			</tbody>
+		</table>
+				
+	<?php 
+	return true;
+}
+
+/**
+ * Get the default (init) set of the input field
+ * 
+ * @param type $id
+ * @return array (type: .. ,name:..
+ */
+function my_aia_events_manager_get_default_field($id) {
+	
 }
 
 /**

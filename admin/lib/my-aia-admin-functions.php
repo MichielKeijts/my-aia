@@ -37,3 +37,28 @@ function my_aia_get_buddy_press_xprofile_fields($return_grouped = FALSE) {
 	
 	return $list_of_fields;	
 }
+
+
+/**
+ * Get User by Meta Key / Value 
+ * @param type $meta_key
+ * @param type $meta_value
+ * @return type
+ */
+function get_user_by_meta_data($meta_key, $meta_value, $return_all = FALSE) {
+	// get al the users by key/value
+	$user_query = new WP_User_Query(
+		array(
+			'meta_key'	  =>	$meta_key,
+			'meta_value'	=>	$meta_value
+		)
+	);
+
+	// Get the results from the query
+	$users = $user_query->get_results();
+
+	if (!is_array($users)) 
+		return false; // no users found
+	
+	return $return_all ? $users:$users[0];
+}

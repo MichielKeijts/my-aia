@@ -7075,6 +7075,11 @@ and open the template in the editor.
 }
 
 /* line 15, sass/_custom.scss */
+.rtm-setting-container {
+  width: 100%;
+}
+
+/* line 19, sass/_custom.scss */
 #my-aia-menu-bar {
   background: #f3f3f3;
   border-bottom: 1px solid #dedede;
@@ -7083,41 +7088,41 @@ and open the template in the editor.
   padding: 10px 10px 10px 10px;
   min-height: 28px;
 }
-/* line 23, sass/_custom.scss */
+/* line 27, sass/_custom.scss */
 #my-aia-menu-bar ul {
   margin: 0px;
 }
-/* line 26, sass/_custom.scss */
+/* line 30, sass/_custom.scss */
 #my-aia-menu-bar ul > li {
   float: left;
   margin: 0px 6px;
 }
 
-/* line 32, sass/_custom.scss */
+/* line 36, sass/_custom.scss */
 .sortable {
   cursor: pointer;
 }
-/* line 33, sass/_custom.scss */
+/* line 37, sass/_custom.scss */
 .sortable :active {
   cursor: move;
 }
-/* line 38, sass/_custom.scss */
+/* line 42, sass/_custom.scss */
 .sortable a.button {
   margin-bottom: 6px;
 }
 
-/* line 43, sass/_custom.scss */
+/* line 47, sass/_custom.scss */
 .sync_field {
   float: left;
   width: 100%;
   padding: 2px;
 }
-/* line 47, sass/_custom.scss */
+/* line 51, sass/_custom.scss */
 .sync_field:hover {
   background-color: #CFFFCF;
 }
 
-/* line 52, sass/_custom.scss */
+/* line 56, sass/_custom.scss */
 .field_connection {
   float: left;
   width: 20%;
@@ -7125,36 +7130,39 @@ and open the template in the editor.
   padding-top: 4px;
 }
 
-/* line 59, sass/_custom.scss */
+/* line 63, sass/_custom.scss */
 .remove {
   float: left;
   width: 30px;
   height: 30px;
 }
 
-/* line 65, sass/_custom.scss */
+/* line 69, sass/_custom.scss */
 .droppable_field {
   float: left;
   width: 37.5%;
   border: 1px solid #66ff66;
 }
 
-/* line 70, sass/_custom.scss */
+/* line 74, sass/_custom.scss */
 .droppable_field.right {
   background-color: #00e0ff;
   border-color: #ff9900;
 }
 
-/* line 76, sass/_custom.scss */
+/* line 80, sass/_custom.scss */
 .field_container .field,
 .droppable_field {
   min-width: 200px;
   padding: 8px;
   min-height: 24px;
   border-radius: 4px;
+  overflow: hidden;
+  font-size: 10px;
+  max-height: 60px;
 }
 
-/* line 84, sass/_custom.scss */
+/* line 91, sass/_custom.scss */
 .internal_fields .field,
 .droppable_field.field {
   border-radius: 4px;
@@ -7162,13 +7170,13 @@ and open the template in the editor.
   border-color: #F9E711;
 }
 
-/* line 92, sass/_custom.scss */
+/* line 99, sass/_custom.scss */
 .droppable_field {
   background-color: #F9F3B0;
   border-color: #F9E711;
 }
 
-/* line 97, sass/_custom.scss */
+/* line 104, sass/_custom.scss */
 .external_fields .field,
 .droppable_field.right.field {
   border-radius: 4px;
@@ -7176,33 +7184,33 @@ and open the template in the editor.
   border-color: #0085BA;
 }
 
-/* line 105, sass/_custom.scss */
+/* line 112, sass/_custom.scss */
 .droppable_field.right {
   background-color: #CAF0FF;
   border-color: #0085BA;
 }
 
-/* line 110, sass/_custom.scss */
+/* line 117, sass/_custom.scss */
 .ui-state-hover {
   background-color: #00ff00 !important;
 }
 
-/* line 114, sass/_custom.scss */
+/* line 121, sass/_custom.scss */
 .right {
   float: right;
 }
 
-/* line 118, sass/_custom.scss */
+/* line 125, sass/_custom.scss */
 .ui-draggable {
   z-index: 10000;
 }
 
-/* line 122, sass/_custom.scss */
+/* line 129, sass/_custom.scss */
 .glyphicon {
   font-size: 24px;
 }
 
-/* line 126, sass/_custom.scss */
+/* line 133, sass/_custom.scss */
 .field_container .glyphicon {
   font-size: 16px;
   cursor: move;

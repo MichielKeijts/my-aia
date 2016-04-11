@@ -344,14 +344,14 @@ class SoapSugar {
 	 * @param string $srchQuery
 	 * @return type 
 	 */
-	function searchCommon($srchQuery,$module="Contacts",$max_results=30) {
+	function searchCommon($srchQuery,$module="Contacts", $max_results=30, $offset=0, $order_by='' ) {
 		$response=$this->SOAP->__soapCall('get_entry_list', 
 				Array(
 					'session'=>$this->IdKey,
 					'module_name'=>$module,
 					'query'=>$srchQuery,
-					'order_by'=>'',
-					'offset'=>0,
+					'order_by'=>$order_by,
+					'offset'=>$offset,
 					'select_fields'=>'*',
 					'max_results'=>$max_results,
 					'deleted'=>0)

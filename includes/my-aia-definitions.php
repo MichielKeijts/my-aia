@@ -20,10 +20,12 @@ define('MY_AIA_POST_TYPE_PARTNER_SLUG','partner');
 
 // -- CAPABILITY --
 define("MY_AIA_CAPABILITY_ADMIN", "my_aia_admin");
+define("MY_AIA_DEFAULT_ROLE_NEW_USER", "avonturier");
 
 // --- OTHER CONSTANTS
 define( "MY_AIA_REGISTERED_HOOKS" , 'my-aia-registered-hooks');
-
+define( "FROM_CRM_TO_WORDPRESS", 1 );
+define( "FROM_WORDPRESS_TO_CRM", 2 );
 
 // --- CSV DELIMITER
 define( "EM_CSV_DELIMITER", ";");	// For Events Manager

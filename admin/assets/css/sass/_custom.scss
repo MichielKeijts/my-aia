@@ -12,6 +12,10 @@ and open the template in the editor.
 	box-sizing: border-box;
 }
 
+.rtm-setting-container {
+	width:100%;
+}
+
 #my-aia-menu-bar {
 	background: #f3f3f3;
 	border-bottom: 1px solid #dedede;
@@ -79,6 +83,9 @@ and open the template in the editor.
 	padding:8px;
 	min-height:24px;
 	border-radius: 4px;
+	overflow: hidden;
+	font-size:10px;
+	max-height:60px;
 }
 
 .internal_fields .field,

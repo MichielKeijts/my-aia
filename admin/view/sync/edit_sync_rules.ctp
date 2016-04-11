@@ -16,7 +16,7 @@
 					<div class="panel panel-success">
 						<div class="panel-heading"><h3><?= __("Sync Connection",'my-aia'); ?> <button type="button" class="button button-primary" id="add_sync_rule">Nieuwe Sync Regel</button></h3></div>
 						<div class="panel-body">
-							<ul id="sync_fields" data-type="profile_sync">
+							<ul id="sync_fields" data-type="<?php echo $sync_type; ?>_sync">
 								<?php if (is_array($data)) foreach ($data as $element): ?>
 								<li class="sync_field">
 									<div class="remove"><i class="glyphicon glyphicon-remove-circle"></i></div>

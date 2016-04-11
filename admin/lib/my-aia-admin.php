@@ -157,7 +157,8 @@ class MY_AIA_ADMIN {
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
 		
 		// Enable Events Manager Addons
-		my_aia_events_manager_add_ninja_form_widget();
+		my_aia_events_manager_add_form_widget();
+		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
 		
 		

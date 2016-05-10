@@ -196,6 +196,9 @@ class MY_AIA_VIEW {
 		
 		// set the variables
 		extract($this->_viewVars);
+		if (!empty($vars)) {
+			extract($vars);	// override or set temp variables for element
+		}
 		
 		if (ob_get_length())
 			$_current_output=ob_get_clean();

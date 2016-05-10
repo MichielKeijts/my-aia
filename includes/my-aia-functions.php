@@ -36,7 +36,7 @@ function my_aia_set_mass_roles( $roles, $capabilities = array()) {
 }
 
 //Register the Upload field
-add_action('init', 'my_custom_field_register');
+/*add_action('init', 'my_custom_field_register');
 function my_custom_field_register(){
 	$args = array(
 		'name' => 'Mijn Custom Field',
@@ -76,7 +76,7 @@ function my_custom_field_register(){
 
 	if (function_exists('ninja_forms_register_field')) return ninja_forms_register_field('_upload', $args);
 	return false;
-}
+}*/
 
 function my_aia_test_notification ($nf_notification_types) {
 	$nf_notification_types['custom_post'] = require_once (MY_AIA_PLUGIN_DIR . 'include/ninja-forms/custom-post-notification.php');

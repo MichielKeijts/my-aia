@@ -13,6 +13,7 @@
 // *******************************************
 
 include_once("definitions_sugar_manyware.php");
+include_once("iso3166.php");
 
 class SoapSugar {
 	private $debug="";
@@ -352,7 +353,7 @@ class SoapSugar {
 					'query'=>$srchQuery,
 					'order_by'=>$order_by,
 					'offset'=>$offset,
-					'select_fields'=>'*',
+					'select_fields'=>'aia_ministry_deelnames.*, aia_ministry_deelnames_cstm.*',
 					'max_results'=>$max_results,
 					'deleted'=>0)
 				);
@@ -399,15 +400,15 @@ class SoapSugar {
         
 	/**
 	 * Check alle fouten in Manyware: no UTF8 string return
-	 *
+	 * Also: Trim to remove spaces in the conversion
 	 * @param string $input
-	 * @return string
+	 * @return string trim($input)
 	 */
 	function correctUTF8($input) {
 		if (mb_check_encoding($input, 'UTF-8'))
-			return $input;
+			return trim($input);
 		else 
-			return utf8_encode($input);
+			return utf8_encode(trim($input));
 	}
 
 	/**

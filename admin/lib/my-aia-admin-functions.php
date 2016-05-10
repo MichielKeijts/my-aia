@@ -46,7 +46,8 @@ function my_aia_get_buddy_press_xprofile_fields($return_grouped = FALSE) {
  * @return type
  */
 function get_user_by_meta_data($meta_key, $meta_value, $return_all = FALSE) {
-	// get al the users by key/value
+	wp_reset_query();	
+	// get al the users by key/value	
 	$user_query = new WP_User_Query(
 		array(
 			'meta_key'	  =>	$meta_key,
@@ -61,4 +62,18 @@ function get_user_by_meta_data($meta_key, $meta_value, $return_all = FALSE) {
 		return false; // no users found
 	
 	return $return_all ? $users:$users[0];
+}
+
+
+/**
+ * Get a Google Geocode Result 
+ * Maps API implementation See https://console.developers.google.com/apis/api/geocoding_backend/usage?project=mijn-athletesinaction&authuser=1&duration=PT1H
+ * @param mixed $data
+ * @return mixed Array(result) | FALSE
+ */
+function get_google_geocode_result($data) {
+	include_once MY_AIA_PLUGIN_DIR . 'classes/crmsync/class_google_geocode.php';
+	
+	$geocoder = new class_google_geocode();
+	return $geocoder->get_result($data);
 }

@@ -23,12 +23,84 @@
 function my_aia_em_bookings_show_ninja_form(\EM_Event $EM_Event) {
 	if( function_exists( 'ninja_forms_display_form' ) ){ 
 		if (isset ($EM_Event->attributes['ninja_forms_form'])) {
-			// remove the nonce, as it will overwrite the EM Event nonce. Not desirable
-			remove_action("ninja_forms_display_after_open_form_tag", "nf_form_nonce");
-			ninja_forms_display_form( $EM_Event->attributes['ninja_forms_form'] ); 
+			// Ok, now ready to display form, but check if person is not already attending
+			//if ($EM_Event->get_bookings()->has_booking() === FALSE) {
+				// remove the nonce, as it will overwrite the EM Event nonce. Not desirable
+				remove_action("ninja_forms_display_after_open_form_tag", "nf_form_nonce");
+				ninja_forms_display_form( $EM_Event->attributes['ninja_forms_form'] ); 
+			//}
 		}
 	}
 }
+
+
+/**
+ * Parse and display a ninja form, to edit the booking information
+ * @param \EM_Booking $EM_Booking
+ * @global Ninja_Forms_Processing $ninja_forms_processing
+ */
+function my_aia_em_bookings_show_ninja_form_from_booking(\EM_Booking $EM_Booking) {
+	global $EM_Booking, $ninja_forms_processing;
+	$EM_Event = $EM_Booking->get_event();
+	
+	// set the default value 
+	add_action('ninja_forms_field', 'my_aia_em_set_ninja_forms_field_default_value', 10, 2); 
+	
+	// forward to booking form
+	$extra_style = "";
+	if (filter_input(INPUT_POST, '_ninja_forms_display_submit') === FALSE) {
+		$extra_style="style='display: none;'";
+	}
+	echo "<div class='em-booking-single-edit' {$extra_style}>";
+	my_aia_em_bookings_show_ninja_form($EM_Event);
+	echo "</div>";
+	
+	if (isset($ninja_forms_processing) && is_a($ninja_forms_processing, "Ninja_Forms_Processing") && count($ninja_forms_processing->get_all_errors()) > 0) {
+		echo '<script>jQuery(function ($) {
+			$(".em-booking-single-info").hide();	
+			$(".em-booking-single-edit").show();;
+			$(".em-booking-single-status-info").hide();
+			$(".em-booking-single-status-edit").show();
+		});
+		</script>';
+	}
+}
+
+/**
+ * Function to remove a ninja_form. In post_meta of all posts a ninja_forms_form can be located
+ * When this is the case, we need to remove the ninja_form, when post_type is EM_POST_TYPE
+ * @param \EM_Tickets $ticket
+ * @param \EM_Bookings $booking
+ * @return \EM_Bookings
+ */
+function my_aia_em_bookings_remove_ninja_form(\EM_Tickets $ticket, \EM_Bookings $booking) {
+	global $ninja_forms_append_page_form_id;
+	
+	$ninja_forms_append_page_form_id=FALSE;
+
+	return $ticket;
+}
+
+/**
+ * Function reads user data from the booking form / meta and sets the default_value
+ * of the ninja forms field
+ * @param array $data
+ * @param int $field_id
+ * @global \EM_Booking $EM_Booking
+ * @return array modified $data
+ */
+function my_aia_em_set_ninja_forms_field_default_value($data, $field_id) {
+	global $EM_Booking;
+	
+	// EM booking meta is always saved as $key = $data['admin_label']
+	if (array_key_exists($data['admin_label'], $EM_Booking->booking_meta)) {
+		$data[ 'default_value' ] = $EM_Booking->booking_meta[	$data[ 'admin_label' ]	];
+	}
+	
+	return $data;
+}
+
+
 
 
 /**
@@ -162,22 +234,31 @@ function my_aia_ninja_forms_validate(){
  */
 function my_aia_events_manager_add_form_widget() {
 	// ninja form
-	add_meta_box('em-event-attributes-ninja-form', __('Formulier','my-aia'), "ninja_forms_inner_custom_box", EM_POST_TYPE_EVENT, 'normal', 'high');
+	add_meta_box('em-event-attributes-ninja-form', __('Aanmeldformulier','my-aia'), "ninja_forms_inner_custom_box", EM_POST_TYPE_EVENT, 'normal', 'high');
 	
 	
 	// custom attributes form
-	//remove_meta_box('em-event-attributes', EM_POST_TYPE_EVENT, 'normal');
-	//add_meta_box('em-event-attributes', __('Attributes','my-aia'), "my_aia_events_manager_add_attributes_form", EM_POST_TYPE_EVENT, 'normal', 'high');
+	remove_meta_box('em-event-attributes', EM_POST_TYPE_EVENT, 'normal');
+	add_meta_box('em-event-attributes2', __('Attributes','my-aia'), "my_aia_events_manager_add_attributes_form", EM_POST_TYPE_EVENT, 'normal', 'high');
 }
 
 function my_aia_events_manager_add_attributes_form() {
+	global $EM_Event, $wp_meta_boxes;
+	
+	// remove the old box, as we are called before!
+	// remove_meta_box('em-event-attributes', EM_POST_TYPE_EVENT, 'normal');
+	// above not working, is in sorted part, not being removed by remove_meta_box(!)
+	if (array_key_exists('em-event-attributes', $wp_meta_boxes[EM_POST_TYPE_EVENT]['normal']['sorted'])) {
+		unset($wp_meta_boxes[EM_POST_TYPE_EVENT]['normal']['sorted']['em-event-attributes']);
+	}
+	
 	$attributes = em_get_attributes();
 	
-	$fields = $attributes['fields'];
+	$fields = $attributes['names'];
 	$values = $attributes['values'];
 	
 	// strip fields which are not used!
-	$displayed_fields = array('ninja_forms_form','sugar_id','')
+	$displayed_fields = array('ninja_forms_form')
 	
 	?>
 		<table class="form-data">
@@ -189,13 +270,21 @@ function my_aia_events_manager_add_attributes_form() {
 			</thead>
 			<tbody>
 	<?php
-		foreach ($fields as $field):
+		foreach ($fields as $_field):
+			if (in_array($_field, $displayed_fields)) continue; // step over already displayed fields..
+			$field = my_aia_events_manager_get_default_field($_field);
+		
+			// get value (as usually is an array)
+			$value = array_key_exists($field['id'], $EM_Event->event_attributes) ? esc_attr($EM_Event->event_attributes[$field['id']], ENT_QUOTES):'';
+			//$value = is_array($values[	$field['id'] ]) ?  reset($values[ $field['id'] ]) : $values[$field['id']];
+			if (!$value) $value="";
+			
 			switch ($field['type']) {
 				case "%b":
 					?>
 					<tr>
 						<td><label for="<?= $field['name']; ?>"><?= $field['label']; ?>:</label></td>
-						<td><input type='checkbox' id="<?= $field['name']; ?>" name="em_attributes[<?= $field['name']; ?>" <?= $values[	$field['name']	]>0?'checked':''; ?>  /></td>
+						<td><input type='checkbox' id="<?= $field['name']; ?>" name="em_attributes[<?= $field['name']; ?>" <?= $value>0?'checked':''; ?>  /></td>
 					</tr>
 					<?php
 					break;
@@ -204,7 +293,7 @@ function my_aia_events_manager_add_attributes_form() {
 					?>
 					<tr>
 						<td><label for="<?= $field['name']; ?>"><?= $field['label']; ?>:</label></td>
-						<td><input type='checkbox' name="em_attributes[<?= $field['name']; ?>]" value="<?= $values['voorbereidings_event']; ?>" /></td>
+						<td><input type='text' name="em_attributes[<?= $field['name']; ?>]" value="<?= $value; ?>" /></td>
 					</tr>
 					<?php
 			}
@@ -218,13 +307,13 @@ function my_aia_events_manager_add_attributes_form() {
 }
 
 /**
- * Get the default (init) set of the input field
+ * Get the default (init) set of the input field.
  * 
- * @param type $id
+ * @param string $field Fieldname
  * @return array (type: .. ,name:..
  */
-function my_aia_events_manager_get_default_field($id) {
-	
+function my_aia_events_manager_get_default_field($field) {
+	return array('type'=>'%s','id'=>$field,'name'=>$field,'label'=>$field);
 }
 
 /**

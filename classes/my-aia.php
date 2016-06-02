@@ -68,7 +68,7 @@ class MY_AIA {
 		}
 	
 		$wp_rewrite->flush_rules();
-		
+
 		// register hooks for process flow
 		self::register_hooks();
 	}
@@ -77,6 +77,7 @@ class MY_AIA {
 	 * Register the hooks for the process
 	 */
 	static function register_hooks() {
+		add_action( 'wp_ajax_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);					// AJAX hook to get Events 	
 		add_option('my-aia-registered-hooks', array('save_post'));
 		add_option('my-aia-hook-save_post');
 		update_option('my-aia-hook-save_post', 
@@ -184,6 +185,22 @@ class MY_AIA {
 	// random test function
 	static function get_partner () {
 		return 'partner';
+	}
+	
+	/**
+	 * Ajax Call 
+	 */
+	static function my_aia_ajax_call() {
+		include_once MY_AIA_PLUGIN_DIR . 'addons/events-manager/classes/my-aia-events-query.php';
+		
+		
+		if (filter_input(INPUT_GET,'post_type') === 'event' || 
+			filter_input(INPUT_POST,'post_type') === 'event') {
+			
+			header("Access-Control-Allow-Origin: *");
+			
+			MY_AIA_EVENTS_QUERY::call_function();
+		}
 	}
 }
 

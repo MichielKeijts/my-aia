@@ -169,7 +169,11 @@ class SoapSugar {
 	}
         
 	/**
-	 * 
+	 * Update a module with name $module in SugarCRM.
+	 * using set_entry
+	 * @param array $data array('name'=> <name>, 'value'=> <value>)
+	 * @param string $module default Email
+	 * @return string UUID
 	 */
 	function updateModule($data, $module='Email') {
 		// UTF - 8 Failsafe
@@ -215,7 +219,7 @@ class SoapSugar {
 		} else 
 			return false;
 	}
-
+	
 	/*function createPartnership() {
 		$table='aia_partnership';
 
@@ -276,7 +280,7 @@ class SoapSugar {
 					'query'=>$srchQuery,
 					'order_by'=>'',
 					'offset'=>0,
-					'select_fields'=>$this->converter->manyware_xml_col,
+					'select_fields'=>'*',//$this->converter->manyware_xml_col,
 					'max_results'=>15,
 					'deleted'=>0)
 				);

@@ -75,7 +75,7 @@ function my_aia_create_crm_sync_table() {
 			`id` BIGINT NOT NULL AUTO_INCREMENT,
 			`wp_id` BIGINT NOT NULL DEFAULT 0,
 			`crm_id` VARCHAR(36) NOT NULL DEFAULT 0 COMMENT 'ID of the CRM Object (or 0 if not existing, thus creating)',
-			`approved` VARCHAR(255) NULL,
+			`approved` TINYINT(1) NULL DEFAULT 0,
 			`approved_by` BIGINT NULL,
 			`done` TINYINT NOT NULL DEFAULT 0,
 			`from_object` VARCHAR(255) NULL COMMENT 'from table (',

@@ -351,3 +351,51 @@ function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) 
 							</div>
 	<?php	// LEAVE the </div> (2x), as whe are hooked inside the <div class="stuffbox"> !	
 }
+
+
+/**
+ * Override the display function for the User Profile in the Events Manager booking info page.
+ * @param EM_Person $person
+ * @return string HTML output
+ */
+function my_aia_events_manager_profile_display_summary($output, $person) {
+	$no_user = get_option('dbem_bookings_registration_disable') && $person->ID == get_option('dbem_bookings_registration_user');
+	
+	// get XProfile Data From BuddyPress
+	bp_has_profile(array('user_id' => $person->ID)); // intiate
+	
+	
+	ob_start();
+	?>
+	<table class="em-form-fields">
+		<tr>
+			<td><?php echo get_avatar($person->ID); ?></td>
+			<td style="padding-left:10px; vertical-align: top;">
+				<table>
+					<?php if( $no_user ): ?>
+					<tr><th><?php _e('Name','events-manager'); ?> : </th><th><?php echo $person->get_name(); ?></th></tr>
+					<?php else: ?>
+					<tr><th><?php _e('Name','events-manager'); ?> : </th><th><a href="<?php echo $person->get_bookings_url(); ?>"><?php echo $person->get_name(); ?></a></th></tr>
+					<?php endif; ?>
+					<tr><th><?php _e('Email','events-manager'); ?> : </th><td><?php echo $person->user_email; ?></td></tr>
+				</table>
+				
+				
+				<?php while ( bp_profile_groups() ) : bp_the_profile_group();?>
+				<h4><?php bp_the_profile_group_name(); ?></h4>
+				<table>
+					<?php while ( bp_profile_fields() ) : bp_the_profile_field(); ?>
+						<tr>
+							<th><?= __(bp_get_the_profile_field_name()); ?> : </th>
+							<td><?= strip_tags(bp_get_the_profile_field_value()); ?></td>
+						</tr>
+						<?php do_action( 'bp_profile_field_item' ); ?>
+					<?php endwhile; ?>
+				</table>
+				<?php endwhile; ?>
+			</td>
+		</tr>
+	</table>
+	<?php
+	return ob_get_clean();
+}

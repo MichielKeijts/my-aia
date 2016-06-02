@@ -7,4 +7,5 @@
 
 
 // include other files for Ninja Forms
-include_once 'fields/my-aia-ninja-form-upload-field.php' ;
+include_once 'fields/my-aia-ninja-form-upload-field.php';
+include_once 'fields/my-aia-ninja-form-term-field.php';

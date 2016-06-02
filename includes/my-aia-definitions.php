@@ -26,6 +26,10 @@ define("MY_AIA_DEFAULT_ROLE_NEW_USER", "avonturier");
 define( "MY_AIA_REGISTERED_HOOKS" , 'my-aia-registered-hooks');
 define( "FROM_CRM_TO_WORDPRESS", 1 );
 define( "FROM_WORDPRESS_TO_CRM", 2 );
+define( "MY_AIA_SYNC_DATES", 'my-aia-sync-dates');
+
+// --- BUDDYPRESS 
+define ("BUDDYPRESS_TABLE_NAME_DATA", 'bp_xprofile_data');
 
 // --- CSV DELIMITER
 define( "EM_CSV_DELIMITER", ";");	// For Events Manager

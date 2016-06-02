@@ -16,3 +16,5 @@ sugarcrm::Contacts::email1
 sugarcrm::Contacts::phone_home
 sugarcrm::Contacts::phone_mobile
 sugarcrm::Contacts::paspoortnr_c
+sugarcrm::Contacts::debiteurnr_c
+sugarcrm::Contacts::manyware_regnr_c

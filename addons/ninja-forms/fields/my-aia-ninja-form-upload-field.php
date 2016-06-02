@@ -4,8 +4,8 @@
  * @copyright (c) 2016, Michiel Keijts
  */
 
-function my_aia_ninja_form_enque_scripts() {
-	my_aia_ninja_form_enque_styles();
+function my_aia_ninja_forms_upload_field_enque_scripts() {
+	my_aia_ninja_forms_upload_field_enque_styles();
 	wp_enqueue_script('jquery-ui-widget', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/vendor/jquery.ui.widget.js', array('jquery','jquery-ui-core'));
 	
 	wp_enqueue_script('blueimp-load-image', 'http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js',array('jquery','jquery-ui-core'));
@@ -20,13 +20,13 @@ function my_aia_ninja_form_enque_scripts() {
 	// wp_enqueue_script('jquery-file-upload', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/main.js', array('jquery','jquery-ui-core'));
 }
 
-function my_aia_ninja_form_enque_styles() {
+function my_aia_ninja_forms_upload_field_enque_styles() {
 	wp_enqueue_style('bootstrap', 'http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css', '', MY_AIA_VERSION );
 	wp_enqueue_style('jquery-fileupload-style', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/css/style.css', '', MY_AIA_VERSION );
 	wp_enqueue_style('jquery-fileupload', MY_AIA_PLUGIN_URL .		'vendor/jQuery-File-Upload/css/jquery.fileupload.css', '', MY_AIA_VERSION );
 }
 
-function my_aia_ninja_form_upload_field_register(){
+function my_aia_ninja_forms_upload_field_register(){
 	$args = array(
 		'name' => 'File Upload',
 		'edit_options' => array(
@@ -59,8 +59,8 @@ function my_aia_ninja_form_upload_field_register(){
 	);
 
 	ninja_forms_register_field('upload', $args);
-	add_action('wp_enqueue_scripts', 'my_aia_ninja_form_enque_scripts');
-	add_action('wp_enqueue_styles', 'my_aia_ninja_form_enque_styles');
+	add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
+	add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
 }
 
 /**

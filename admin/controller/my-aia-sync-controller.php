@@ -42,19 +42,35 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	private $manyware;
 	
 	/**
+	 * Sync dates ($this->get_sync_dates)
+	 * @var array
+	 */
+	private $sync_dates;
+	
+	
+	/**
+	 * Start time in seconds
+	 * @var int (seconds)
+	 */
+	private $start_time;
+	
+	/**
 	 * Before Filter function
 	 * called before most of the wordpress logic happens.
 	 * - Add the AJAX save over here
 	 */
 	public function before_filter(){
 		add_action( 'wp_ajax_my_aia_admin_sync_save', array($this, 'sync_save'), 1);	
+		add_action( 'wp_ajax_my_aia_admin_sync_start', array($this, 'do_sync'), 1);	
 	}
 	
 	public function before_render() {
 		// setting the menu bar for this controller
 		$menu_bar = array(
-			'index' => __('Overzicht'),
-			'settings' => __('Instellingen','my-aia'),			
+			'edit_profile' => __('Sync Instellingen Profiel', 'my-aia'),
+			'edit_events' => __('Sync Instellingen Events', 'my-aia'),
+			'edit_registrations' => __('Sync Instellingen Registraties', 'my-aia'),
+			'sync' => __('Handmatige Synchronisatie','my-aia'),
 		);
 		
 		$this->set('menu_bar', $menu_bar);
@@ -65,9 +81,15 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 		parent::before_render();
 	}
 	
-	public function index() {
-		
-	}
+	/**
+	 * Index function, just a function with leads to the various settings one can do 
+	 */
+	public function index() {}
+	
+	/**
+	 * Main non-cron Sync Function (auto rendererd)
+	 */
+	public function sync() {}// auto rendered
 	
 	/**
 	 * function use to update the profile fields sync with sugar
@@ -141,12 +163,20 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 		$fields = array_keys(get_user_meta($current_user->ID));
 		
 		
+		$buddypress_fields=my_aia_get_buddy_press_xprofile_fields(FALSE);
+		
+		$internal_fields = array();
+		// create form: <TYPE>::<ID>::<READABLE NAME>
+		$internal_fields[] = 'WP::user_email::user_email';
+		$internal_fields[] = 'UserMeta::sugar_id::sugar_id';
+		foreach ($buddypress_fields as $id=>$field) $internal_fields[] = 'BuddyPress::' . $id . '::' . $field;
+		
 		// get all booking meta fields --> NinjaForms Fields (admin label)
 		// get all fields, with an admin label not empty. Such fields can be
 		// used for the sync to CRM
 		$nf_fields = ninja_forms_get_all_fields();
 		
-		$internal_fields = array();
+		//$internal_fields = array();
 		// create form: <TYPE>::<ID>::<READABLE NAME>
 		foreach (em_get_booking()->fields as $field=>$val) $internal_fields[] = 'EM::BOOKING::' . $field;	// EM_Booking fields
 		foreach ($nf_fields as $field) {
@@ -154,9 +184,13 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 				$internal_fields[] = 'EM::BOOKING_META::' . $field['data']['admin_label'];	// EM_Event fields
 			}
 		}
+		
+		// add date modified field
+		$internal_fields[] = 'EM::BOOKING_META::sugar_date_modified';	// EM_Event fields
 	
 		// get EXTERNAL (sugarcrm) fields
 		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'includes/definitions/my-aia-sugacrm-registration-fields.txt');
+		$sugar_fields_string .= "\r\n".file_get_contents(MY_AIA_PLUGIN_DIR . 'includes/definitions/my-aia-sugacrm-contact-fields.txt');
 		$sugar_fields = explode("\r\n",$sugar_fields_string);
 	
 		$this->set('internal_fields', $internal_fields);
@@ -169,7 +203,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 		$this->render('edit_sync_rules');
 	}
 	
-	public function sync() {
+	public function test_sync() {
 		include_once(MY_AIA_PLUGIN_DIR . 'classes/crmsync/class_soap_sugar.php');
 		
 		// create a sugar Client
@@ -242,17 +276,34 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 				'pass' => get_option('my_aia_sugar_user_password','')
 			)
 		);
+		// set sync dates, the start date from which syncing is needed
+		$this->sync_dates = $this->get_sync_dates();
+		$items = 0; // number of updates
 		
+		
+		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		//$this->sync_profiles_sugar_to_wordpress();
+		//$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
-		$this->sync_events_sugar_to_wordpress();
+		//$items += $this->sync_events_sugar_to_wordpress($this->sync_dates['sync_events_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Registration Data
-		$this->sync_registrations_sugar_to_wordpress();
+		//$items += $this->sync_registrations_sugar_to_wordpress($this->sync_dates['sync_registrations_sugar_to_wordpress']);
 		
-		//$this->set_meta('booking-sugar', 10, "bladiebla");
+		//-- END FROM SUGAR TO WORDPRESS
+		//-- START FROM WORDPRESS TO SUGAR
+		//$items += $this->sync_profiles_wordpress_to_sugar();	// TODO: based on modifications table
+		$items += $this->sync_events_wordpress_to_sugar();		
+		//$items += $this->sync_profiles_wordpress_to_sugar();	// TODO: based on modifications table
+		
+		//-- END FROM WORDPRESS TO SUGAR
+		
+		// check if we need to send..
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			if ($items > 0)	$this->send_json_response($this->sync_dates + array('count' => $items));
+			$this->send_json_response($this->sync_dates + array('count' => $items));
+		}
 	}
 	
 	/**
@@ -261,7 +312,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	 * @parem boolean $create if TRUE create, if not exists
 	 * @return boolean
 	 */
-	private function sync_profiles_sugar_to_wordpress($fromdate='2012-01-01', $create=TRUE) {
+	private function sync_profiles_sugar_to_wordpress($fromdate='2000-01-01', $create=TRUE) {
 		global $wpdb;
 		
 		
@@ -269,11 +320,11 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 		$items_found = TRUE;
 		$num_items_per_query = 50;
 		$offset = 0;
-		while ($items_found && $offset<=100 ) { //TEMP !! FOR DEBUG!!
+		while ($items_found && $offset<=100 ) { // 100 per time for speed issues
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
-					"contacts_cstm.manyware_aiarelatie_c = 1 && contacts.last_name<>'' AND UNIX_TIMESTAMP(contacts.date_modified) > ".  strtotime($fromdate),
+					"contacts_cstm.manyware_aiarelatie_c = 1 && contacts.last_name<>'' AND UNIX_TIMESTAMP(contacts.date_modified) >= ".  strtotime($fromdate),
 					"Contacts",
 					$num_items_per_query,
 					$offset
@@ -298,19 +349,27 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 					}
 				}
 
-				// update meta data
+				// -- update meta data
 				
-				// for safety ALWAYS set sugar_id!
+				// for safety ALWAYS set sugar_id && sugar_date_modified
 				update_user_meta($user->ID, 'sugar_id', $contact['id']);
+				update_user_meta($user->ID, 'sugar_date_modified', $contact['date_modified']);
+				
 				// other metadata (and sugarID normally..)
 				$this->update_wordpress_user_data($user->ID, $contact);
+				
+				// check for script execution time
+				$this->get_elapsed_time_and_break(__FUNCTION__, $contact['date_modified']);
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
 			$offset += count($items); // increase by number of restults
+			
+			// update sync_date:
+			$this->set_sync_dates(__FUNCTION__, $items[ count($items)-1 ]['date_modified']);
 		}
 	
-		return true;
+		return count($items);
 	}
 	
 	/**
@@ -319,7 +378,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	 * @parem boolean $create if TRUE create, if not exists
 	 * @return boolean
 	 */
-	private function sync_events_sugar_to_wordpress($fromdate='2015-01-01', $create=TRUE) {
+	private function sync_events_sugar_to_wordpress($fromdate='2000-01-01', $create=TRUE) {
 		global $wpdb;		
 		
 		/* DEBUG 
@@ -380,7 +439,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
-					"AIA_ministry_projecten.titel <>'' AND UNIX_TIMESTAMP(AIA_ministry_projecten.date_modified) > ".  strtotime($fromdate),
+					"AIA_ministry_projecten.titel <>'' AND UNIX_TIMESTAMP(AIA_ministry_projecten.date_modified) >= ".  strtotime($fromdate),
 					"AIA_ministry_projecten",
 					$num_items_per_query,
 					$offset
@@ -424,13 +483,19 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 				} else {
 					//@TODO error: no event found.. or could not create new one..
 				}
+				
+				// check for script execution time
+				$this->get_elapsed_time_and_break(__FUNCTION__, $sugar_event['date_modified']);
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
 			$offset += count($items); // increase by number of restults
+			
+			// update sync_date:
+			$this->set_sync_dates(__FUNCTION__, $items[ count($items)-1 ]['date_modified']);
 		}
 	
-		return true;
+		return count($items);
 	}
 	
 	/**
@@ -441,7 +506,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	 * @return boolean
 	 */
 	private function sync_registrations_sugar_to_wordpress($fromdate='2015-01-01', $create=TRUE) {
-/*
+/* -- EXAMPLE DATA
 aia_ministry_project_id_c	7fc114e2-c080-9ff5-11d6-560e735be09f
 aia_ministry_project_name	2016_SK016-T_Sportkampen 2016 Tieners
 assigned_user_id	1
@@ -511,6 +576,18 @@ vrijwaring_ok	0
 			foreach ($items as $sugar_registration) {
 				if (empty($sugar_registration['aia_ministry_project_id_c']) || empty($sugar_registration['contact_id_c'])) continue;
 
+				// popuplate fields with user_data
+				$contacts = $this->sugar->searchContact("contacts.id = '{$sugar_registration['contact_id_c']}'"); 
+				if (count($contacts) > 0) {
+					$contact = reset($contacts);
+				} else {
+					continue; // no valid data found
+				}
+				
+				// array add
+				$sugar_registration = $sugar_registration + $contact;
+				
+				
 				// try and find event by sugar_id
 				$args = array(
 					'meta_key' => 'sugar_id',
@@ -565,12 +642,93 @@ vrijwaring_ok	0
 				} else {
 					//@TODO error: no event found.. or could not create new one..
 				}
+				
+				// check for script execution time
+				$this->get_elapsed_time_and_break(__FUNCTION__, $sugar_registration['date_modified']);
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
 			$offset += count($items); // increase by number of restults
+			
+			// update sync_date:			
+			$this->set_sync_dates(__FUNCTION__, $items[ count($items)-1 ]['date_modified']);
 		}		
-		return true;
+		return count($items);
+	}
+	
+	/**
+	 * Sync EM_Events from WP to Sugar. 
+	 * 
+	 * This is based on comparisson from date_modified (sugar) to the modification date in WP
+	 * @return type
+	 */
+	private function sync_events_wordpress_to_sugar() {
+		// get list of modified events (post_type = EM_POST_TYPE_EVENT
+		
+		// try and find event by where modification is past last sync date
+		$args = array(
+			'post_type'			=> EM_POST_TYPE_EVENT,
+			'post_status'		=> 'any',
+			'posts_per_page'	=> -1,
+			'orderby'			=> 'post_modified',
+			'order'				=> 'DESC',
+			'date_query'		=>  array(
+				'after'			=>  $this->sync_dates['sync_events_wordpress_to_sugar'],
+				'column'		=> 'post_modified'
+			)
+		);
+		$events = get_posts($args);
+		
+		// step over event
+		foreach ($events as $_event) {
+			$event = new EM_Event($_event);	// load EM Event
+			
+			// check if sugar_id, otherwise create
+			if (!array_key_exists('sugar_id', $event->event_attributes)) {
+				// create new event!
+				$create = TRUE;
+			} elseif (array_key_exists('sugar_date_modified', $event->event_attributes) 
+					&& strtotime($event->event_attributes['sugar_date_modified']) < strtotime($event->post_modified)	
+					|| !array_key_exists('sugar_date_modified', $event->event_attributes)) {
+				// date modified is bigger than sugar date, update
+				$create = FALSE;
+			} else {
+				continue; // step over this event.
+			}
+			
+			// init creation and update process
+			$set_entry_data = Array();
+			if ($create) {
+				$set_entry_data[] = array(
+					'name'	=> 'new_with_id',
+					'value'	=> true
+				);
+			} else {
+				// make sure to set the sugar id
+				$set_entry_data[] = array(
+						'name'	=>	'id',
+						'value'	=>	$event->event_attributes['sugar_id']
+				);
+			}
+			
+			// format the dataset according to be read by sync rules..
+			$dataset = $this->format_wordpress_data_for_syncing(array('EM'=>$event));											// format data
+			$parsed_data = $this->parse_crm_and_wordpress_data($dataset, array(), "event", FROM_WORDPRESS_TO_CRM);	// parse the data
+			$set_entry_data = $this->from_array_key_value_to_array_name_value_list($parsed_data['AIA_ministry_projecten'], $set_entry_data);
+			
+			// save the data..
+			if ($sugar_id = $this->sugar->updateModule($set_entry_data, 'AIA_ministry_projecten')) {
+				// Finally, save set Sugar Meta and Update Datemodified
+				if ($create) $event->event_attributes['sugar_id'] = $sugar_id;
+				$event->event_attributes['sugar_date_modified'] = date('Y-m-d H:i:s'); // now. Should be bigger than sugar_date_modified (by default)
+				$event->save_meta(); // save metadata to wp_post_meta
+			}
+		}
+		
+		$this->set_sync_dates('sync_events_wordpress_to_sugar', date('Y-m-d H:i:s'));
+		
+		// return number of events
+		return (int) count($events);
 	}
 	
 	/**
@@ -694,13 +852,21 @@ vrijwaring_ok	0
 					$from_def	= explode("::", $rule['internal_field']);
 					$to_def		= explode("::", $rule['external_field']);
 					
+					$from_field = $rule['internal_field'];
+					$to_field = $to_def[2];
+					
 					// check for existence
-					if (array_key_exists($from_field, $from_data)) {
+					if (array_key_exists($from_field, $from_data)) {// || $from_def[2]=='sugar_name') { //@TODO unsafe from_def
 						// form:	$to_data['BP'][id] = val
 						// or:		$to_data['WP'][name] = val
 						
-						if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
-						$to_data[ $to_def[0] ][ $to_def[1] ] = ConversionHelper::from_wordpress($from_field, $from_data);
+						if ($to_def[1] != $to_def[2]) {
+							if (!is_array($to_data[$to_def[1]])) $to_data[$to_def[1]] = array();
+							$to_data[ $to_def[1] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $from_data);
+						} else {
+							if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
+							$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $from_data);
+						}
 					}
 			}
 			
@@ -708,6 +874,88 @@ vrijwaring_ok	0
 		}
 	
 		return $to_data;
+	}
+	
+	/**
+	 * Preformatting WP post data (or EM_Event, EM_Booking, etc.) to the 
+	 * corresponding format. the $data parameter can be of:
+	 * array(
+	 *	'EM'			=> EM_Event object (auto set TICKET)
+	 *	'BOOKING'		=> EM_Booking object (auto parsing BOOKING_META)
+	 *  'Buddypress'	=> Xprofile Fields
+	 *  )
+	 * @param array $data
+	 * @return array formatted data
+	 */
+	private function format_wordpress_data_for_syncing($data) {
+		if (!is_array($data)) return array(); // empty array
+		
+		$formatted_data = array();
+		foreach ($data as $key=>$obj) {
+			switch ($key) {
+				case "EM":
+					$internal_fields = array();
+					// create form: <TYPE>::<ID>::<READABLE NAME>
+					// set values
+					foreach ($data['EM']->fields as $field)								$formatted_data[	'EM::' . $field['name'] . '::' . $field['name']]	= $data['EM']->{$field['name']};	// EM_Event fields
+					foreach ($data['EM']->get_tickets()->get_first()->fields as $field=>$key)	$formatted_data[	'EM::TICKET::' . $field	]					= $data['EM']->get_tickets()->get_first()->{$field};	
+					foreach ($data['EM']->event_attributes as $field=>$val)				$formatted_data[	'EM::' . $field . '::' . $field]					= $val;	
+					
+					$formatted_data[	'EM::location_town::location_town']			= $data['EM']->get_location()->location_town;	
+					$formatted_data[	'EM::location_country::location_country']	= $data['EM']->get_location()->location_country;	
+					$formatted_data[	'EM::post_content::post_content']			= $data['EM']->post_content;	
+					
+					$category = current($data['EM']->get_categories()->categories);
+					if (is_a($category, "EM_Category")) {
+						$formatted_data[	'EM::projecttype::projecttype']		= str_replace(
+								array('Sportweek'), 
+								array('Project'), 
+								$category->name
+							);
+					}
+					break;
+				case "BOOKING": 
+					break;
+				case "BuddyPress":
+					break;
+				default:
+					//..
+			}
+		}
+		
+		return $formatted_data;
+	}
+	
+	/**
+	 * Convert the $data from array(key1=>value,key2=>value,..) to a list
+	 * <br> where the format is SugarCRM soap entry style:
+	 * <br> 
+	 * array (
+	 *	array(
+	 *		'name' => key
+	 *		'value'=> key
+	 *	),
+	 *	array(
+	 *		'name' => key
+	 *		'value'=> key
+	 *	),
+	 *  ..
+	 * )
+	 * @param type $data
+	 * @param type $name_value_list
+	 * @return type
+	 */
+	private function from_array_key_value_to_array_name_value_list($data, $name_value_list=array()) {
+		foreach ($data as $key=>$val) {
+			array_push($name_value_list,
+					array(
+						'name'	=>	$key,
+						'value'	=>	$val
+					)
+				);
+		}
+		
+		return $name_value_list;
 	}
 	
 	/**
@@ -817,14 +1065,14 @@ vrijwaring_ok	0
 							usleep(100);	// force not more than 10 requests per second to google.. (free plan)
 							if ($results = get_google_geocode_result(sprintf('%s %s', $dataset['EM']['location_town'], ISO3166::get_full_country_name( $dataset['EM']['location_country']) ))) {
 								// apply data
-								$location->location_country = $results['country'];
-								$location->location_latitude = $results['latitude'];
-								$location->location_longitude = $results['longitude'];
-								$location->location_address = $results['route'];
-								$location->location_country = $results['country'];
-								$location->location_town = $results['locality'];
-								$location->location_postcode = $results['postal_code'];
-								$location->location_status = 1; //found
+								$location->location_country		= $results['country'];
+								$location->location_latitude	= $results['latitude'];
+								$location->location_longitude	= $results['longitude'];
+								$location->location_address		= $results['route'];
+								$location->location_country		= $results['country'];
+								$location->location_town		= $results['locality'];
+								$location->location_postcode	= $results['postal_code'];
+								$location->location_status		= 1; //found
 								
 							}
 							
@@ -1034,6 +1282,80 @@ vrijwaring_ok	0
 		global $wpdb;
 		
 		return $wpdb->insert(EM_META_TABLE, array('object_id'=>$object_id, 'meta_key'=>$key, 'meta_value'=> maybe_serialize($value)), array('%d','%s','%s'));
+	}
+	
+	/**
+	 * Get Syc dates from WP_option which corresponding functions should sync,
+	 * or the default:
+	 *		'sync_profiles_sugar_to_wordpress'		=> '2000-01-01',
+			'sync_events_sugar_to_wordpress'		=> '2000-01-01',
+			'sync_registrations_sugar_to_wordpress'	=> '2000-01-01',
+	 * @return array
+	 */
+	private function get_sync_dates() {
+		$default_sync_dates = array(
+			'sync_profiles_sugar_to_wordpress'		=> '2000-01-01 00:00:00',
+			'sync_events_sugar_to_wordpress'		=> '2000-01-01 00:00:00',
+			'sync_registrations_sugar_to_wordpress'	=> '2000-01-01 00:00:00',
+			'sync_events_wordpress_to_sugar'		=> '2016-05-15 00:00:00',
+			'sync_registrations_wordpress_to_sugar'	=> '2016-05-15 00:00:00',
+			'sync_profiles_wordpress_to_sugar'		=> '2016-05-15 00:00:00',
+		);
+		
+		$dates = get_option(MY_AIA_SYNC_DATES, $default_sync_dates);
+		
+		foreach ($default_sync_dates as $key=>$date) {
+			if (!isset($dates[$key]) || !is_numeric(strtotime($dates[$key]))) $dates[$key] = $default_sync_dates[$key];
+		}
+		
+		return $dates;
+	}
+	
+	/**
+	 * Set WP_option for sync dates
+	 * @param string $key
+	 * @param string $value date-time readable by strtotime
+	 */
+	private function set_sync_dates($key, $value = '2000-01-01 00:00:00') {
+		if (empty($key)) return FALSE;
+		
+		// use variabele to set dates
+		if (empty($this->sync_dates)) {
+			$this->sync_dates = $this->get_sync_dates();
+		}
+		
+		if (!array_key_exists($key, $this->sync_dates)) return FALSE; // Not a valid key to set
+		
+		// set value & update wp_option
+		$this->sync_dates[$key] = $value;		
+		return update_option(MY_AIA_SYNC_DATES, $this->sync_dates, FALSE);
+	}
+	
+	/**
+	 * Check if script execution is longer than $max_length, saves and breaks;
+	 * @param int $max_length (default 25) including error margin
+	 */
+	private function get_elapsed_time_and_break($param_name, $date, $max_length = 25) {
+		if (!$this->start_time || $this->start_time<1) {
+			$this->start_time = time();
+			return true; // no break;
+		}
+		
+		// time set, check elapsed time
+		if ((time() - $this->start_time) > $max_length) {
+			$this->set_sync_dates($param_name, $date);	// save current state
+			$this->send_json_response();				// exit
+		}		
+	}
+	
+	/**
+	 * Send JSON response. Called from do_sync and to quit script execution
+	 * @param $data	(optional) send custom data
+	 */
+	private function send_json_response($data = NULL) {
+		if ($data == NULL)	wp_send_json($this->sync_dates);
+		else				wp_send_json($data);
+		wp_die();
 	}
 	
 }

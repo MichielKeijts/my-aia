@@ -52,15 +52,56 @@ class ConversionHelper {
 	 * @param array $dataset with $key=>$val
 	 */
 	static function from_wordpress($key, $dataset) {
+		// check for right key
+		if (strpos($key,'::') !== FALSE) {
+			$_keys = explode('::', $key);
+			$_key = $_keys [ count ($_keys) - 1];
+		}
 		// we will call a function (method) if exists
-		if (method_exists(get_class(), $key)) {
-			return self::$key($dataset);
+		if (method_exists(get_class(), $_key)) {
+			return self::$_key($dataset, $key);
 		}
 		
 		// return the variable
 		return $dataset[$key];
 	}
 	
+	/**
+	 * Return a name value for AIA_ministry_projecten
+	 * @param array $data
+	 * @return string
+	 */
+	static function sugar_name($data, $key) {
+		if (
+			(!isset($data[$key]) || strlen($data[$key])<2 )
+			&& isset($data['EM::start_date::start_date']))
+			return date('Y', strtotime ($data['EM::start_date::start_date'])) . ' ' .$data['EM::name::name'];
+			
+		return $data[$key];
+	}
+	
+	
+	/**
+	 * Location Country
+	 * @param array $data
+	 * @param string $key
+	 * @return array
+	 */
+	static function location_country($data, $key) {
+		return ISO3166::from_2to3_characters($data[$key], 'NLD');	// default Nederland
+	}
+	
+	/**
+	 * Format number to 1.000,00 from 1,000.00 
+	 * @param mixed $data
+	 * @return float
+	 */
+	static function ticket_price($data, $key) {
+		if (is_numeric($data[$key]))
+			return number_format($data[$key], 2, ',', '.');
+		
+		return $data[$key];
+	}
 
 	/**
 	 * @param mixed $data
@@ -85,21 +126,24 @@ class ConversionHelper {
 	 * @param mixed $data
 	 * @return float
 	 */
-	static function termijn_1_prijs($data) {
+	static function termijn_1_prijs($data, $key=NULL) {
+		if (func_num_args() > 1) return self::ticket_price($data, $key);
 		return self::projectprijs($data);
 	}
 	/**
 	 * @param mixed $data
 	 * @return float
 	 */
-	static function termijn_2_prijs($data) {
+	static function termijn_2_prijs($data, $key=NULL) {
+		if (func_num_args() > 1) return self::ticket_price($data, $key);
 		return self::projectprijs($data);
 	}
 	/**
 	 * @param mixed $data
 	 * @return float
 	 */
-	static function termijn_3_prijs($data) {
+	static function termijn_3_prijs($data, $key=NULL) {
+		if (func_num_args() > 1) return self::ticket_price($data, $key);
 		return self::projectprijs($data);
 	}
 	

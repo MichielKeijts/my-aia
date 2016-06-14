@@ -27,6 +27,7 @@ class MY_AIA {
 	 */
 	static $CUSTOM_POST_TYPES = array(
 		MY_AIA_POST_TYPE_PARTNER, 
+		MY_AIA_POST_TYPE_CONTRACT
 	);
 	
 	/*

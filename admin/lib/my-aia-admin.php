@@ -9,8 +9,6 @@
  * Holder for the Administration pages
  */
 class MY_AIA_ADMIN {
-
-	
 	/**
 	 * $TABS
 	 * @var array ('slug','name')
@@ -30,6 +28,8 @@ class MY_AIA_ADMIN {
 		add_action( 'admin_menu', array($this, 'show_menu'));
 		// handle the request
 		$this->request_handler();
+		
+		
 	}
 	
 	/**
@@ -70,6 +70,9 @@ class MY_AIA_ADMIN {
 	 * deals with all the requests and parses the right controller
 	 */
 	public function request_handler() {
+		// if not a call to MY_AIA admin... 
+		if (!isset($_REQUEST['controller']) && !isset($_REQUEST['action'])) return false;
+		
 		// default:
 		$controller = 'page';
 		$this->action = 'index';
@@ -150,14 +153,19 @@ class MY_AIA_ADMIN {
 			plugins_url( 'my-aia/assets/images/my-aia24.png' ), 
 			10
 		);
+		
+		
 		add_submenu_page('my-aia-admin',__('Reset','my-aia'),		__('Reset','my-aia'), 'manage_options', 'my-aia-reset', array($this, 'reset') );
-		add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), 'my_aia_admin', 'my-aia-partners', 'MY_AIA_ADMIN::show_admin_menu' );
+		//add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), 'my_aia_admin', 'my-aia-partners', 'edit.php?post_type=partner' );
 		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'my_aia_admin', 'my-aia-settings', array($this, 'settings') );
 		add_submenu_page('my-aia-admin',__('Sportweken','my-aia'),	__('Sportweken','my-aia'), 'my_aia_admin', 'my-aia-sportweken', 'MY_AIA_ADMIN::show_admin_menu' );
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
 		
+		
 		// Enable Events Manager Addons
 		my_aia_events_manager_add_form_widget();
+		my_aia_post_type_partner_add_form_widget();
+		my_aia_post_type_partner_add_metaboxes();
 		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
 		

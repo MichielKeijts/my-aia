@@ -6,23 +6,23 @@
  */
 
 // Registration of Custom Post Type
-function my_aia_register_posttype_partner(){
+function my_aia_register_post_type_partner(){
 	$partner_post_type = array(	
 		'public' => true,
 		'hierarchical' => false,
 		'show_ui' => true,
-		'show_in_menu' => true,
+		'show_in_menu' => 'my-aia-admin',
 		'show_in_nav_menus'=>true,
 		'can_export' => true,
 		'exclude_from_search' => false,
 		'publicly_queryable' => true,
 		'rewrite' => false,//array('slug' => EM_POST_TYPE_EVENT_SLUG,'with_front'=>false),
 		'has_archive' => true,//get_option('my-aia_cp_events_has_archive', false) == true,
-		'supports' => array('custom-fields','title','editor','excerpt','comments','thumbnail','author'),
-		'capability_type' => 'partner',
-		'capabilities' => MY_AIA::get_capabilities('partner'),
+		'supports' => array('title','editor','excerpt','comments','thumbnail','author'),
+		'capability_type' => MY_AIA_POST_TYPE_PARTNER,
+		'capabilities' => MY_AIA::get_capabilities(MY_AIA_POST_TYPE_PARTNER),
 		'label' => __('Partners','my-aia'),
-		'description' => __('Display events on your blog.','my-aia'),
+		'description' => __('Display partners on your blog.','my-aia'),
 		'labels' => array (
 			'name' => __('Partners','my-aia'),
 			'singular_name' => __('Partner','my-aia'),
@@ -43,8 +43,7 @@ function my_aia_register_posttype_partner(){
 		'yarpp_support'=>true
 	);
 	
-    
-
+ 
     // Register Post Type
-    register_post_type('partner', $partner_post_type);
+    register_post_type(MY_AIA_POST_TYPE_PARTNER, $partner_post_type);
 }

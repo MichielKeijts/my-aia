@@ -20,6 +20,7 @@ include ('includes/my-aia-install.php');
 
 // Include all custom Post Types
 include ('includes/custom-post-types/my-aia-partner.php');
+include ('includes/custom-post-types/my-aia-contract.php');
 
 // Include custom taxonomies
 include ('includes/custom-taxonomies/my-aia-doelgroep.php');
@@ -37,6 +38,11 @@ include ( 'classes/processflow/my-aia-processflow-static-condition.php' );
 include ( 'classes/my-aia-html-helper.php' );
 include ( 'classes/my-aia-view.php' );
 include ( 'classes/my-aia.php' );
+
+// Classes: MODELS
+include ( 'classes/my-aia-base.php' );
+include ( 'classes/my-aia-partner.php' );
+include ( 'classes/my-aia-contract.php' );
 
 // Modifications: Load modifications for other plugins (add ons)
 include ( 'addons/buddypress/my-aia-buddypress.php' );

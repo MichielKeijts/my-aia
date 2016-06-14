@@ -15,7 +15,8 @@ add_action( 'init', 'my_aia_register_taxonomy_taal' );
 add_action( 'init', 'my_aia_register_taxonomy_sportweek_eigenschap' );
 add_action( 'init', 'my_aia_register_taxonomy_kerkstroming' );
 add_action( 'init', 'my_aia_register_taxonomy_overnachting' );
-add_action( 'init', 'my_aia_register_posttype_partner' );
+add_action( 'init', 'my_aia_register_post_type_partner' );
+add_action( 'init', 'my_aia_register_post_type_contract' );
 add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );
 
 // Used for user-taxonomy
@@ -33,6 +34,10 @@ add_action( 'em_bookings_get_tickets',	'my_aia_em_bookings_remove_ninja_form', 9
 add_action( 'em_person_display_summary','my_aia_events_manager_profile_display_summary', 99, 2);
 add_action( 'init', 'my_aia_ninja_forms_upload_field_register' );
 add_action( 'init', 'my_aia_ninja_forms_term_field_register' );
+add_action( 'nf_notification_types', 'my_aia_nf_add_notifications');									// add custom-post and other notification types
+
+// Hooks for custom post save
+add_action( 'save_post',  'my_aia_post_save_action', 99, 2);
 
 
 // Ajax Functions for Front Page
@@ -44,4 +49,4 @@ add_action( 'wp_ajax_nopriv_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);		
 
 add_action ( 'init', 'MY_AIA::init');
 
-//add_action ('nf_notification_types', 'my_aia_test_notification');
+// 

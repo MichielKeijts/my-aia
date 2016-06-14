@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
 /*
  * @Package my-aia
  * @Author Michiel Keijts (c)2015
@@ -17,6 +17,8 @@ define("MY_AIA_TAXONOMY_TAAL", "taal");
 // -- CUSTOM POST TYPEPS -- 
 define('MY_AIA_POST_TYPE_PARTNER','partner');
 define('MY_AIA_POST_TYPE_PARTNER_SLUG','partner');
+define('MY_AIA_POST_TYPE_CONTRACT', 'contract');			// a partner has a contract
+
 
 // -- CAPABILITY --
 define("MY_AIA_CAPABILITY_ADMIN", "my_aia_admin");

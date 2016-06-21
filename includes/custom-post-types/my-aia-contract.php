@@ -2,7 +2,8 @@
 /** 
  * MY AIA 
  * @Package my-aia
- * @Author Michiel Keijts (c)2015
+ * @Author Michiel Keijts (c)2016
+ * @copyright (c) 2016, Normit, Michiel Keijts
  */
 
 // Registration of Custom Post Type

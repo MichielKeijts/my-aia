@@ -27,7 +27,11 @@ class MY_AIA {
 	 */
 	static $CUSTOM_POST_TYPES = array(
 		MY_AIA_POST_TYPE_PARTNER, 
-		MY_AIA_POST_TYPE_CONTRACT
+		MY_AIA_POST_TYPE_CONTRACT,
+		MY_AIA_POST_TYPE_PRODUCT,
+		MY_AIA_POST_TYPE_ORDER,
+		MY_AIA_POST_TYPE_INVOICE,
+		MY_AIA_POST_TYPE_PAYMENT,
 	);
 	
 	/*
@@ -47,17 +51,40 @@ class MY_AIA {
 		'public',	// add role for public (for all google bots and so on, to define it clearly)
 	);
 	
+	/**
+	 * Processflow holder
+	 * @var \MY_AIA_PROCESSFLOW 
+	 */
 	static $processflow;
 	
+	/**
+	 * post_types holder
+	 * @var array 
+	 */
+	static $post_types;
+	
+	/**
+	 * pointer to SELF
+	 * @var \MY_AIA
+	 */
 	private static $instance;
 	
+	/**
+	 * Returns an instance (or the instance) of MY_AIA
+	 * @return \MY_AIA
+	 */
 	public function instance() {
 		if ( !isset( self::$instance ) && ! (self::$instance instanceof MY_AIA ) ) {
 			self::$instance = new MY_AIA();
 		}
 		return self::$instance;	
 	}
-		
+	
+	/** 
+	 * Initializes the MY_AIA
+	 * @global \WP_Rewrite $wp_rewrite
+	 * @global \WP_Roles $wp_roles
+	 */
 	static function init() {
 		global $wp_rewrite, $wp_roles;
 		
@@ -67,7 +94,11 @@ class MY_AIA {
 				my_aia_install();
 			}
 		}
+		
+		// register the post_types 
+		self::register_post_types();
 	
+		// flush rules so everything works!
 		$wp_rewrite->flush_rules();
 
 		// register hooks for process flow
@@ -203,8 +234,54 @@ class MY_AIA {
 			MY_AIA_EVENTS_QUERY::call_function();
 		}
 	}
+	
+	/**
+	 * Magically loads all the custom post types and its custom classes (Models)
+	 * when exists.
+	 * @param mixed $type name/array of post_type(s) to register (default: all)
+	 * @param book $register_save_post_hooks register the custom post save_post  hook (default: TRUE)
+	 */
+	static function register_post_types($type='all', $register_save_post_hooks = TRUE) {
+		$definitionDir =		MY_AIA_PLUGIN_DIR . 'includes/custom-post-types/';
+		$modelDir = MY_AIA_PLUGIN_DIR . 'classes/';	
+		
+		$post_types = self::$CUSTOM_POST_TYPES;
+		if ($type!='all')  {
+			// in this way the intersection of existing post_types and the 
+			$post_types = is_array($type) ? array_intersect($post_types, $type) : array_intersect($post_types, array($type));
+		}
+		// 
+		foreach ($post_types as $post_type) {
+			$cstm_file = sprintf('%smy-aia-%s.php',$definitionDir, $post_type);
+			if (file_exists($cstm_file)) include_once $cstm_file;
+			
+			$fn = 'my_aia_register_post_type_'.$post_type;
+			if (function_exists($fn)) {
+				call_user_func($fn);
+				
+				$cstm_file = sprintf('%smy-aia-%s.php',$modelDir, $post_type);
+				if (file_exists($cstm_file)) {
+					include_once($cstm_file);
+					
+					$className = "MY_AIA_$post_type";
+					self::$post_types[$post_type] = new $className();
+					
+					if ($register_save_post_hooks) {
+						// Hooks for custom post save
+						//add_action( 'save_post',  sprintf('MY_AIA_%s::save', strtoupper($post_type)), 99, 2);
+						add_action( 'save_post',  "my_aia_post_save_action", 99, 3);
+					}
+				}
+			}
+		}
+	}
 }
 
+
+/**
+ * Wrapper to get the MY_AIA Class
+ * @return \MY_AIA
+ */
 function MY_AIA_INIT() {
-    return MYAIA::instance();
+    return MY_AIA::instance();
 }

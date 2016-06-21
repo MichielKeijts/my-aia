@@ -162,10 +162,11 @@ class MY_AIA_ADMIN {
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
 		
 		
-		// Enable Events Manager Addons
-		my_aia_events_manager_add_form_widget();
-		my_aia_post_type_partner_add_form_widget();
-		my_aia_post_type_partner_add_metaboxes();
+		// enqueue scripts
+		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
+			
+		$this->add_metaboxes_to_post_types();
+
 		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
 		
@@ -173,6 +174,22 @@ class MY_AIA_ADMIN {
 		remove_action( 'admin_notices', 'update_nag', 3 );
 	}
 
+	/**
+	 * Adds metaboxes to the various admin interface pages
+	 */
+	private function add_metaboxes_to_post_types() {
+		my_aia_events_manager_add_form_widget();		// Enable Events Manager Addons
+		my_aia_post_type_partner_add_metaboxes();
+		
+		
+		// initiate attribute (custom post) forms
+		foreach (MY_AIA::$CUSTOM_POST_TYPES as $post_type) {
+			add_meta_box('my-aia-'.$post_type.'-attribute-box', __('Attributes','my-aia'), array(MY_AIA::$post_types[$post_type],'get_attributes_form'), $post_type, 'normal', 'high');
+		}		
+		
+		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-items-add-box', __('Order Items','my-aia'), array(MY_AIA::$post_types[MY_AIA_POST_TYPE_ORDER],'get_order_form'), MY_AIA_POST_TYPE_ORDER, 'normal', 'high');
+		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-items-box', __('Order Items','my-aia'), "my_aia_order_form_add_item", MY_AIA_POST_TYPE_ORDER, 'normal', 'high');
+	}
 	
 	
 	/**
@@ -183,17 +200,4 @@ class MY_AIA_ADMIN {
 	private function set($var, $val=NULL) {
 		$this->controller->view->set($var, $val);
 	}
-}
-
-/**
- * Try and find a method of a function and call it. 
- * @param class $obj
- * @param string $method
- * @return mixed FALSE if function not exists, function output otherwise 
- */
-function call_method_if_exists($obj, $method) {
-	if (method_exists($obj, $method))
-		return $obj->$method();
-	
-	return FALSE;
 }

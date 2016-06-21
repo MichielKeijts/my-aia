@@ -88,7 +88,12 @@ class MY_AIA_BASE {
 	public function get($post) {
 		if (is_numeric($post)) {
 			$post = get_post($post);
-		}
+		} elseif (is_array($post)) {
+			$post = get_post();
+		} 
+		
+		if (!($post instanceof WP_Post)) 
+			return FALSE;
 		
 		//if (is_a($post,'WP_Post') || is_a($this, 'MY_AIA_BASE')) {
 		 //if && $post->post_type = $this->post_type
@@ -100,6 +105,32 @@ class MY_AIA_BASE {
 		//}
 		
 		$this->get_meta();
+	}
+	
+	/**
+	 * Find objects by WP_Post criteria ($args) see also WP_Query::parse_query 
+	 * for full list  of options
+	 * @param array $args 
+	 * @param $returnAsType (TRUE) retun as same object as $this
+	 */
+	public function find($args, $returnAsType = TRUE) {
+		$args['post_type'] = $this->post_type;
+		$posts = get_posts($args);
+		
+		if ($posts) {
+			if ($returnAsType) {
+				$returnObj = array();
+				foreach ($posts as $post) {
+					$this->get($post);
+					array_push($returnObj, $this);
+				}
+				// return as MY_AIA_<TYPE> array
+				return $returnObj;
+			} 
+			// return as WP_Posts array
+			return $posts;
+		}
+		return FALSE;
 	}
 	
 	/**
@@ -117,9 +148,19 @@ class MY_AIA_BASE {
 		if (!$this->ID) return false;	// No ID
 			
 		$meta_data = get_post_meta($this->ID);
-		foreach ($meta_data as $key=>$values) {
-			if (in_array($key, array_keys($this->fields))) {
-				$this->$key = reset($values);	// assume just one value per setting(!)
+		foreach ($this->fields as $key=>$field) { //$meta_data as $key=>$values
+			if (isset($meta_data[ $field['name'] ])) {
+				if ($field['type']!='%a') {
+					$this->$key = reset($meta_data[	$field['name']	]);	// assume just one value per setting(!) if not an array is expected
+				} else {
+					// check if parse function exists
+					if (method_exists($this, 'parse_'.$key)) {
+						$this->$key = call_user_method('parse_'.$key, $this, $meta_data[ $field['name']	]);
+					} else {
+						// just set the values
+						$this->$key = $values;
+					}
+				}
 			}
 		}
 		
@@ -157,13 +198,13 @@ class MY_AIA_BASE {
 		if ($prepare_post_data) $this->prepare_post_data();
 		
 		$post_array['post_type'] = $this->post_type;
-		$post_array['post_title'] = $this->name;
+		$post_array['post_title'] = $this->post_title;
 		$post_array['post_content'] = $this->post_content;
 		$post_array['post_excerpt'] = !empty($this->post_excerpt) ? $this->post_excerpt : $this->post_content;
 		$post_array['post_status']	= 'draft';
 		
 		
-		if (!$thois->ID && !$this->create()) 
+		if (!$this->ID && !$this->create()) 
 			return FALSE;// no ID and not able to create
 		
 		// set ID
@@ -171,6 +212,21 @@ class MY_AIA_BASE {
 		$post_saved = wp_update_post($post_array);
 		if ($post_saved) {
 			$this->update_post_meta($prepare_post_data);
+		}
+	}
+	
+	/**
+	 * Function to be called from the save_post hook from WP.
+	 * - first initiate the current object
+	 * - than updates the meta_data
+	 */
+	public function save_post($post_id, $post, $update ) {
+		$this->get($post);
+		$this->ID = $post_id; // to be save
+		
+		if ($update) {
+			// updates the current data
+			$this->update_post_meta(TRUE); 
 		}
 	}
 	
@@ -183,14 +239,21 @@ class MY_AIA_BASE {
 		if ($prepare_post_data) $this->prepare_post_data ();
 		
 		foreach ($this->fields as $key=>$value) {
-			update_post_meta($this->ID, $key, $this->$key);
+			update_post_meta($this->ID, $value['name'], $this->$key);
+			/*if (is_array($this->$key)) {
+				foreach ($this->$key as $param) {
+					update_post_meta($this->ID, $key, $param);
+				}
+			} else {
+				update_post_meta($this->ID, $key, $this->$key);
+			}*/
 		}
 	}
 	
 	/**
 	 * Update the object with post data, saved in $_POST
 	 */
-	private function prepare_post_data() {
+	protected function prepare_post_data() {
 		foreach ($_POST as $key=>$value) {
 			if (property_exists($this, $key)) {
 				$this->$key = $value;
@@ -206,5 +269,17 @@ class MY_AIA_BASE {
 	 */
 	public function set($key, $value) {
 		$this->$key = $value;
+	}
+	
+	/**
+	 * Return $this-><fields> as array 
+	 */
+	private function toArray() {
+		$returnAr = array();
+		foreach ($this->fields as $field=>$value) {
+			$return[$field] = $this->$field;
+		}
+		
+		return $return;
 	}
 }

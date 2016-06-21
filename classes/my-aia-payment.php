@@ -6,15 +6,15 @@
  */
 
 /**
- * Definition of the MY_AIA_PARTNER post_type and including the custom fields
+ * Definition of the MY_AIA_PAYMENT post_type and including the custom fields
  * It also enables to create relationships
  */
-class MY_AIA_PARTNER extends MY_AIA_BASE {
+class MY_AIA_PAYMENT extends MY_AIA_BASE {
 	/**
 	 * Definition of the associate WP POST TYPE
 	 * @var string
 	 */
-	var $post_type = MY_AIA_POST_TYPE_PARTNER;
+	var $post_type = MY_AIA_POST_TYPE_PAYMENT;
 
 	/**
 	 * Name of the Object
@@ -80,6 +80,6 @@ class MY_AIA_PARTNER extends MY_AIA_BASE {
 			$data[] = $field;
 		endforeach; // loop over $fields
 		
-		return my_aia_add_attributes_form(MY_AIA_POST_TYPE_PARTNER, MY_AIA_POST_TYPE_PARTNER, $data);
+		return my_aia_add_attributes_form(MY_AIA_POST_TYPE_PAYMENT, MY_AIA_POST_TYPE_PAYMENT, $data);
 	}
 }

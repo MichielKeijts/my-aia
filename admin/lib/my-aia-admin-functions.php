@@ -78,14 +78,6 @@ function get_google_geocode_result($data) {
 	return $geocoder->get_result($data);
 }
 
-/**
- * Adds the Attribute widget to the custom post type page
- */
-function my_aia_post_type_partner_add_form_widget() {
-	$partner = new MY_AIA_PARTNER();
-
-	add_meta_box('my-aia-partner-attribute-box', __('Attributes','my-aia'), array($partner,'get_attributes_form'), MY_AIA_POST_TYPE_PARTNER, 'normal', 'high');
-}
 
 /**
  * Adds the Attribute widget to the custom post type page
@@ -132,17 +124,138 @@ function my_aia_post_type_partner_display_assigned_user_id_metabox() {
 
 
 /**
+ * Display an order form with items 
+ * @param type $order_id
+ * @param type $order_items
+ */
+function my_aia_order_form($order_id, $order_items) {
+	?>
+		<div class="bp-groups-member-type" id="my-aia-order-items">
+
+			<table class="widefat bp-group-members">
+				<thead>
+					<tr>
+						<th scope="col" class="uid-column"><?= __( 'ID', 'my-aia' ); ?></th>
+						<th scope="col" class="uname-column"><?= __( 'Name', 'Group member name in group admin', 'my-aia' ); ?></th>
+						<th scope="col" class="ucount-column"><?= __( 'Aantal', 'my-aia' ); ?></th>
+						<th scope="col" class="uprice-column"><?= __( 'Prijs', 'my-aia' ); ?></th>
+						<th scope="col" class="usubtotal-column"><?= __( 'Totaal', 'my-aia' ); ?></th>
+						<th scope="col" class="umodify-column"></th>
+					</tr>
+					<tr class="hidden">
+						<th scope="row" class="uid-column"><label class="text"></label><input type="hidden" name="order_item_product_id" value="-1" class="order-item-id"></th>
+						<td class="uname-column"><a style="float: left;" href="<?php echo get_permalink($order_item->product_id); ?>"></a></td>
+						<td class="ucount-column"><input type="number" name="count" value="1" min="0" max="999" step="1" class="order-item-count"></td>
+						<td class="uprice-column"><input type="text" name="price" value="0.00" class="order-item-price"></td>
+						<td class="usubtotal-column">&euro;</td>
+						<td class="umodify-column"><span class="dashicons dashicons-dismiss"></span></td>
+					</tr>
+				</thead>
+				<tbody>
+				<?php 
+					$totalPrice = $totalVat = 0.00;
+					foreach($order_items as $order_item): 
+						if (empty($order_item->product_id)) continue;
+						
+						$totalPrice +=  $order_item->price * $order_item->count;
+						$totalVat += $order_item->price * $order_item->vat;
+				?>
+					<tr>
+						<th scope="row" class="uid-column"><?php echo esc_html($order_item->product_id); ?><input type="hidden" name="order_items[<?= $order_item->product_id; ?>][id]" value="<?= $order_item->product_id; ?>" class="order-id"></th>
+
+						<td class="uname-column"><a style="float: left;" href="<?php echo get_permalink($order_item->product_id); ?>"><?= $order_item->post_title; ?></a></td>
+						<td class="ucount-column"><input type="number" name="order_items[<?= $order_item->product_id; ?>][count]" value="<?= $order_item->count; ?>" min="0" max="999" step="1" class="order-item-count"></td>
+						<td class="uprice-column"><input type="text" name="order_items[<?= $order_item->product_id; ?>][price]" value="<?= $order_item->price; ?>" class="order-item-price"></td>
+						<td class="usubtotal-column">&euro;<?= round((float)$order_item->count * $order_item->price, 2); ?></td>
+						<td class="umodify-column"><span class="dashicons dashicons-dismiss"></span></td>
+					</tr>
+				<?php endforeach; ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th scope="row" class="uid-column" colspan="3">Totaal:</th>
+						<td class="uprice-column"></td>
+						<td class="usubtotal-column">&euro; <span class="text"><?= round($totalPrice,2); ?></span></td>
+						<td class="umodify-column"></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div><!-- .bp-groups-member-type -->
+
+	<?php 
+}
+
+
+/**
+ * Output a add_product_item to 
+ */
+function my_aia_order_form_add_item( ) {
+	?>
+
+	<label for="my-aia-order-items-add" class="screen-reader-text"><?= __( 'Add new products', 'my-aia' ); ?></label>
+	<input name="my_aia_order_item_add" id="my-aia-order-items-add" class="my-aia-find-order" placeholder="<?= esc_attr_e( 'Enter a product name to search', 'my-aia' ) ?>" style="border:0px; width:100%;display:inline-block;"/>
+	
+	<fieldset style='width:100%; display:inline-block; border: 1px solid #eee;'>
+		<label style='display:inline-block;'><?= __('Selected product','my-aia'); ?></label>
+		<div class="order_item_example" style='display:inline-block; position:relative;'>
+			<label for="my_aia_order_item_add_id"  style='display:inline-block;'><?= __('ID:','my-aia'); ?></label> <div id="my_aia_order_item_add_id" style='display:inline-block; width: 30px'></div>
+			<label for="my_aia_order_item_add_name" style='display:inline-block;'><?= __('Description:','my-aia'); ?></label> <div id="my_aia_order_item_add_name" style='display:inline-block; width: 200px'><i><?= __('empty','my-aia'); ?></i></div>
+			<label for="my_aia_order_item_add_price" style='display:inline-block;'><?= __('Price:','my-aia'); ?></label> <input id="my_aia_order_item_add_price" style='display:inline-block; width: 70px' type='text'>	
+			<label for="my_aia_order_item_add_count" style='display:inline-block;'><?= __('Count:','my-aia'); ?></label> <input id="my_aia_order_item_add_count" style='display:inline-block; width: 70px' type='text'>
+		</div>
+		<button class="btn btn-default" id="button_order_item_add"><i class="glyphicon glyphicon-plus-sign"></i><?= __('Add Product to order', 'my-aia'); ?></button>
+	</fieldset>
+	
+	<?php
+}
+
+
+
+/**
  * Function which calls custom post types to save in case a custom post class
  * exists.
  */
-function my_aia_post_save_action($id, $post) {
+function my_aia_post_save_action($post_id, $post, $update) {
 	switch ($post->post_type) {
 		case MY_AIA_POST_TYPE_PARTNER:
 			// update partner meta
 			$partner = new MY_AIA_PARTNER($post);
-			$partner->update_post_meta();
+			$partner->save_post($post_id, $post, $update);
+			//$partner->update_post_meta();
+			break;
+		case MY_AIA_POST_TYPE_ORDER:
+			// update partner meta
+			$partner = new MY_AIA_ORDER($post);
+			$partner->save_post($post_id, $post, $update);
+			//$partner->update_post_meta();
+			break;
+		case MY_AIA_POST_TYPE_INVOICE:
+			// update partner meta
+			$partner = new MY_AIA_INVOICE($post);
+			$partner->save_post($post_id, $post, $update);
+			//$partner->update_post_meta();
+			break;
+		case MY_AIA_POST_TYPE_PRODUCT:
+			// update partner meta
+			$partner = new MY_AIA_PRODUCT($post);
+			$partner->save_post($post_id, $post, $update);
+			//$partner->update_post_meta();
 			break;
 		default:
 			return true;
 	}
+}
+
+
+/**
+ * Try and find a method of a function and call it. 
+ * @param class $obj
+ * @param string $method
+ * @return mixed FALSE if function not exists, function output otherwise 
+ */
+function call_method_if_exists($obj, $method) {
+	if (method_exists($obj, $method))
+		return $obj->$method();
+	
+	return FALSE;
 }

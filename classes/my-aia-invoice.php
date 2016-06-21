@@ -6,15 +6,15 @@
  */
 
 /**
- * Definition of the MY_AIA_PARTNER post_type and including the custom fields
+ * Definition of the MY_AIA_INVOICE post_type and including the custom fields
  * It also enables to create relationships
  */
-class MY_AIA_PARTNER extends MY_AIA_BASE {
+class MY_AIA_INVOICE extends MY_AIA_BASE {
 	/**
 	 * Definition of the associate WP POST TYPE
 	 * @var string
 	 */
-	var $post_type = MY_AIA_POST_TYPE_PARTNER;
+	var $post_type = MY_AIA_POST_TYPE_INVOICE;
 
 	/**
 	 * Name of the Object
@@ -42,10 +42,6 @@ class MY_AIA_PARTNER extends MY_AIA_BASE {
 		'phone'				=> array('name'=>'phone','type'=>'%s'),
 		'website'			=> array('name'=>'website','type'=>'%d'),
 		'email'				=> array('name'=>'email','type'=>'%d'),
-		'shipping_address'	=> array('name'=>'shipping_address','type'=>'%s'),
-		'shipping_postcode'	=> array('name'=>'shipping_postcode','type'=>'%s'),
-		'shipping_city'		=> array('name'=>'shipping_city','type'=>'%s'),
-		'shipping_country'	=> array('name'=>'shipping_country','type'=>'%s'),
 		'location_address'	=> array('name'=>'location_address','type'=>'%sd'),
 		'location_postcode'	=> array('name'=>'location_postcode','type'=>'%s'),
 		'location_city'		=> array('name'=>'location_city','type'=>'%s'),
@@ -80,6 +76,51 @@ class MY_AIA_PARTNER extends MY_AIA_BASE {
 			$data[] = $field;
 		endforeach; // loop over $fields
 		
-		return my_aia_add_attributes_form(MY_AIA_POST_TYPE_PARTNER, MY_AIA_POST_TYPE_PARTNER, $data);
+		return my_aia_add_attributes_form(MY_AIA_POST_TYPE_INVOICE, MY_AIA_POST_TYPE_INVOICE, $data);
+	}
+		
+	/**
+	 * Save post hook to update the post_title as order number
+	 * @param int $post_id
+	 * @param \WP_Post $post
+	 * @param type $update
+	 * @return type
+	 */
+	public function save_post($post_id, $post, $update) {
+		if (!preg_match("/AIA[0-9]+/",$post->post_title)) {
+			$this->create($post);	// initialize
+			$this->ID = $post_id;	// to be save
+			
+			$this->set_order_nr();	// update order number
+			return $this->save(false);
+		}
+		parent::save_post($post_id, $post, $update);
+	}
+	
+	/**
+	 * Set order nr. Post Name (post-title) is order nr
+	 */
+	public function set_order_nr($override=FALSE) {
+		if (!$override && !empty($this->post_title)) return $this->post_title;
+		
+		$this->post_title = 'AIA'.$this->get_increment_order_nr();
+	}
+	
+	/**
+	 * Set order nr. Post Name (post-title) is order nr
+	 * @return mixed post_name (ordernr) or FALSE if empty
+	 */
+	public function get_order_nr() {
+		if (empty($this->post_title)) return FALSE;
+		return $this->post_title;
+	}
+	
+	
+	/**
+	 * Returns the next order nr
+	 * @return int
+	 */
+	private function get_increment_order_nr() {
+		return (int)date('YmdHis');
 	}
 }

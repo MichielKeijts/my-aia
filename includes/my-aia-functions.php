@@ -194,6 +194,7 @@ function my_aia_add_attributes_form($name='em-event-attributes', $post_type = EM
 					<?php
 					break;
 				case "%s":
+				case "%d":
 				default:
 					?>
 					<tr>

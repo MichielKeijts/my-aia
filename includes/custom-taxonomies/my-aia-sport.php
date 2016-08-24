@@ -67,7 +67,7 @@ function my_aia_edit_user_taxonomy_metabox($user, $taxonomy='sport') {
 
 	/* Make sure the user can assign terms of the sport taxonomy before proceeding. */
 	if ( !current_user_can( $tax->cap->assign_terms ) ) {
-		echo "GEEN TOEGAGN";
+		echo "GEEN TOEGANG";
 	}
 		//return "GEEN TOEGANG";
 	

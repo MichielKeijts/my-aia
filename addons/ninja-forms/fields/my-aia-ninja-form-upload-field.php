@@ -21,7 +21,7 @@ function my_aia_ninja_forms_upload_field_enque_scripts() {
 }
 
 function my_aia_ninja_forms_upload_field_enque_styles() {
-	wp_enqueue_style('bootstrap', 'http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css', '', MY_AIA_VERSION );
+	//wp_enqueue_style('bootstrap', 'http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css', '', MY_AIA_VERSION );
 	wp_enqueue_style('jquery-fileupload-style', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/css/style.css', '', MY_AIA_VERSION );
 	wp_enqueue_style('jquery-fileupload', MY_AIA_PLUGIN_URL .		'vendor/jQuery-File-Upload/css/jquery.fileupload.css', '', MY_AIA_VERSION );
 }

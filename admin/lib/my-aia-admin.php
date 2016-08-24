@@ -27,9 +27,7 @@ class MY_AIA_ADMIN {
 	public function __construct() {
 		add_action( 'admin_menu', array($this, 'show_menu'));
 		// handle the request
-		$this->request_handler();
-		
-		
+		$this->request_handler();		
 	}
 	
 	/**
@@ -62,7 +60,7 @@ class MY_AIA_ADMIN {
 		
 		$this->set('hook_name', $_REQUEST['hook_name']);
 		
-		echo $this->view->render('tests/test');		
+		echo $this->controller->view->render('tests/test');		
 	}
 	
 	/**
@@ -71,7 +69,7 @@ class MY_AIA_ADMIN {
 	 */
 	public function request_handler() {
 		// if not a call to MY_AIA admin... 
-		if (!isset($_REQUEST['controller']) && !isset($_REQUEST['action'])) return false;
+		//if (!isset($_REQUEST['controller']) && !isset($_REQUEST['action'])) return false;
 		
 		// default:
 		$controller = 'page';
@@ -163,7 +161,7 @@ class MY_AIA_ADMIN {
 		
 		
 		// enqueue scripts
-		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
+		//wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 			
 		$this->add_metaboxes_to_post_types();
 
@@ -176,6 +174,7 @@ class MY_AIA_ADMIN {
 
 	/**
 	 * Adds metaboxes to the various admin interface pages
+	 * Metabox is described in the custom post type library, found in the classes directory
 	 */
 	private function add_metaboxes_to_post_types() {
 		my_aia_events_manager_add_form_widget();		// Enable Events Manager Addons
@@ -184,11 +183,14 @@ class MY_AIA_ADMIN {
 		
 		// initiate attribute (custom post) forms
 		foreach (MY_AIA::$CUSTOM_POST_TYPES as $post_type) {
-			add_meta_box('my-aia-'.$post_type.'-attribute-box', __('Attributes','my-aia'), array(MY_AIA::$post_types[$post_type],'get_attributes_form'), $post_type, 'normal', 'high');
+			// check if attribute form != false: otherwise no attribute form
+			if(MY_AIA::$post_types[$post_type]->has_attribute_form) {
+				add_meta_box('my-aia-'.$post_type.'-attribute-box', __('Attributes','my-aia'), array(MY_AIA::$post_types[$post_type],'get_attributes_form'), $post_type, 'normal', 'high');
+			}
+			
+			// set meta_boxes when they exists for custom post type
+			call_method_if_exists(MY_AIA::$post_types[$post_type], 'set_meta_boxes');
 		}		
-		
-		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-items-add-box', __('Order Items','my-aia'), array(MY_AIA::$post_types[MY_AIA_POST_TYPE_ORDER],'get_order_form'), MY_AIA_POST_TYPE_ORDER, 'normal', 'high');
-		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-items-box', __('Order Items','my-aia'), "my_aia_order_form_add_item", MY_AIA_POST_TYPE_ORDER, 'normal', 'high');
 	}
 	
 	
@@ -199,5 +201,14 @@ class MY_AIA_ADMIN {
 	 */
 	private function set($var, $val=NULL) {
 		$this->controller->view->set($var, $val);
+	}
+	
+	/**
+	 * Wrapper for $this->view->set. Set view variables
+	 * @param string $var name of variable
+	 * @param mixed $val vlue of the variabele
+	 */
+	private function set_flash($title, $type='info')  {
+		$this->controller->view->set_flash($title, $type);
 	}
 }

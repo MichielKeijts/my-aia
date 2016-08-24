@@ -19,7 +19,8 @@ class MY_AIA {
 		MY_AIA_TAXONOMY_OVERNACHTING,
 		MY_AIA_TAXONOMY_SPORTWEEK_EIGENSCHAP,
 		MY_AIA_TAXONOMY_DOELGROEP,
-		MY_AIA_TAXONOMY_TAAL
+		MY_AIA_TAXONOMY_TAAL,
+		MY_AIA_TAXONOMY_PRODUCT_CATEGORIE
 	);
 	
 	/**
@@ -32,6 +33,7 @@ class MY_AIA {
 		MY_AIA_POST_TYPE_ORDER,
 		MY_AIA_POST_TYPE_INVOICE,
 		MY_AIA_POST_TYPE_PAYMENT,
+		MY_AIA_POST_TYPE_TEMPLATE,
 	);
 	
 	/*
@@ -56,6 +58,18 @@ class MY_AIA {
 	 * @var \MY_AIA_PROCESSFLOW 
 	 */
 	static $processflow;
+	
+	/**
+	 * Array holding various settings in key/value pairs
+	 * @var array
+	 */
+	static $settings = array();
+	
+	/**
+	 * Array holding view_vars
+	 * @var array
+	 */
+	static $_viewVars;
 	
 	/**
 	 * post_types holder
@@ -273,6 +287,87 @@ class MY_AIA {
 					}
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Return Events for current_user 
+	 * @param int $user_id
+	 */
+	static function get_my_events($user_id = 0, $future_events = FALSE) {
+		em_get_my_bookings();
+		$bookings = EM_Bookings::get(array(
+			'owner' => false,
+			'person' => $user_id,
+			'scope'	=> $future_events ? 'future':'all',			
+		));
+		
+		$my_events = array();
+		foreach ($bookings as $booking) {
+			$event = $booking->get_event();
+			$event->link = $event->output("#_EVENTLINK"); 
+			$event->start =date('d/m', $event->start ); 
+			$my_events[] = $event;			
+		}
+		
+		return $my_events;
+	}
+	
+	/**
+	 * Display the My AIA navigaton bar. Possibly in different than buddypress format
+	 */
+	static function navigation_bar($extra_arguments = array()) {
+		if (!is_array($extra_arguments)) return FALSE;
+		if (self::$settings['navigation_bar'] && is_array(self::$settings['navigation_bar'])) 
+			$extra_arguments = $extra_arguments + self::$settings['navigation_bar'];
+		include MY_AIA_PLUGIN_DIR . "themes/default/buddypress/common/navigation-bar.php";
+	}
+	
+	/**
+	 * Return whether to display the buddypress header or not.
+	 * Default true
+	 * override by setting: MY_AIA::hide_buddypressheader();
+	 * @return bool
+	 */
+	static function display_buddypressheader() {
+		return !(isset(self::$settings['hide_buddypressheader']) && self::$settings['hide_buddypressheader']);
+	}
+	
+	static function hide_buddypressheader() {
+		self::$settings['hide_buddypressheader'] = TRUE;
+	}
+	static function show_buddypressheader() {
+		self::$settings['hide_buddypressheader'] = FALSE;
+	}
+	
+	/**
+	 * Set arguments for the navigation bar
+	 * parameters:
+	 * 
+	 *	'current_title' =>	<string>
+		'nav'			=>	<li></li>
+		'title'			=> <string>
+	 * @param array $extra_arguments
+	 * @return boolean
+	 */
+	static function set_navigationbar($extra_arguments= array()) {
+		if (!is_array($extra_arguments)) return FALSE;
+		self::$settings['navigation_bar'] = $extra_arguments;
+	}
+	
+	
+	/**
+	 * Set Variables for the VIEW
+	 * @param mixed $var Name of the var, or Array(var_name=>var_value)
+	 * @param mixed $val Value of the var
+	 */
+	static function set($var, $val=NULL) {
+		if (!is_array($var)) {
+			$var = array($var=>$val);
+		}
+		
+		foreach ($var as $key=>$val) {
+			self::$_viewVars[$key]=$val;
 		}
 	}
 }

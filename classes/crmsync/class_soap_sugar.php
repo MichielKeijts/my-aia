@@ -347,9 +347,13 @@ class SoapSugar {
 	 * of (contacts.manyware_relatienummer_c=251097)
 	 * $module iets als Contacts
 	 * @param string $srchQuery
+	 * @param string $module (Contacts)
+	 * @param string $max_results (30)
+	 * @param string $offset (0)
+	 * @param string $order_by ('') 
 	 * @return type 
 	 */
-	function searchCommon($srchQuery,$module="Contacts", $max_results=30, $offset=0, $order_by='' ) {
+	function searchCommon($srchQuery, $module="Contacts", $max_results=30, $offset=0, $order_by='' ) {
 		$response=$this->SOAP->__soapCall('get_entry_list', 
 				Array(
 					'session'=>$this->IdKey,
@@ -357,7 +361,7 @@ class SoapSugar {
 					'query'=>$srchQuery,
 					'order_by'=>$order_by,
 					'offset'=>$offset,
-					'select_fields'=>'aia_ministry_deelnames.*, aia_ministry_deelnames_cstm.*',
+					'select_fields'=>'*',
 					'max_results'=>$max_results,
 					'deleted'=>0)
 				);

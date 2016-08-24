@@ -8,11 +8,15 @@
  */
 
 include_once 'classes/my-aia-xprofile-change-moderate.php';
+include_once 'classes/my-aia-bp-core.php';
+include_once 'classes/my-aia-bp-orders.php';
+
 
 // add hooks
 add_action( 'xprofile_updated_profile',		'my_aia_xprofile_sync_wp_profile'	, 99, 1);			// update user_date with xprofile data
 add_action( 'profile_update',				'my_aia_wp_profile_sync_xprofile'	, 99, 2 );			// update xprofile with user_data
 add_action( 'profile_update',				MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save()	, 10, 2 );			// update xprofile with user_data
+add_action( 'bp_loaded',					'bp_my_aia_load_core_components' );						// load front-end 
 //add_action( 'bp_xprofile_settings_before_save', MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save, '',	1, 2);						// save profile edits to an review table
 
 /**
@@ -23,6 +27,28 @@ function my_aia_xprofile_edit_init() {
 	include_once 'classes/my-aia-taxonomy-field.php' ;
 }
 
+/**
+ * Load the BuddyPress Front-End add ons
+ * @global \BuddyPress $bp
+ */
+function bp_my_aia_load_core_components() {
+	global $bp;
+	if (!isset($bp->documents)) {
+		include_once 'classes/my-aia-bp-group-extension-location.php';
+		include_once 'classes/my-aia-bp-group-extension-group-type.php';
+		$bp->documents = new BP_MY_AIA_Component();
+		bp_register_group_extension('MY_AIA_BP_Group_Extension_Location');
+		bp_register_group_extension('MY_AIA_BP_Group_Extension_Group_Type');
+	}
+	
+	if (!isset($bp->my_orders)) {
+		//include_once 'classes/my-aia-bp-group-extension-location.php';
+		//include_once 'classes/my-aia-bp-group-extension-group-type.php';
+		$bp->orders = new BP_MY_AIA_ORDER_Component();
+		//bp_register_group_extension('MY_AIA_BP_Group_Extension_Location');
+		//bp_register_group_extension('MY_AIA_BP_Group_Extension_Group_Type');
+	}
+}
 
 /**
  * Update the custom boxes for the BP Admin

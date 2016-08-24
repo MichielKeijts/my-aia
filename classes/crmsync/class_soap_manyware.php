@@ -26,7 +26,7 @@ class SoapManyware {
 	private $SOAP=null;
 
     // Initiating Connection
-	function __construct($url='https://mw20ws.manyware.eu/IFundsMW2_114.wsdl') {
+	function __construct($url='https://mw20ws.manyware.eu/IFundsMW2_116.wsdl') {
 		$this->URL=$url;
 		$this->SOAP=new SoapClient($this->URL);
 

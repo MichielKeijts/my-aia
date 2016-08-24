@@ -29,7 +29,7 @@ class MY_AIA_APP_CONTROLLER {
 	 * View class
 	 * @var \MY_AIA_ADMIN_VIEW
 	 */
-	protected $view;
+	public $view;
 	
 	protected $layout = 'default';
 	

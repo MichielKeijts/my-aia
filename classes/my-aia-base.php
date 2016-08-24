@@ -26,6 +26,11 @@ class MY_AIA_BASE {
 	 */
 	public $assigned_user_id;
 	
+	/**
+	 * To show an attribute form
+	 * @var bool
+	 */
+	public $has_attribute_form = TRUE;
 	
 	/**
 	 * @var array List of Fields saved into database. Same list as class variables
@@ -111,7 +116,7 @@ class MY_AIA_BASE {
 	 * Find objects by WP_Post criteria ($args) see also WP_Query::parse_query 
 	 * for full list  of options
 	 * @param array $args 
-	 * @param $returnAsType (TRUE) retun as same object as $this
+	 * @param $returnAsType (TRUE) return as same object as $this
 	 */
 	public function find($args, $returnAsType = TRUE) {
 		$args['post_type'] = $this->post_type;
@@ -155,8 +160,8 @@ class MY_AIA_BASE {
 				} else {
 					// check if parse function exists
 					if (method_exists($this, 'parse_'.$key)) {
-						$this->$key = call_user_method('parse_'.$key, $this, $meta_data[ $field['name']	]);
-					} else {
+						$this->$key = call_user_func(array($this, 'parse_'.$key), $meta_data[ $field['name']	]);
+					} else {call_user_method();
 						// just set the values
 						$this->$key = $values;
 					}
@@ -260,6 +265,7 @@ class MY_AIA_BASE {
 			}
 		}
 	}
+	
 	
 	/**
 	 * Apply the $value to $this->$key

@@ -5,6 +5,8 @@
  * @license GPL
  */
 
+include MY_AIA_PLUGIN_DIR . 'vendor/Mollie/API/Autoloader.php';
+
 /**
  * Definition of the MY_AIA_ORDER post_type and including the custom fields
  * It also enables to create relationships
@@ -22,14 +24,16 @@ class MY_AIA_ORDER extends MY_AIA_BASE {
 	 */
 	public $phone;
 	public $email;
+	public $shipping_name;
 	public $shipping_address;
 	public $shipping_postcode;
 	public $shipping_city;
 	public $shipping_country;
-	public $location_address;
-	public $location_postcode;
-	public $location_city;
-	public $location_country;	
+	public $invoice_name;
+	public $invoice_address;
+	public $invoice_postcode;
+	public $invoice_city;
+	public $invoice_country;	
 	
 	/**
 	 * @var array List of Fields saved into database. Same list as class variables
@@ -40,14 +44,16 @@ class MY_AIA_ORDER extends MY_AIA_BASE {
 		'description'		=> array('name'=>'description','type'=>'%s'),
 		'phone'				=> array('name'=>'phone','type'=>'%s'),
 		'email'				=> array('name'=>'email','type'=>'%d'),
+		'shipping_name'		=> array('name'=>'shipping_name','type'=>'%s'),
 		'shipping_address'	=> array('name'=>'shipping_address','type'=>'%s'),
 		'shipping_postcode'	=> array('name'=>'shipping_postcode','type'=>'%s'),
 		'shipping_city'		=> array('name'=>'shipping_city','type'=>'%s'),
 		'shipping_country'	=> array('name'=>'shipping_country','type'=>'%s'),
-		'location_address'	=> array('name'=>'location_address','type'=>'%s'),
-		'location_postcode'	=> array('name'=>'location_postcode','type'=>'%s'),
-		'location_city'		=> array('name'=>'location_city','type'=>'%s'),
-		'location_country'	=> array('name'=>'location_country','type'=>'%s'),
+		'invoice_name'		=> array('name'=>'invoice_name','type'=>'%s'),
+		'invoice_address'	=> array('name'=>'invoice_address','type'=>'%s'),
+		'invoice_postcode'	=> array('name'=>'invoice_postcode','type'=>'%s'),
+		'invoice_city'		=> array('name'=>'invoice_city','type'=>'%s'),
+		'invoice_country'	=> array('name'=>'invoice_country','type'=>'%s'),
 		'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
 		'order_items'		=> array('name'=>'_order_items', 'type'=>'%a'),	// type is array!
 		'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
@@ -71,11 +77,21 @@ class MY_AIA_ORDER extends MY_AIA_BASE {
 	 */
 	public $invoice;
 	
+	/**
+	 * 
+	 * @param int|WP_Post $post
+	 */
 	public function __construct($post = NULL) {
 		parent::__construct($post);
 	}
 	
-	public function get_attributes_form() {
+	/**
+	 * Output attribute (custom post data) form
+	 * @global type $post
+	 * @param type $prefix
+	 * @return bool and echo the form
+	 */
+	public function get_attributes_form($prefix="") {
 		global $post;
 		
 		if (!$this->ID && $post && $post->ID)	parent::get($post);		
@@ -85,6 +101,8 @@ class MY_AIA_ORDER extends MY_AIA_BASE {
 		// return data
 		$data = array();
 		foreach ($this->fields as $field):
+			// create a dynamic form, to only show some some of the values
+			if (!empty($prefix) && strpos($field['name'], $prefix)===FALSE) continue;
 			if (in_array($field['name'], $displayed_fields)) continue; // step over already displayed fields..
 			$field['label'] = __($field['name'],'my-aia'); //my_aia_get_default_field_type($_field);
 
@@ -121,6 +139,9 @@ class MY_AIA_ORDER extends MY_AIA_BASE {
 			$field['value'] = $value;
 			$data[] = $field;
 		endforeach; // loop over $fields
+		
+		// enque script
+		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 		
 		return my_aia_order_form($this->ID, $this->order_items);
 	}
@@ -212,6 +233,140 @@ class MY_AIA_ORDER extends MY_AIA_BASE {
 		
 		parent::update_post_meta(FALSE);	// we already updated post data
 	}
+	
+	/**
+	 * Returns an] key=>value array of the templates
+	 */
+	private function get_invoice_templates() {
+		$posts = MY_AIA::$post_types[MY_AIA_POST_TYPE_TEMPLATE]->find(array(
+			'post_title'	=> 'Factuur'
+		));
+		
+		return $posts;
+	}
+	
+	/**
+	 * Either gets or creates a new invoice.
+	 * @param bool $create (default true) create when not exists
+	 * @return MY_AIA_INVOICe FALSE|MY_AIA_INVOICE
+	 */
+	public function get_invoice($create = TRUE) {
+		$invoice = new MY_AIA_INVOICE();
+		$invoices = $invoice->find(array('meta_query'=>array(array('key'=>'order_id', 'value'=>$this->ID))));
+		if ($invoices && count($invoices) > 0 ) {
+			$invoice->get($invoices[0]);	// set data
+			return $invoice;
+		} 
+		
+		if (!$create) return FALSE;
+		
+		// create an invoice
+		$invoice->get($this); // prepare from post data
+		$invoice->order_id = $this->ID;
+		$invoice->post_type = MY_AIA_POST_TYPE_INVOICE;
+		$invoice->ID = NULL;
+		$invoice->create();
+		
+		return $invoice;
+	}
+	
+	/**
+	 * Set the meta boxes
+	 */
+	public function set_meta_boxes() {
+		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-items-add-box', __('Order Items','my-aia'), array($this, 'get_order_form'), MY_AIA_POST_TYPE_ORDER, 'normal', 'high');
+		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-items-box', __('Order Items','my-aia'), array($this, "display_meta_box_order_add_item"), MY_AIA_POST_TYPE_ORDER, 'normal', 'high');
+		
+		add_meta_box('my-aia-'.MY_AIA_POST_TYPE_ORDER.'-order-invoice-box', __('Order Items','my-aia'), array($this, "display_meta_box_order_add_invoice"), MY_AIA_POST_TYPE_ORDER, 'side', 'default');
+	}
+	
+	/** Meta Box Display Functions */
+	public function display_meta_box_order_add_item() {
+		global $post;
+		$this->get($post);
+		
+		// enque script
+		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
+		
+		include(MY_AIA_PLUGIN_DIR . "/admin/view/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
+	
+	public function display_meta_box_order_add_invoice() {
+		global $post;
+		$this->get($post);
+		
+		$this->invoice = $this->get_invoice(FALSE);
+		
+		// enque script
+		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'admin/assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
+		
+		include(MY_AIA_PLUGIN_DIR . "/admin/view/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
+	
+	
+	
+	/**
+	 * Function to retun an array of order items of the current order. 
+	 */
+	public function get_order_items() {
+		return $this->order_items;
+	}
+	
+	/**
+	 * Function to retun an array of order items of the current order. 
+	 */
+	public function get_shopping_cart_widget() {
+		$view = new MY_AIA_VIEW(new stdClass());
+		
+		$mollie = new Mollie_API_Client;
+		$mollie->setApiKey("test_tFFHbqz89rCuFJJygrwwgJhb963r35");
+		
+		$payment = $mollie->payments->create(array(
+			"amount"      => 10.00,
+			"description" => "Test Betaling Athletes in Action",
+			"redirectUrl" => "http://www.athletesinaction.nl/members/my-order/12345/",
+		));
+		
+		$view->set('payment', $payment);
+		
+		return $view->render('post_type_templates/display_shopping_cart_widget', 'empty', FALSE);
+	}
+	
+	/**
+	 * Function to retun an array of order items of the current order. 
+	 */
+	public function get_shopping_cart_items() {
+		//$view = new MY_AIA_VIEW(new stdClass());
+	
+		/**
+		 * Simple proces
+		 * 1) show Cookie vars, ask for confirmation: 'Place order' 
+		 * 2) show adres/bank information, ask for proceed to payment
+		 * 3) show thank you information
+		 */
+		
+		// first get all the order items from cookie variable
+		if (isset($_COOKIE['my_aia_shopping_cart']) && isset($_REQUEST['create'])) {
+			$shopping_cart = json_decode(stripslashes($_COOKIE['my_aia_shopping_cart']));
+			if (count($shopping_cart->items) <= 0) {
+				$view->set_flash('Selecteer eerst een aantal producten voor je verder gaat', $type);
+			}
+			
+			foreach ($shopping_cart->items as $item) {
+				$order_item = new MY_AIA_ORDER_ITEM();
+				$order_item->product_id = $item->id;
+				$order_item->count = $item->count;
+				$order_item->set_product();
+				
+				array_push(
+						$this->order_items,
+						$order_item
+				);						
+			}
+		}		
+		
+		return $this->order_items;
+	}
 }
 
 
@@ -250,6 +405,7 @@ class MY_AIA_ORDER_ITEM {
 			}
 		}
 		
+		//try and find product
 		if (!$this->set_product()) return FALSE;
 
 		// apply variables 
@@ -280,6 +436,9 @@ class MY_AIA_ORDER_ITEM {
 	 * @return \MY_AIA_PRODUCT
 	 */
 	public function get_product() {
+		if (!$this->product && $this->product_id) {
+			if (!$this->set_product()) return FALSE;
+		}
 		return $this->product;
 	}
 	

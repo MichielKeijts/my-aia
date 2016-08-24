@@ -31,6 +31,7 @@ include ('includes/custom-taxonomies/my-aia-sport.php');
 include ('includes/custom-taxonomies/my-aia-taal.php');
 include ('includes/custom-taxonomies/my-aia-sportweek-eigenschap.php');
 include ('includes/custom-taxonomies/my-aia-sportbetrokkenheid.php');
+include ('includes/custom-taxonomies/my-aia-product-categorie.php');
 
 // Classes: Load MY_AIA class
 include ( 'classes/my-aia-processflow.php' );

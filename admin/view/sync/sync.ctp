@@ -47,10 +47,10 @@
 <script>
 	var sync_counter=0;
 	jQuery(document).ready(function(){
-		setTimeout("get_sync()", 100); //start
+		setTimeout(get_sync, 100); //start
 	});
 	
-	function get_sync() {
+	get_sync = function() {
 		// the actual query
 		jQuery.post(
 			ajaxurl, 
@@ -62,18 +62,27 @@
 			}, 
 			function(response){
 				if (response.sync_profiles_sugar_to_wordpress) {
+					var el = jQuery('tr.sync_rule_display:first').clone(true);
+					el.find('p').text("# " + sync_counter + "	Sync done. Aantal items: #"+response.count+"	Datum: ("+response.sync_profiles_sugar_to_wordpress+" "+response.sync_events_sugar_to_wordpress+" "+response.sync_registrations_sugar_to_wordpress+")");
+					el.insertAfter(jQuery('tr.sync_rule_display:last'));
+					sync_counter=sync_counter+1;
+					
 					if (response.count) {
 						// good response, and non zero response, continue
-						setTimeout("get_sync()", 100);
-					}
-					
-					var el = jQuery('tr.sync_rule_display').clone(true);
-					el.find('p').text("# " + sync_counter + "	Sync done. Aantal items: #"+response.count+"	Datum: ("+response.sync_profiles_sugar_to_wordpress+" "+response.sync_events_sugar_to_wordpress+" "+response.sync_registrations_sugar_to_wordpress+")");
-					el.appendTo(jQuery('tr.sync_rule_display').parent());
-					sync_counter=sync_counter+1;
+						setTimeout(get_sync, 100);
+					}					
 				}
-			}
-		);
+			})
+			.fail(function(){
+				var el = jQuery('tr.sync_rule_display:first').clone(true);
+				el.find('p').text("# ERROR .. retrying..");
+				el.insertAfter(jQuery('tr.sync_rule_display:last'));
+				sync_counter=sync_counter+1;
+				
+				// good response, and non zero response, continue
+				//setTimeout(get_sync, 100);
+				
+			});
 	}
 	
 </script>

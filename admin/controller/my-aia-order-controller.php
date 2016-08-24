@@ -38,6 +38,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 	 */
 	public function before_filter() {
 		add_action( 'wp_ajax_my_aia_admin_get_products', array($this, 'get_products'), 1);	
+		add_action( 'wp_ajax_my_aia_admin_create_invoice', array($this, 'create_invoice'), 1);	
 		add_action( 'wp_ajax_my_aia_admin_processflow_order_save', array($this, 'processflow_order_save'),1);	
 	}
 	
@@ -223,6 +224,65 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_APP_CONTROLLER {
 			
 			
 			
+			if ($products) {
+				$jsonAr = Array();
+				foreach ($products as $p) {
+					$jsonAr[] = array(
+						'value'  => $p->post_title,
+						'price' => $p->price,
+						'id'	=> $p->ID,
+					);
+				}
+				echo json_encode($jsonAr);
+				wp_die();
+			}
+			
+			wp_send_json_success();		
+		}
+		wp_send_json_error();
+	}
+	
+	/**
+	 * Save the order of the processflows. They can be reordered by drag and drop
+	 * on the admin interface.
+	 * Save by Ajax Call
+	 * 
+	 * @retun string json
+	 */
+	public function create_invoice() {
+		$parent_id = filter_input(INPUT_POST, 'parent_id');
+		$template_id = filter_input(INPUT_POST, 'template_id');
+		
+		if ($parent_id !== FALSE && $template_id !== FALSE) {
+			$order = NEW MY_AIA_ORDER($parent_id); // first get order
+			
+			if ($order) {
+				$invoice = $order->get_invoice(); // gets or creates invoice
+			} else {
+				wp_send_json_error(array('message'=>'could not find an order with this ID'));
+			}
+			
+			// get the option data
+			$invoice->invoice_template = $template_id;
+			$invoice->parent_id = $parent_id;
+			
+			// get a PDF
+			$filename = $invoice->create_invoice_pdf();
+			
+			if ($filename) {
+				// filename exists, create the invoice WP_Post
+				$invoice->ID = NULL;
+				$invoice->attachment = $filename;
+				$invoice->create($invoice);
+				
+				wp_send_json_success(array(
+					'invoice_number'		=>	$invoice->invoice_number,
+					'ID'					=>  $invoice->ID,
+					'attachment_permalink'	=>	str_replace(WP_CONTENT_DIR, WP_CONTENT_URL, $filename)	// replace DIR with URL
+				));
+			}
+			
+			//$invoice->g			
 			if ($products) {
 				$jsonAr = Array();
 				foreach ($products as $p) {

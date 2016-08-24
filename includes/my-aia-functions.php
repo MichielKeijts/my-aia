@@ -211,4 +211,47 @@ function my_aia_add_attributes_form($name='em-event-attributes', $post_type = EM
 	<?php 
 	return true;
 }
-?>
+
+
+/**
+ * Works much like <a href="http://codex.wordpress.org/Function_Reference/locate_template" target="_blank">locate_template</a>, except it takes a string instead of an array of templates, we only need to load one.
+ * Copied and modified from Events-Manager
+ * @param string $template_name
+ * @param boolean $load
+ * @uses locate_template()
+ * @return string
+ */
+function my_aia_locate_template( $template_name, $load=false, $args = array() ) {
+	//First we check if there are overriding tempates in the child or parent theme
+	$located = locate_template(array(MY_AIA_PLUGIN_DIR.$template_name, $template_name));
+	if( !$located ){
+		if ( file_exists(MY_AIA_PLUGIN_DIR.'/themes/default/'.$template_name) ) {
+			$located = MY_AIA_PLUGIN_DIR.'/themes/default/'.$template_name;
+		}
+	}
+	$located = apply_filters('my_aia_locate_template', $located, $template_name, $load, $args);
+	if( $located && $load ){
+		if( is_array($args) ) extract($args);
+		include($located);
+	}
+	return $located;
+}
+
+
+/**
+ * Shorthand to return the instance of MY_AIA_ORDER declared in 
+ * MY_AIA::$post_types[MY_AIA_ORDER]
+ * @return \MY_AIA_ORDER Order Instace
+ */
+function my_aia_order() {
+	return MY_AIA::$post_types[MY_AIA_POST_TYPE_ORDER];
+}
+
+/**
+ * Shorthand to return the instance of MY_AIA_INVOICE declared in 
+ * MY_AIA::$post_types[MY_AIA_INVOICE]
+ * @return \MY_AIA_INVOICE Order Instace
+ */
+function my_aia_invoice() {
+	return MY_AIA::$post_types[MY_AIA_POST_TYPE_INVOICE];
+}

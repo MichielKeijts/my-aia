@@ -1,8 +1,8 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * @Package my-aia
+ * @Author Michiel Keijts (c)2016
  */
+
 
 jQuery(document).ready(function($) {
 	/* Initialize autocomplete */
@@ -73,6 +73,8 @@ jQuery(document).ready(function($) {
 	
 	var MY_AIA_ORDER_APPLICATION = new MY_AIA_ORDER_FORM("#my-aia-order-items tbody");
 	MY_AIA_ORDER_APPLICATION.update_order_listeners();
+	
+	var MY_AIA_INVOICE_APPLICATION = new MY_AIA_INVOICE_FORM();
 });
 
 var MY_AIA_ORDER_FORM = function(scope) {
@@ -116,10 +118,39 @@ MY_AIA_ORDER_FORM.prototype.on_remove_row = function() {
 	jQuery(this).parent().parent().remove();
 }
 
+var MY_AIA_INVOICE_FORM = function() {
+	this.$ = jQuery;
+	this.select = '#select_invoice';
+	this.show = '#show_invoice';
+	this.$select = this.$(this.select);
+	this.$show = this.$(this.show);
+	this.$template = this.$('select[name=invoice_template]');
+	
+	this.$select.find('#create_invoice').on('click', {api: this}, this.onCreateInvoiceClick);
+	//this.$scope.find('#create_invoice').on('click', {api: this}, this.onCreateInvoiceClick);
+}
 
-/*MY_AIA_ORDER_FORM.prototype.submit = function () {
-	var order_items = new Array();
-	this.$scope.find('tr').each(function() {
-		//order_items[order_items.length] = new Array();
-	}
-}*/
+MY_AIA_INVOICE_FORM.prototype.onCreateInvoiceClick = function (e) {
+	e.preventDefault();
+	
+	e.data.api.$.post(
+			ajaxurl,
+			{
+				action:			'my_aia_admin_create_invoice',
+				controller:		'order',
+				template_id:	e.data.api.$template.val(),
+				parent_id:		e.data.api.$("#post_ID").val()
+			},
+			function(response) {
+				if (response.data.attachment_permalink) {
+					e.data.api.$show.find('#invoice_number').text(response.data.invoice_number);
+					e.data.api.$show.find('a.pdf-open').attr('href', response.data.attachment_permalink);
+					e.data.api.$show.find('a.reminder-mail').data('id', response.data.ID);
+					
+					e.data.api.$select.addClass('hidden');
+					e.data.api.$show.removeClass('hidden');
+				}
+			},
+			'json'
+	);
+}

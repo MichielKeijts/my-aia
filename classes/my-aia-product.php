@@ -24,6 +24,7 @@ class MY_AIA_PRODUCT extends MY_AIA_BASE {
 	public $price;
 	public $vat;
 	public $description;
+	public $short_description;
 	
 	/**
 	 * @var array List of Fields saved into database. Same list as class variables
@@ -32,6 +33,7 @@ class MY_AIA_PRODUCT extends MY_AIA_BASE {
 		'ID'				=> array('name'=>'ID','type'=>'%d'),
 		'name'				=> array('name'=>'name','type'=>'%s'),
 		'description'		=> array('name'=>'description','type'=>'%s'),
+		'short_description'	=> array('name'=>'short_description','type'=>'%s'),
 		'size'				=> array('name'=>'size','type'=>'%s'),
 		'price'				=> array('name'=>'price','type'=>'%f'),
 		'vat'				=> array('name'=>'vat','type'=>'%f'),
@@ -55,10 +57,11 @@ class MY_AIA_PRODUCT extends MY_AIA_BASE {
 			$field['label'] = __($field['name'],'my-aia'); //my_aia_get_default_field_type($_field);
 
 			// get value (as usually is an array)
-			$value = isset($this->$field['name']) ? esc_attr($this->$field['name'], ENT_QUOTES):'';
+			$var = $field['name'];
+			$value = property_exists($this, $var) ? esc_attr( $this->$var, ENT_QUOTES):'';
 			//$value = is_array($values[	$field['id'] ]) ?  reset($values[ $field['id'] ]) : $values[$field['id']];
 			if (!$value) $value="";
-
+;
 			$field['value'] = $value;
 			$data[] = $field;
 		endforeach; // loop over $fields

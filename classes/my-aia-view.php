@@ -142,9 +142,10 @@ class MY_AIA_VIEW {
 	 * Render function for the admin display.
 	 * @param string $template name of template relative to /admin/views/
 	 * @param string $layout name of layout relative to /admin/views/layouts/
+	 * @param bool	$do_output (return string or echo)
 	 * @return string rendered HTML
 	 */
-	public function render($template, $layout='default', $do_output=FALSE) {
+	public function render($template, $layout='default', $do_output=TRUE) {
 		if (!empty($this->_rendered_body)) return "";
 		
 		$template	= sprintf('%sadmin/view/%s.ctp', MY_AIA_PLUGIN_DIR, $template); // path to absolute dir
@@ -170,18 +171,19 @@ class MY_AIA_VIEW {
 		
 		// Get Content
 		$content = ob_get_clean();
-		
+		ob_start();
 		// include layout (which holds $content)
 		include ($layout);
 		$output = ob_get_clean();
 		$this->_rendered_body = $output;
-		
+	
 		
 		// restore $_current_output;
 		if ($_current_output)	
 			echo $_current_output;
 		
 		if ($do_output) echo $output;
+		
 		return $output;
 	}
 	

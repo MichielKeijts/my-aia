@@ -15,6 +15,7 @@ add_action( 'init', 'my_aia_register_taxonomy_taal' );
 add_action( 'init', 'my_aia_register_taxonomy_sportweek_eigenschap' );
 add_action( 'init', 'my_aia_register_taxonomy_kerkstroming' );
 add_action( 'init', 'my_aia_register_taxonomy_overnachting' );
+add_action( 'init', 'my_aia_register_taxonomy_product_categorie' );
 /*add_action( 'init', 'my_aia_register_post_type_partner' );
 add_action( 'init', 'my_aia_register_post_type_contract' );
 add_action( 'init', 'my_aia_register_post_type_order' );

@@ -11,10 +11,23 @@
  * - Insert Taxonomy data (register & on install: insert taxonomy tags)
  */
 
+$my_aia_extension_list = array('soap','curl','mbstring','memcached');
+
 /**
  * Function to install everything (or reinstall)
  */
 function my_aia_install() { 
+	global $my_aia_extension_list;
+	// check capabilities
+	foreach($my_aia_extension_list as $ext) {
+		if (!extension_loaded($ext)) {
+			echo "Please enable module php-{$ext}<br>";
+			$fail = TRUE;
+		}
+	}
+	
+	if ($fail) return false;
+	
 	my_aia_register_capabilities();
 	echo "<br>Capabilities inserted";
 	
@@ -53,7 +66,7 @@ function my_aia_insert_taxonomies() {
 	// loop over all custom taxonomies
 	foreach (MY_AIA::$CUSTOM_TAXONOMIES as $name) {
 		$filename = sprintf("my-aia-%s.txt", strtolower($name));
-		$lines =  file(MY_AIA_PLUGIN_DIR . 'include/definitions/' . $filename);
+		$lines =  file(MY_AIA_PLUGIN_DIR . 'includes/definitions/' . $filename);
 		foreach ($lines as $term) {
 			// insert term 
 			// wp does not overwrite term with same name

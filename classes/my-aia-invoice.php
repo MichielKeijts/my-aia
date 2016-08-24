@@ -27,10 +27,35 @@ class MY_AIA_INVOICE extends MY_AIA_BASE {
 	public $shipping_postcode;
 	public $shipping_city;
 	public $shipping_country;
-	public $location_address;
-	public $location_postcode;
-	public $location_city;
-	public $location_country;
+	public $invoice_name;
+	public $invoice_address;
+	public $invoice_postcode;
+	public $invoice_city;
+	public $invoice_country;
+	
+	/**
+	 * Template ID used to generate PDF
+	 * @var int 
+	 */
+	public $invoice_template;
+	
+	/**
+	 * Invoice Number, starts with 1
+	 * @var int 
+	 */
+	public $invoice_number = 1;	//initialize
+	
+	/**
+	 * Parent ID is th
+	 * @var int the id of the order
+	 */
+	public $order_id = 1;	//initialize
+	
+	/**
+	 * The PDF or attachment
+	 * @var string $attachment 
+	 */
+	public $attachment = NULL; 
 	
 	/**
 	 * @var array List of Fields saved into database. Same list as class variables
@@ -42,14 +67,24 @@ class MY_AIA_INVOICE extends MY_AIA_BASE {
 		'phone'				=> array('name'=>'phone','type'=>'%s'),
 		'website'			=> array('name'=>'website','type'=>'%d'),
 		'email'				=> array('name'=>'email','type'=>'%d'),
-		'location_address'	=> array('name'=>'location_address','type'=>'%sd'),
-		'location_postcode'	=> array('name'=>'location_postcode','type'=>'%s'),
-		'location_city'		=> array('name'=>'location_city','type'=>'%s'),
-		'location_country'	=> array('name'=>'location_country','type'=>'%s'),
-		'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
-		'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
+		'invoice_name'		=> array('name'=>'invoice_name','type'=>'%s'),
+		'invoice_address'	=> array('name'=>'invoice_address','type'=>'%s'),
+		'invoice_postcode'	=> array('name'=>'invoice_postcode','type'=>'%s'),
+		'invoice_city'		=> array('name'=>'invoice_city','type'=>'%s'),
+		'invoice_country'	=> array('name'=>'location_country','type'=>'%s'),
+		'invoice_number'	=> array('name'=>'invoice_number','type'=>'%d'),
+		'invoice_template'	=> array('name'=>'invoice_template','type'=>'%d'),
+		'invoice_attachment'=> array('name'=>'invoice_attachment','type'=>'%d'),
+		'order_id'			=> array('name'=>'order_id', 'type'=>'%d'),
+		'attachment'		=> array('name'=>'attachment', 'type'=>'%d')
+		//'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
+		//'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
 	);
 	
+	/**
+	 * Constructs the Invoice, built from MY_AIA_ORDER
+	 * @param int|WP_Post $post
+	 */
 	public function __construct($post = NULL) {
 		parent::__construct($post);
 	}
@@ -78,6 +113,18 @@ class MY_AIA_INVOICE extends MY_AIA_BASE {
 		
 		return my_aia_add_attributes_form(MY_AIA_POST_TYPE_INVOICE, MY_AIA_POST_TYPE_INVOICE, $data);
 	}
+	
+	/**
+	 * Override Create by defining an invoice number
+	 */
+	public function create($post_array = NULL) {
+		$this->post_title = $this->get_invoice_nr();
+		$this->name = $this->post_title;
+		$this->invoice_number = $this->post_title;
+		$this->post_content = 'Factuur voor order '.$this->order_id;
+		
+		parent::create($post_array);
+	}
 		
 	/**
 	 * Save post hook to update the post_title as order number
@@ -87,40 +134,44 @@ class MY_AIA_INVOICE extends MY_AIA_BASE {
 	 * @return type
 	 */
 	public function save_post($post_id, $post, $update) {
-		if (!preg_match("/AIA[0-9]+/",$post->post_title)) {
-			$this->create($post);	// initialize
-			$this->ID = $post_id;	// to be save
-			
-			$this->set_order_nr();	// update order number
+		if (!preg_match("/[0-9]+/",$post->post_title)) {
+			$this->post_title = $this->get_invoice_nr();
 			return $this->save(false);
 		}
 		parent::save_post($post_id, $post, $update);
 	}
 	
 	/**
-	 * Set order nr. Post Name (post-title) is order nr
+	 * Get last invoice number and ads one.
+	 * @global \wpdb $wpdb;
+	 * @return int invoice number
 	 */
-	public function set_order_nr($override=FALSE) {
-		if (!$override && !empty($this->post_title)) return $this->post_title;
+	public function get_invoice_nr() {
+		global $wpdb;
+		$restult = $wpdb->get_results(sprintf('SELECT meta_value FROM %s%s WHERE meta_key="invoice_number" ORDER BY meta_value DESC LIMIT 1', $wpdb->prefix, 'post_meta'));
+		if (!$result) {
+			return $this->invoice_number;
+		}
 		
-		$this->post_title = 'AIA'.$this->get_increment_order_nr();
+		return $result[0]['meta_value']+1;
 	}
 	
 	/**
-	 * Set order nr. Post Name (post-title) is order nr
-	 * @return mixed post_name (ordernr) or FALSE if empty
+	 * Create a PDF
+	 * @return string $filename;
 	 */
-	public function get_order_nr() {
-		if (empty($this->post_title)) return FALSE;
-		return $this->post_title;
-	}
-	
-	
-	/**
-	 * Returns the next order nr
-	 * @return int
-	 */
-	private function get_increment_order_nr() {
-		return (int)date('YmdHis');
+	public function create_invoice_pdf() {
+		// makes sure we have an invoice_number
+		$this->save_post($this->ID, $this, TRUE);
+		
+		$pdf = new MY_AIA_TEMPLATE($this->invoice_template);
+		$filename = $pdf->parse($this->invoice_template, $this->parent_id, MY_AIA_INVOICE_DIR);
+		
+		if ($filename) {
+			$this->attachment = $filename;
+			$this->update_post_meta();
+		}
+		
+		return $filename;
 	}
 }

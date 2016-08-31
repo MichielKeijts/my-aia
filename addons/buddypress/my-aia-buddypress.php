@@ -15,7 +15,7 @@ include_once 'classes/my-aia-bp-orders.php';
 // add hooks
 add_action( 'xprofile_updated_profile',		'my_aia_xprofile_sync_wp_profile'	, 99, 1);			// update user_date with xprofile data
 add_action( 'profile_update',				'my_aia_wp_profile_sync_xprofile'	, 99, 2 );			// update xprofile with user_data
-add_action( 'profile_update',				MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save()	, 10, 2 );			// update xprofile with user_data
+add_action( 'profile_update',				'MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save', 10, 2 );			// update xprofile with user_data
 add_action( 'bp_loaded',					'bp_my_aia_load_core_components' );						// load front-end 
 //add_action( 'bp_xprofile_settings_before_save', MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save, '',	1, 2);						// save profile edits to an review table
 
@@ -48,6 +48,8 @@ function bp_my_aia_load_core_components() {
 		//bp_register_group_extension('MY_AIA_BP_Group_Extension_Location');
 		//bp_register_group_extension('MY_AIA_BP_Group_Extension_Group_Type');
 	}
+	
+	include_once 'classes/my-aia-bp-template-parser.php';
 }
 
 /**

@@ -22,7 +22,8 @@ class BP_MY_AIA_ORDER_Component extends BP_Component {
 			//'addons/buddypress/my-aia-bp-notifications.php',
 			//'addons/buddypress/screens/profile.php',
 			'addons/buddypress/screens/orders.php',
-			'addons/buddypress/screens/my-orders.php',
+			'addons/buddypress/screens/my-order-edit.php',
+			'addons/buddypress/screens/order-status.php',
 			//'addons/buddypress/screens/attending.php',
 			//'addons/buddypress/screens/my-bookings.php',
 			//'addons/buddypress/screens/my-order.php'
@@ -71,39 +72,41 @@ class BP_MY_AIA_ORDER_Component extends BP_Component {
 			$can_manage_locations = current_user_can('edit_locations');
 			$can_manage_bookings = current_user_can('manage_bookings');
 		}
+		
 		/* Add 'Events' to the main user profile navigation */
 		$main_nav = array(
-			'name' => __( 'Orders', 'my-aia'),
+			'name' => __( 'Mijn Orders', 'my-aia'),
 			'slug' => BP_MY_AIA_ORDERS_SLUG,
 			'position' => 90,
 			'screen_function' => 'my_aia_bp_orders',
-			'default_subnav_slug' => 'my-order',
-			//'user_has_access' => true
+			'default_subnav_slug' => 'none',
+			//'user_has_access' => bp_is_my_profile()
 		);
 
 		$my_aia_link = trailingslashit( bp_displayed_user_domain() . 'orders' );
 		
 		/* Create SubNav Items */
 		$sub_nav[] = array(
-			'name' => __( 'Mijn Order', 'my-aia'),
-			'slug' => 'my-order',
+			'name' => __( 'Mijn Order Aanpassen', 'my-aia'),
+			'slug' => 'my-order-edit',
 			'parent_slug' => BP_MY_AIA_ORDERS_SLUG,
 			'parent_url' => $my_aia_link,
-			'screen_function' => 'my_aia_bp_my_orders',
-			'position' => 10
+			'screen_function' => 'my_aia_bp_my_order_edit',
+			'position' => 10,
+			'user_has_access' => true,//bp_is_my_profile()
 		);
 		
-		/*$sub_nav[] = array(
-			'name' => __( 'Events I\'m Attending', 'events-manager'),
-			'slug' => 'attending',
-			'parent_slug' => em_bp_get_slug(),
-			'parent_url' => $em_link,
-			'screen_function' => 'bp_em_attending',
+		$sub_nav[] = array(
+			'name' => __( 'Bestelling Status', 'my-aia'),
+			'slug' => 'status',
+			'parent_slug' => BP_MY_AIA_ORDERS_SLUG,
+			'parent_url' => $my_aia_link,
+			'screen_function' => 'my_aia_bp_my_order_status',
 			'position' => 20,
-			'user_has_access' => bp_is_my_profile() // Only the logged in user can access this on his/her profile
+			'user_has_access' => true,//bp_is_my_profile(), // Only the logged in user can access this on his/her profile
 		);
 	
-		if( $can_manage_events ){
+		/*if( $can_manage_events ){
 			$sub_nav[] = array(
 				'name' => __( 'My Events', 'events-manager'),
 				'slug' => 'my-events',

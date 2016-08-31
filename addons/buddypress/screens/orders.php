@@ -9,17 +9,13 @@ function my_aia_bp_orders() {
 	add_action( 'bp_template_title', 'my_aia_bp_orders_title' );
 	add_action( 'bp_template_content', 'my_aia_bp_orders_content' );
 	
-	// get contents
-	MY_AIA::set('order_items', MY_AIA::$post_types[MY_AIA_POST_TYPE_ORDER]->get_shopping_cart_items(bp_current_user_id()));
+	// get contents and save in $self::$_viewVars
+	MY_AIA::set('orders', MY_AIA::get_my_orders(get_current_user_id()));
 	
 	// hide header
 	MY_AIA::hide_buddypressheader();
 	
-	MY_AIA::set_navigationbar(array(
-		'current_title' =>	__( 'Mijn Bestelling', 'my-aia'),
-		'nav'			=>	NULL,//MY_AIA::$post_types[MY_AIA_POST_TYPE_ORDER]->get_shopping_cart_widget(),
-		'title'			=>	'Winkelwagen',
-	));
+	MY_AIA::set_navigationbar();
 	
 	
 	/* Finally load the plugin template file. */
@@ -28,7 +24,7 @@ function my_aia_bp_orders() {
 }
 	
 function my_aia_bp_orders_title() {
-	__( 'Mijn Bestelling', 'my-aia');
+	echo __( 'Mijn Winkelwagen', 'my-aia');
 }
 /**
  * Determines whether to show event page or events page, and saves any updates to the event or events

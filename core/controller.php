@@ -50,8 +50,11 @@ class MY_AIA_CONTROLLER {
 		//  set SAVE_POST
 		$model = strtoupper($this->classname);
 		$modelClass = sprintf("MY_AIA_%s",$model);//e.g. MY_AIA_TEMPLATE
-		require_once sprintf('%smodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname);	// NO autoload yet.. in future remove
-		$this->{$model} = new $modelClass(); 
+		// only if model exists. Makes Controlles more flexible
+		if (file_exists(sprintf('%ssprintfmodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname))) {
+			require_once sprintf('%ssprintfmodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname);	// NO autoload yet.. in future remove
+			$this->{$model} = new $modelClass(); 
+		}
 	}
 	
 	/**
@@ -110,10 +113,10 @@ class MY_AIA_CONTROLLER {
 	private function find_template($action=NULL) {
 		if (empty($action)) $action = $this->classname;
 
-		$path = sprintf('%views/%s/%s', MY_AIA_PLUGIN_DIR, lowercase_underscore($this->classname), lowercase_underscore($action));
+		$path = sprintf('%sviews/%s/%s', MY_AIA_PLUGIN_DIR, lowercase_underscore($this->classname), lowercase_underscore($action));
 		
 		if (!file_exists($path.'.ctp')) {
-			return sprintf('%s/views/error/general', MY_AIA_PLUGIN_DIR);
+			return sprintf('error/general');
 		}
 		
 		return sprintf('%s/%s', lowercase_underscore($this->classname), lowercase_underscore($action));

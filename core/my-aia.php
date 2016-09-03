@@ -139,8 +139,9 @@ class MY_AIA {
 	 * Register the hooks for the process
 	 */
 	static function register_hooks() {
-		add_action( 'wp_footer', "MY_AIA::get_footer_content", 10, 1);
-		add_action( 'body_class', "MY_AIA::body_class_add", 10, 1);
+		add_action( 'wp_footer',				"MY_AIA::get_footer_content", 10, 1);
+		add_action( 'body_class',				"MY_AIA::body_class_add", 10, 1);
+		add_action( 'wp_get_nav_menu_items',	"MY_AIA::get_my_aia_menu", 10, 1);					// show my-aia-menu
 		add_action( 'wp_ajax_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);					// AJAX hook to get Events 	
 		add_option('my-aia-registered-hooks', array('save_post'));
 		add_option('my-aia-hook-save_post');
@@ -409,6 +410,22 @@ class MY_AIA {
 	}
 	
 	/**
+	 * Returns a list of events recommended for the user
+	 * @param int $user_id
+	 * @return EM_Event array()
+	 */
+	static function get_recommended_events($user_id = 0) {
+		if ($user_id == 0) $user_id = get_current_user_id ();
+		
+		$events = new EM_Events(array(
+			'limit' => 5,
+			'scope' => 'all' //@TODO only for testing purpose
+		));
+		
+		return $events;
+	}
+	
+	/**
 	 * Display the My AIA navigaton bar. Possibly in different than buddypress format
 	 */
 	static function navigation_bar($extra_arguments = array()) {
@@ -450,6 +467,9 @@ class MY_AIA {
 		self::$settings['navigation_bar'] = $extra_arguments;
 	}
 	
+	/**
+	 * Footer content for lay over (login menu)
+	 */
 	static function get_footer_content() {
 		?>
 		<div id="join-us-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -464,6 +484,50 @@ class MY_AIA {
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
 		<?php	
+	}
+	
+	/**
+	 * Extra menu items: 
+	 * - Mijn AIA
+	 * - Login / Logout
+	 * - Join Us / Members
+	 */
+	static function get_my_aia_menu($items, $menu = NULL, $args=NULL) {
+		if (get_current_user_id()!=0);
+		
+		/**
+		 * Nasty Solution: Override the last 3 post elements
+		 */
+		$id = count($items) - 3;
+		
+		
+		/*
+		 * If User is logged in menu
+		 */
+		if (get_current_user_id()!=0) {
+			$items[$id]->title = 'Mijn AIA';
+			$items[$id]->url = bp_core_get_user_domain( get_current_user_id() );
+			
+			$id++;
+			$items[$id]->title = __('Uitloggen','my-aia');
+			$items[$id]->url = wp_logout_url('/');
+			
+			$id++;
+			$items[$id]->title = __('Members','my-aia');
+			$items[$id]->url = '/mijn-aia/members/';
+		} else {
+			$items[$id]->title = 'Mijn AIA';
+			$items[$id]->url = '/join-us/';
+			
+			$id++;
+			$items[$id]->title = __('Inloggen','my-aia');
+			$items[$id]->url = wp_login_url('/mijn-aia/');
+
+			$id++;
+			$items[$id]->title = __('Join Us','my-aia');
+			$items[$id]->url = '/join-us/';
+		}
+		return $items;
 	}
 	
 	

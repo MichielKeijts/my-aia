@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-include_once(MY_AIA_PLUGIN_DIR . 'classes/crmsync/class_soap_sugar.php');
-include_once(MY_AIA_PLUGIN_DIR . 'classes/crmsync/class_conversion_helper.php');
+include_once(MY_AIA_PLUGIN_DIR . 'core/crmsync/class_soap_sugar.php');
+include_once(MY_AIA_PLUGIN_DIR . 'core/crmsync/class_conversion_helper.php');
 
 /**
  * Description of my-aia-sync-controller
@@ -53,6 +53,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * @var int (seconds)
 	 */
 	private $start_time;
+	
 	
 	/**
 	 * Before Filter function
@@ -108,7 +109,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		
 		// get EXTERNAL (sugarcrm) fields
-		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'includes/definitions/my-aia-sugacrm-contact-fields.txt');
+		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'config/definitions/my-aia-sugacrm-contact-fields.txt');
 		$sugar_fields = explode("\r\n",$sugar_fields_string);
 	
 		$this->set('internal_fields', $internal_fields);
@@ -141,7 +142,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		
 		// get EXTERNAL (sugarcrm) fields
-		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'includes/definitions/my-aia-sugacrm-event-fields.txt');
+		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'config/definitions/my-aia-sugacrm-event-fields.txt');
 		$sugar_fields = explode("\r\n",$sugar_fields_string);
 	
 		$this->set('internal_fields', $internal_fields);
@@ -189,8 +190,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		$internal_fields[] = 'EM::BOOKING_META::sugar_date_modified';	// EM_Event fields
 	
 		// get EXTERNAL (sugarcrm) fields
-		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'includes/definitions/my-aia-sugacrm-registration-fields.txt');
-		$sugar_fields_string .= "\r\n".file_get_contents(MY_AIA_PLUGIN_DIR . 'includes/definitions/my-aia-sugacrm-contact-fields.txt');
+		$sugar_fields_string = file_get_contents(MY_AIA_PLUGIN_DIR . 'config/definitions/my-aia-sugacrm-registration-fields.txt');
+		$sugar_fields_string .= "\r\n".file_get_contents(MY_AIA_PLUGIN_DIR . 'config/definitions/my-aia-sugacrm-contact-fields.txt');
 		$sugar_fields = explode("\r\n",$sugar_fields_string);
 	
 		$this->set('internal_fields', $internal_fields);

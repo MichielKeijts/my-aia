@@ -30,7 +30,7 @@ include_once ('config/custom-taxonomies/my-aia-product-categorie.php');
 include_once ( 'controllers/my-aia-processflow.php' );
 include_once ( 'core/processflow/my-aia-processflow-static-condition.php' );
 include_once ( 'controllers/my-aia-html-helper.php' );
-include_once ( 'controllers/my-aia-view.php' );
+include_once ( 'core/my-aia-view.php' );
 include_once ( 'core/controller.php' );
 include_once ( 'core/model.php' );
 include_once ( 'core/my-aia.php' );

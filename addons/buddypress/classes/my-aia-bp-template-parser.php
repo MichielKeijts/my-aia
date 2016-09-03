@@ -73,10 +73,11 @@ function my_aia_is_documents() {
 function my_aia_bp_before_member_body_default() {
 	if (!do_template_modification()) return "";
 	?>
-		<section class="buddy-press">
+		<section class="buddy-press buddypress-tiles">
 			<div class="column-wrapper">
 				<div class="column-4-1 column-md-3-1 column-sm-1">
-					<div class="column-inner">
+					<div class="raster events-filter-label">
+						<div class="column-inner">
 	<?php
 }
 
@@ -85,16 +86,39 @@ function my_aia_bp_before_profile_content() {
 	// break column-4-1
 	// get new class
 	?>
+						</div>
 					</div>
 				</div>
 				<div class="column-4-3 column-md-3-2 column-sm-1">
-					<div class="column-inner">
+					<div class="raster buddypress-content">
+						<div class="column-inner">
+						
+	<?php
+}
+
+/**
+ * Above GROUPS
+ * @return string
+ */
+function my_aia_bp_before_groups_content() {
+	if (!do_template_modification()) return "";
+	// break column-4-1
+	// get new class
+	?>
+						</div>
+					</div>
+				</div>
+				<div class="column-4-3 column-md-3-2 column-sm-1">
+					<div class="raster buddypress-content">
+						<div>
+						
 	<?php
 }
 
 function my_aia_bp_after_member_body_default () {
 	if (!do_template_modification()) return "";
 	?>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -104,6 +128,7 @@ function my_aia_bp_after_member_body_default () {
 
 add_action( 'bp_before_member_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_profile_content', 'my_aia_bp_before_profile_content');
-add_action( 'bp_before_events_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_member_groups_content', 'my_aia_bp_before_groups_content');
+//add_action( 'bp_before_events_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_member_body', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_member_body', 'my_aia_bp_after_member_body_default');

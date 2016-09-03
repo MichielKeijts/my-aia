@@ -23,9 +23,16 @@ class MY_AIA_ADMIN {
 		
 	);
 	private $action;
+	
+	/**
+	 * Is checked before semi automagic run of request render
+	 * @var book 
+	 */
+	private $isMY_AIAcall = FALSE;
 
 	public function __construct() {
 		add_action( 'admin_menu', array($this, 'show_menu'));
+		//add_action( 'init', array($this,'request_render'), 999,1 );	// this calls the automatic render of the controller
 		// handle the request
 		$this->request_handler();		
 	}
@@ -78,6 +85,7 @@ class MY_AIA_ADMIN {
 		if (!isset($_REQUEST['controller'])) return false;
 		
 		// default:
+		$this->isMY_AIAcall = TRUE;
 		$controller = 'page';
 		$this->action = 'index';
 		
@@ -98,9 +106,10 @@ class MY_AIA_ADMIN {
 			$this->controller = new $this->className();
 		}
 		
-		call_method_if_exists($this->controller, 'before_filter'); 
+		//call_method_if_exists($this->controller, 'before_filter'); 
 		
 		// done. other handling is done in $this->request_render();
+		//$this->request_render();
 	}
 	
 	/** 
@@ -111,6 +120,7 @@ class MY_AIA_ADMIN {
 	 * - afterRender callback
 	 */
 	public function request_render() {
+		if (!$this->isMY_AIAcall) return FALSE;
 		call_method_if_exists($this->controller, 'before_filter');
 		call_method_if_exists($this->controller, 'before_render'); 
 		
@@ -131,11 +141,6 @@ class MY_AIA_ADMIN {
 			case "members":	return "members";
 			default:		return "";
 		}
-	}
-	
-	public function show_admin_menu() {
-		//echo "Welkom in het ADMIN menu voor Mijn AIA";
-		return true;
 	}
 	
 	/**
@@ -162,23 +167,21 @@ class MY_AIA_ADMIN {
 			10
 		);
 		
-		
-		add_submenu_page('my-aia-admin',__('Reset','my-aia'),		__('Reset','my-aia'), 'manage_options', 'my-aia-reset', array($this, 'reset') );
-		//add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), 'my_aia_admin', 'my-aia-partners', 'edit.php?post_type=partner' );
-		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'my_aia_admin', 'my-aia-settings', array($this, 'settings') );
-		add_submenu_page('my-aia-admin',__('Sportweken','my-aia'),	__('Sportweken','my-aia'), 'my_aia_admin', 'my-aia-sportweken', 'MY_AIA_ADMIN::show_admin_menu' );
-		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'my_aia_admin', 'my-aia-hooks-index', array($this, 'hooks_index'));
+		// add submenu_pages
+		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'manage_options', 'my-aia-admin&controller=page', 	array($this, 'request_render') );
+		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'manage_options', 'my-aia-admin&controller=processflow', 	array($this, 'request_render'));
+		add_submenu_page('my-aia-admin',__('Products','my-aia'),	__('Products','my-aia'), MY_AIA_POST_TYPE_PRODUCT, 'edit.php?post_type='.MY_AIA_POST_TYPE_PRODUCT, 	NULL);
+		add_submenu_page('my-aia-admin',__('Orders','my-aia'),	__('Orders','my-aia'), MY_AIA_POST_TYPE_ORDER, 'edit.php?post_type='.MY_AIA_POST_TYPE_ORDER, 	NULL);
+		add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), MY_AIA_POST_TYPE_PARTNER, 'edit.php?post_type='.MY_AIA_POST_TYPE_PARTNER, 	NULL);
+		add_submenu_page('my-aia-admin',__('Templates','my-aia'),	__('Templates','my-aia'), MY_AIA_POST_TYPE_TEMPLATE, 'edit.php?post_type='.MY_AIA_POST_TYPE_TEMPLATE, 	NULL);
 		
 		
 		// enqueue scripts
 		//wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 			
 		$this->add_metaboxes_to_post_types();
-
 		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
-		
-		
 		remove_action( 'admin_notices', 'update_nag', 3 );
 	}
 

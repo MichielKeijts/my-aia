@@ -72,9 +72,9 @@ function get_user_by_meta_data($meta_key, $meta_value, $return_all = FALSE) {
  * @return mixed Array(result) | FALSE
  */
 function get_google_geocode_result($data) {
-	include_once MY_AIA_PLUGIN_DIR . 'classes/crmsync/class_google_geocode.php';
+	include_once MY_AIA_PLUGIN_DIR . 'core/crmsync/class_google_geocode.php';
 	
-	$geocoder = new class_google_geocode();
+	$geocoder = new class_google_geocode(MY_AIA::$settings['google_maps_api_key']);
 	return $geocoder->get_result($data);
 }
 

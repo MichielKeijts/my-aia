@@ -54,6 +54,21 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	private $start_time;
 	
+	/*
+	 * Ids of some members
+	 * array
+	 */
+	private $ids = array(
+			"5ebdca15-a5a7-7b71-628c-5604faa86791", ///kath
+			"d2b794c3-be82-4f25-3753-4f0719f19583", // agien
+			"a6ddce37-0ff0-c229-66fe-4f070f503fac", // jouke
+			"3d1ec996-64a2-b605-539d-4f070e094638", // michiel
+			"86d7815a-2abf-e51b-14e3-4f070e7a73ca", // marcel
+			"a4910c38-455c-a5dc-63bb-4f07190c038a", // christiaan
+			"d0039759-0e53-c0c8-b70b-5278f15f0604", // jonathan
+			);
+	
+	
 	
 	/**
 	 * Before Filter function
@@ -284,12 +299,12 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		//if ($items < 100) 
-			//$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
+		if ($items < 100) 
+			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
-		//if ($items < 100) 
-		//	$items += $this->sync_events_sugar_to_wordpress($this->sync_dates['sync_events_sugar_to_wordpress']);
+		if ($items < 100) 
+			$items += $this->sync_events_sugar_to_wordpress($this->sync_dates['sync_events_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Registration Data
 		if ($items < 100) 
@@ -312,26 +327,29 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	
 	/**
 	 * Synchronise a
-	 * @param string $fromdate Sync from this date
+	 * @param string $date_offset['date'] Sync from this date
 	 * @parem boolean $create if TRUE create, if not exists
 	 * @return boolean
 	 */
-	private function sync_profiles_sugar_to_wordpress($fromdate='2000-01-01', $create=TRUE) {
+	private function sync_profiles_sugar_to_wordpress($date_offset, $create=TRUE) {
 		global $wpdb;
 		
+		// seleect only a small number of ID, namely AIA employees
+		
+		$subset = sprintf("contacts.id IN ('%s') AND ", implode("','", $this->ids));
 		
 		// loop over all contacts
 		$items_found = TRUE;
 		$num_items_per_query = 50;
-		$offset = 0;
-		while ($items_found && $offset<=100 ) { // 100 per time for speed issues
+		$offset = $date_offset['offset'];
+		while ($items_found && $date_offset['offset']-$offset<=100 ) { // 100 per time for speed issues
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
-					"contacts_cstm.manyware_aiarelatie_c = 1 && contacts.last_name<>'' AND UNIX_TIMESTAMP(contacts.date_modified) >= ".  (strtotime($fromdate) - 7200),
+					$subset ."contacts_cstm.manyware_aiarelatie_c = 1 && contacts.last_name<>'' AND UNIX_TIMESTAMP(contacts.date_modified) >= ".  (strtotime($date_offset['date'])),
 					"Contacts",
 					$num_items_per_query,
-					0,
+					$date_offset['offset'],
 					'date_modified ASC'	// order by
 				);
 
@@ -368,24 +386,27 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
-			$offset += count($items); // increase by number of restults
+			$date_offset['offset'] += count($items); // increase by number of restults
 			
 			// update sync_date:
-
- 			$fromdate =  $items[ count($items)-1 ]['date_modified'];
-			$this->set_sync_dates(__FUNCTION__, $fromdate);
+			if (!$items_found) {			
+				$this->set_sync_dates(__FUNCTION__, $last_fromdate, 0 );
+			} else {
+				$last_fromdate =  $items[ count($items)-1 ]['date_modified'];
+				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
+			}
 		}
 	
-		return $offset;
+		return $date_offset['offset']-$offset;
 	}
 	
 	/**
 	 * Synchronise a Event from Sugar to Wordpress
-	 * @param string $fromdate Sync from this date
+	 * @param string $date_offset['date'] Sync from this date
 	 * @parem boolean $create if TRUE create, if not exists
 	 * @return boolean
 	 */
-	private function sync_events_sugar_to_wordpress($fromdate='2000-01-01', $create=TRUE) {
+	private function sync_events_sugar_to_wordpress($date_offset = NULL, $create=TRUE) {
 		global $wpdb;		
 		
 		/* DEBUG 
@@ -441,15 +462,15 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		// loop over all contacts
 		$items_found = TRUE;
 		$num_items_per_query = 50;
-		$offset = 0;
-		while ($items_found && $offset<=50 ) { //TEMP !! FOR DEBUG!!
+		$start_offset = $date_offset['offset'];
+		while ($items_found && $date_offset['offset']-$start_offset<=100 ) { //TEMP !! FOR DEBUG!!
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
-					"AIA_ministry_projecten.titel <>'' AND UNIX_TIMESTAMP(AIA_ministry_projecten.date_modified) >= ". strtotime($fromdate),
+					"AIA_ministry_projecten.titel <>'' AND UNIX_TIMESTAMP(AIA_ministry_projecten.date_modified) >= ". strtotime($date_offset['date']),
 					"AIA_ministry_projecten",
 					$num_items_per_query,
-					0,
+					$date_offset['offset'],
 					'date_modified ASC'	// order by
 				);
 
@@ -503,24 +524,28 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
-			$offset += count($items); // increase by number of restults
+			$date_offset['offset'] += count($items); // increase by number of restults
 			
 			// update sync_date:
-			$fromdate = $items[ count($items)-1 ]['date_modified'];
-			$this->set_sync_dates(__FUNCTION__, $fromdate);
+			if (!$items_found) {			
+				$this->set_sync_dates(__FUNCTION__, $last_fromdate,0 );
+			} else {
+				$last_fromdate =  $items[ count($items)-1 ]['date_modified'];
+				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
+			}
 		}
 	
-		return $offset;
+		return $date_offset['offset'] - $start_offset;
 	}
 	
 	/**
 	 * Function to update or insert EM_Bookings with the SugarCRM aia_ministry_deelnames
 	 * data. This uses the sync columns
-	 * @param type $fromdate
+	 * @param type $date_offset['date']
 	 * @param type $create
 	 * @return boolean
 	 */
-	private function sync_registrations_sugar_to_wordpress($fromdate='2015-01-01', $create=TRUE) {
+	private function sync_registrations_sugar_to_wordpress($date_offset=NULL, $create=TRUE) {
 /* -- EXAMPLE DATA
 aia_ministry_project_id_c	7fc114e2-c080-9ff5-11d6-560e735be09f
 aia_ministry_project_name	2016_SK016-T_Sportkampen 2016 Tieners
@@ -576,15 +601,17 @@ vrijwaring_ok	0
 		// loop over all registrations
 		$items_found = TRUE;
 		$num_items_per_query = 50;
-		$offset = 0;
-		while ($items_found && $offset<=100 ) { //TEMP !! FOR DEBUG!!
+		$offset = $date_offset['offset'];
+		$subset = sprintf("AIA_ministry_deelnames.contact_id_c IN ('%s') AND ", implode("','", $this->ids));
+		while ($items_found && $date_offset['offset']-$offset<=100 ) { //TEMP !! FOR DEBUG!!
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
-					"AIA_ministry_deelnames.contact_id_c <>'' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($fromdate) - 0),
+					$subset.
+					"AIA_ministry_deelnames.contact_id_c <>'' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($date_offset['date'])),
 					"AIA_ministry_deelnames",
 					$num_items_per_query,
-					0,
+					$date_offset['offset'],
 					'date_modified ASC'	// order by
 				);
 			
@@ -666,12 +693,19 @@ vrijwaring_ok	0
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
-			$offset += count($items); // increase by number of restults
+			$date_offset['offset'] += count($items); // increase by number of restults
 			
-			// update sync_date:			
-			$this->set_sync_dates(__FUNCTION__, $items[ count($items)-1 ]['date_modified']);
+			
+			
+			// update sync_date:
+			if (!$items_found) {			
+				$this->set_sync_dates(__FUNCTION__, $last_fromdate,0 );
+			} else {
+				$last_fromdate =  $items[ count($items)-1 ]['date_modified'];
+				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
+			}
 		}		
-		return $offset;
+		return $date_offset['offset']-$offset;
 	}
 	
 	/**
@@ -844,6 +878,8 @@ vrijwaring_ok	0
 					
 					$from_def	= explode("::", $rule['external_field']);
 					$to_def		= explode("::", $rule['internal_field']);
+					if (count($from_def) != 3 || count($to_def) != 3) continue;
+					
 					$from_field = $from_def[2];
 					$to_field = $to_def[2];
 
@@ -854,8 +890,8 @@ vrijwaring_ok	0
 						
 						// if a CHILD class
 						if ($to_def[1] != $to_def[2]) {
-							if (!is_array($to_data[$to_def[1]])) $to_data[$to_def[1]] = array();
-							$to_data[ $to_def[1] ][ $to_def[2] ] = ConversionHelper::from_sugar($from_field, $from_data);
+							if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
+							$to_data[ $to_def[0] ][ $to_def[1] ] = ConversionHelper::from_sugar($from_field, $from_data);
 						} else {
 							if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
 							$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_sugar($from_field, $from_data);
@@ -990,7 +1026,7 @@ vrijwaring_ok	0
 			$user = get_user_by('ID', $userID);
 			
 			foreach ($dataset['WP'] as $key=>$val) {
-				$user->$key = $val;
+				$user->{$key} = $val;
 			}
 			
 			// update user command
@@ -1312,18 +1348,18 @@ vrijwaring_ok	0
 	 */
 	private function get_sync_dates() {
 		$default_sync_dates = array(
-			'sync_profiles_sugar_to_wordpress'		=> '2000-01-01 00:00:00',
-			'sync_events_sugar_to_wordpress'		=> '2000-01-01 00:00:00',
-			'sync_registrations_sugar_to_wordpress'	=> '2000-01-01 00:00:00',
-			'sync_events_wordpress_to_sugar'		=> '2012-01-01 00:00:00',
-			'sync_registrations_wordpress_to_sugar'	=> '2012-01-01 00:00:00',
-			'sync_profiles_wordpress_to_sugar'		=> '2012-01-01 00:00:00',
+			'sync_profiles_sugar_to_wordpress'		=> array('date'=>'2000-01-01 00:00:00','offset'=>0),
+			'sync_events_sugar_to_wordpress'		=> array('date'=>'2000-01-01 00:00:00','offset'=>0),
+			'sync_registrations_sugar_to_wordpress'	=> array('date'=>'2000-01-01 00:00:00','offset'=>0),
+			'sync_events_wordpress_to_sugar'		=> array('date'=>'2012-01-01 00:00:00','offset'=>0),
+			'sync_registrations_wordpress_to_sugar'	=> array('date'=>'2012-01-01 00:00:00','offset'=>0),
+			'sync_profiles_wordpress_to_sugar'		=> array('date'=>'2012-01-01 00:00:00','offset'=>0)
 		);
 		
 		$dates = get_option(MY_AIA_SYNC_DATES, $default_sync_dates);
 		
 		foreach ($default_sync_dates as $key=>$date) {
-			if (!isset($dates[$key]) || !is_numeric(strtotime($dates[$key]))) $dates[$key] = $default_sync_dates[$key];
+			if (!isset($dates[$key]['date']) || !is_numeric(strtotime($dates[$key]['date']))) $dates[$key]['date'] = $default_sync_dates[$key];
 		}
 		
 		return $dates;
@@ -1334,8 +1370,8 @@ vrijwaring_ok	0
 	 * @param string $key
 	 * @param string $value date-time readable by strtotime
 	 */
-	private function set_sync_dates($key, $value = NULL) {
-		if (empty($key) || empty($value)) return FALSE;
+	private function set_sync_dates($key, $date=NULL, $offset = 0) {
+		if (empty($key) || empty($date)) return FALSE;
 		
 		// use variabele to set dates
 		if (empty($this->sync_dates)) {
@@ -1345,7 +1381,8 @@ vrijwaring_ok	0
 		if (!array_key_exists($key, $this->sync_dates)) return FALSE; // Not a valid key to set
 		
 		// set value & update wp_option
-		$this->sync_dates[$key] = $value;		
+		$this->sync_dates[$key]['date'] = $date;		
+		$this->sync_dates[$key]['offset'] = $offset;		
 		return update_option(MY_AIA_SYNC_DATES, $this->sync_dates, FALSE);
 	}
 	

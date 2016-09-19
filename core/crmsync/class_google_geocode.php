@@ -24,7 +24,12 @@ class class_google_geocode {
 	 */
 	private $url;	
 				
-	public function __construct($url='https://maps.googleapis.com/maps/api/geocode/json', $key='AIzaSyDtMwN3eT9t_-Hut-qKqtAOewl_Px0iaa8') {
+	/**
+	 * 
+	 * @param string $key
+	 * @param string $url='https://maps.googleapis.com/maps/api/geocode/json' 
+	 */
+	public function __construct($key='AIzaSyDtMwN3eT9t_-Hut-qKqtAOewl_Px0iaa8', $url='https://maps.googleapis.com/maps/api/geocode/json') {
 		$this->key = $key;
 		$this->url = $url;
 	}

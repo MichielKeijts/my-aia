@@ -18,8 +18,8 @@ include_once("iso3166.php");
 class SoapSugar {
 	private $debug="";
 	private $IdKey="";
-	private $user=USER;
-	private $pass=PASS;
+	private $user;
+	private $pass;
 
 
 	public  $SOAP=null;

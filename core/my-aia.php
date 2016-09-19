@@ -233,7 +233,7 @@ class MY_AIA {
 	* @since 0.1.0
 	*/
     static function load_textdomain() {
-		load_plugin_textdomain( 'my-aia', false, plugin_basename( dirname( __FILE__ ) ) . '/config/languages' ); 
+		load_plugin_textdomain( 'my-aia', false, plugin_basename( dirname( __FILE__ ) ) . '/../config/languages' ); 
 	}
 	
 	/**
@@ -360,7 +360,7 @@ class MY_AIA {
 		if (!(isset(self::$controllers[$post->post_type]) && is_a(self::$controllers[$post->post_type], $className))) {
 			// check if model exists, otherwise leave
 			$controllerDir = MY_AIA_PLUGIN_DIR . 'controllers/';	
-			$cstm_file = sprintf('%smy-aia-%s.php',$controllerDir, $post_type);
+			$cstm_file = sprintf('%smy-aia-%s.php',$controllerDir, $post->post_type);
 			if (file_exists($cstm_file)) {
 				include_once($cstm_file);
 				self::$controllers[$post_type] = new $className();
@@ -473,7 +473,8 @@ class MY_AIA {
 		
 		$obj = new stdClass();
 		$obj->messages = messages_get_unread_count($user_id);
-		$obj->notifications = BP_Notifications_Notification::get_current_notifications_for_user()['total'];
+		$tmp = BP_Notifications_Notification::get_current_notifications_for_user();
+		$obj->notifications = $tmp['total'];
 		
 		return $obj;
 	}

@@ -14,19 +14,18 @@
 					<td width="20%"><span class="name"></span></td>
 					<td width="50%"><span class="name">omschrijving</span></td>
 					<td width="10%"><span class="count">aantal</span></td>
-					<td width="10%"><span class="count">bedrag</span></td>
-					<td width="10%"></td>
+					<td width="20%"><span class="count">bedrag</span></td>
+					
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach (
-						
 						$this->get_order_items() as $item): ?>
 				<tr class="">
 					<td width="10%"><div class="product-image"><?= get_the_post_thumbnail($item->product_id, array('width'=>150, 'height'=>150)); ?></div></td>
-					<td width="80%"><span class="name"><?= $item->post_title; ?></span></td>
+					<td width="50%"><span class="name"><?= $item->post_title; ?></span></td>
 					<td width="10%"><span class="count"><?= $item->count; ?></span></td>
-					<td width="10%"><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count);; ?></span></td>
+					<td width="20%"><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count);; ?></span></td>
 				</tr>
 				<?php endforeach; //$order_items ?>
 			</tbody>
@@ -34,7 +33,7 @@
 				<tr>
 					<td></td>
 					<td colspan=2><span class="total_price"><?= __('TOTAAL','my-aia'); ?></span></td>
-					<td><span class="total_price">&euro; <?= $total_price; ?></span></td>
+					<td><span class="total_price">&euro; <?= $this->ORDER->total_amount; ?></span></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -77,8 +76,10 @@
 				<div class="column-inner">
 					<h3><?= __('Overige gegevens','my-aia');?></h3>
 					<ul>
-						<li>Status: Betaald (Betaal nu)</li>
-						<li>Download <a href='#'>hier</a> je proforma factuur</li>
+						<li>Status: <?= $this->ORDER->order_status ?> 
+							<?php if ($this->ORDER->order_status == MY_AIA_ORDER_STATUS_AWAITING_PAYMENT) echo '<br>klik <a href="../my-order-edit/?make_payment&order_id=', $this->ORDER->ID, '">hier</a> om je order te betalen';
+						?></li>
+						<li>Download <a href='<?= $this->ORDER->invoice->pdf_link() ?>'>hier</a> je proforma factuur</li>
 					</ul>
 				</div>
 			</div>

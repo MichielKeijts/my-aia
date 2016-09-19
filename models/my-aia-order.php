@@ -33,8 +33,11 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public $invoice_city;
 	public $invoice_country;	
 	public $total_amount;
+	public $total_amount_ex_btw;
 	public $order_status;		// Prefix use MY_AIA_ORDER_STATUS
 	public $assigned_user_id;
+	
+	
 	
 	/**
 	 * @var array List of Fields saved into database. Same list as class variables
@@ -181,7 +184,7 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	/**
 	 * Either gets or creates a new invoice.
 	 * @param bool $create (default true) create when not exists
-	 * @return MY_AIA_INVOICe FALSE|MY_AIA_INVOICE
+	 * @return MY_AIA_INVOICE FALSE|MY_AIA_INVOICE
 	 */
 	public function get_invoice($create = TRUE) {
 		$invoice = new MY_AIA_INVOICE();
@@ -194,13 +197,16 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		if (!$create) return FALSE;
 		
 		// create an invoice
+		$order_id = $this->ID;
 		$invoice->get($this->ID); // prepare from post data
-		$invoice->order_id = $this->ID;
-		$invoice->post_type = MY_AIA_POST_TYPE_INVOICE;
+		$invoice->apply($this);
 		$invoice->ID = NULL;
-		$invoice->total_amount = $this->total_amount;
+		$invoice->order_id = $order_id;
 		$invoice->create();
-		$invoice->save();
+		$invoice->order_id = $order_id;
+		$invoice->post_type = MY_AIA_POST_TYPE_INVOICE;
+		$invoice->total_amount = $this->total_amount;
+		$invoice->save(FALSE);
 		
 		return $invoice;
 	}
@@ -235,7 +241,8 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	 */
 	public function prepare_shopping_cart_items($shopping_cart) {
 		$this->order_items = array();
-		$this->total_amount = 0;
+		$this->total_amount = 0.0;
+		$this->total_amount_ex_btw = 0.0;
 		foreach ($shopping_cart->items as $item) {
 			$order_item = new MY_AIA_ORDER_ITEM();
 			$order_item->product_id = $item->id;
@@ -248,6 +255,7 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 			);						
 
 			$this->total_amount += $order_item->get_product()->price * $order_item->count;
+			$this->total_amount_ex_btw += $order_item->get_product()->price / (1 + intval(trim($order_item->get_product()->vat,'%'))/100) * $order_item->count;
 		}
 
 		$this->assigned_user_id = $user_id;

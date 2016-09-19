@@ -85,7 +85,7 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 		include_once MY_AIA_PLUGIN_DIR . 'vendor/Mollie/API/Autoloader.php';
 		$mollie = new Mollie_API_Client;
 		
-		$mollie->setApiKey("test_tFFHbqz89rCuFJJygrwwgJhb963r35");
+		$mollie->setApiKey(MY_AIA::$settings['mollie_key']);
 		
 		$pmt    = $mollie->payments->get($this->PAYMENT->payment_id);
 		
@@ -96,16 +96,16 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 			if (isset($order) && $order) {
 				if ($pmt->isPaid()) {
 					wp_publish_post($invoice->order_id);
-					$order->oder_status = MY_AIA_ORDER_STATUS_PAID;
+					$order->order_status = MY_AIA_ORDER_STATUS_PAID;
 				} else {
-					$order->oder_status = MY_AIA_ORDER_STATUS_AWAITING_PAYMENT;
+					$order->order_status = MY_AIA_ORDER_STATUS_AWAITING_PAYMENT;
 				}
 			}
-			$order->save();
+			$order->update_post_meta(FALSE);
 			$this->PAYMENT->save();
 			return $order->ID;
 		}
-		
+		return $order->ID;
 		//
 		return $this->PAYMENT->get_invoice();
 	}

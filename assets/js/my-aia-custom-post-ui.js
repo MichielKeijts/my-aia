@@ -22,6 +22,36 @@ jQuery(document).ready(function($) {
 		}
 	});
 	
+	$('#my-aia-product-select' ).autocomplete({
+		source:    ajaxurl + '?action=my_aia_admin_get_products_wpdmpro&controller=wpdmpro',
+		delay:     500,
+		minLength: 2,
+		position:  ( 'undefined' !== typeof isRtl && isRtl ) ? { my: 'right top', at: 'right bottom', offset: '0, -1' } : { offset: '0, -1' },
+		open:      function() { $(this).addClass('open'); },
+		close:     function() { $(this).removeClass('open'); $(this).val(''); },
+		select:    function( event, ui ) { 
+			//ui.item.id /value/..
+			$('#my_aia_product_add_id').text(ui.item.id);
+			$('input[name=product_id]').val(ui.item.id);
+			$('#my_aia_product_add_name').text(ui.item.name);
+		}
+	});
+	
+	$('#my-aia-product-select' ).autocomplete({
+		source:    ajaxurl + '?action=my_aia_admin_get_wpdmpro_products&controller=wpdmpro',
+		delay:     500,
+		minLength: 2,
+		position:  ( 'undefined' !== typeof isRtl && isRtl ) ? { my: 'right top', at: 'right bottom', offset: '0, -1' } : { offset: '0, -1' },
+		open:      function() { $(this).addClass('open'); },
+		close:     function() { $(this).removeClass('open'); $(this).val(''); },
+		select:    function( event, ui ) { 
+			//ui.item.id /value/..
+			$('#my_aia_product_add_id').text(ui.item.id);
+			$('input[name=download_id]').val(ui.item.id);
+			$('#my_aia_product_add_name').text(ui.item.name);
+		}
+	});
+	
 	
 	$('#button_order_item_add' ).click(function(e){
 		e.preventDefault();

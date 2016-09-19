@@ -51,8 +51,8 @@ class MY_AIA_CONTROLLER {
 		$model = strtoupper($this->classname);
 		$modelClass = sprintf("MY_AIA_%s",$model);//e.g. MY_AIA_TEMPLATE
 		// only if model exists. Makes Controlles more flexible
-		if (file_exists(sprintf('%ssprintfmodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname))) {
-			require_once sprintf('%ssprintfmodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname);	// NO autoload yet.. in future remove
+		if (file_exists(sprintf('%smodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname))) {
+			require_once sprintf('%smodels/my-aia-%s.php', MY_AIA_PLUGIN_DIR, $this->classname);	// NO autoload yet.. in future remove
 			$this->{$model} = new $modelClass(); 
 		}
 	}
@@ -69,7 +69,7 @@ class MY_AIA_CONTROLLER {
 		
 		if (!$this->get_model()->ID && $post && $post->ID)	$this->get_model()->get($post);		
 		
-		$displayed_fields = array('ID','name', 'description','assigned_user_id','order_items','total_order_price'); // hide
+		$displayed_fields = array('ID','name', 'description','assigned_user_id','order_items','total_order_price','parent_type'); // hide
 		//
 		// return data
 		$data = array();
@@ -155,7 +155,8 @@ class MY_AIA_CONTROLLER {
 	 * Before Render function
 	 * called to include all the styles etc from Wordpress
 	 */
-	public function before_render() {		
+	public function before_render() {	
+		if (!is_admin()) return true;
 		wp_enqueue_style( 'my-aia-admin-jquery-ui', MY_AIA_PLUGIN_URL . 'assets/css/jquery-ui.min.css', '', MY_AIA_VERSION );
 		wp_enqueue_style( 'my-aia-admin', MY_AIA_PLUGIN_URL . 'assets/css/admin.css', '', MY_AIA_VERSION );
 		wp_enqueue_style( 'my-aia-admin-jstree-default', MY_AIA_PLUGIN_URL . 'assets/css/jstree/default/style.min.css', '', MY_AIA_VERSION );
@@ -163,6 +164,7 @@ class MY_AIA_CONTROLLER {
 		wp_enqueue_script( 'my-aia-admin-jquery-ui', MY_AIA_PLUGIN_URL . 'assets/js/jquery_ui/jquery-ui.min.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-tabs', MY_AIA_PLUGIN_URL . 'assets/js/vendors/tabs.js', '', MY_AIA_VERSION );
 		wp_enqueue_script( 'my-aia-admin-jstree', MY_AIA_PLUGIN_URL . 'assets/js/jstree.min.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-conditions', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-admin.js', '', MY_AIA_VERSION );
 	
 		$this->set('title',$_viewVars["titel"]);
 	}

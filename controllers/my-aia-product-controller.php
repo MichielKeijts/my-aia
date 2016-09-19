@@ -39,4 +39,25 @@ class MY_AIA_PRODUCT_CONTROLLER extends MY_AIA_CONTROLLER {
 	public function index() {
 		
 	}
+	
+		
+	/**
+	 * Set the meta boxes
+	 */
+	public function set_meta_boxes() {
+		add_meta_box('my-aia-'.$this->classname.'-display-add-box', __('Download (Webshop)','my-aia'), array($this, 'display_meta_box_product_add_wpdmpro'), $this->classname, 'side', 'high');
+	}
+	
+	/** Meta Box Display Functions */
+	public function display_meta_box_product_add_wpdmpro() {
+		global $post;
+		
+		$this->download = new MY_AIA_WPDMPRO();
+		$this->download->findByProduct($post->ID);
+				
+		// enque script
+		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
+		
+		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
 }

@@ -106,7 +106,8 @@ class MY_AIA_ADMIN {
 			$this->controller = new $this->className();
 		}
 		
-		//call_method_if_exists($this->controller, 'before_filter'); 
+		// sets the AJAX listeners, so call before INIT hook is called
+		call_method_if_exists($this->controller, 'before_filter'); 
 		
 		// done. other handling is done in $this->request_render();
 		//$this->request_render();
@@ -120,8 +121,11 @@ class MY_AIA_ADMIN {
 	 * - afterRender callback
 	 */
 	public function request_render() {
-		if (!$this->isMY_AIAcall) return FALSE;
-		call_method_if_exists($this->controller, 'before_filter');
+		if (defined('MY_AIA_REQUEST_RENDERED')) return FALSE;
+		if (!$this->isMY_AIAcall || defined('DOING_AJAX') && DOING_AJAX) return FALSE;
+		
+		define('MY_AIA_REQUEST_RENDERED', TRUE);
+		//call_method_if_exists($this->controller, 'before_filter');
 		call_method_if_exists($this->controller, 'before_render'); 
 		
 		// call the action and render
@@ -169,6 +173,7 @@ class MY_AIA_ADMIN {
 		
 		// add submenu_pages
 		add_submenu_page('my-aia-admin',__('Settings','my-aia'),	__('Settings','my-aia'), 'manage_options', 'my-aia-admin&controller=page', 	array($this, 'request_render') );
+		add_submenu_page('my-aia-admin',__('Reset','my-aia'),	__('Reset','my-aia'), 'manage_options', 'reset', 	array($this, 'reset') );
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'manage_options', 'my-aia-admin&controller=processflow', 	array($this, 'request_render'));
 		add_submenu_page('my-aia-admin',__('Products','my-aia'),	__('Products','my-aia'), MY_AIA_POST_TYPE_PRODUCT, 'edit.php?post_type='.MY_AIA_POST_TYPE_PRODUCT, 	NULL);
 		add_submenu_page('my-aia-admin',__('Orders','my-aia'),	__('Orders','my-aia'), MY_AIA_POST_TYPE_ORDER, 'edit.php?post_type='.MY_AIA_POST_TYPE_ORDER, 	NULL);
@@ -197,7 +202,7 @@ class MY_AIA_ADMIN {
 		// initiate attribute (custom post) forms
 		foreach (MY_AIA::$CUSTOM_POST_TYPES as $post_type) {
 			// check if attribute form != false: otherwise no attribute form
-			if(MY_AIA::$controllers[$post_type]->has_attribute_form) {
+			if(MY_AIA::$controllers[$post_type]->has_attribute_form === TRUE) {
 				add_meta_box('my-aia-'.$post_type.'-attribute-box', __('Attributes','my-aia'), array(MY_AIA::$controllers[$post_type],'get_attributes_form'), $post_type, 'normal', 'high');
 			}
 			

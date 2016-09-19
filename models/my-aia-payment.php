@@ -92,7 +92,7 @@ class MY_AIA_PAYMENT extends MY_AIA_MODEL {
 		$user = new WP_User(get_current_user_id());
 		
 		$mollie = new Mollie_API_Client;
-		$mollie->setApiKey("test_tFFHbqz89rCuFJJygrwwgJhb963r35");
+		$mollie->setApiKey(MY_AIA::$settings['mollie_key']);
 		
 		$payment = $mollie->payments->create(array(
 			"amount"		=> $amount,

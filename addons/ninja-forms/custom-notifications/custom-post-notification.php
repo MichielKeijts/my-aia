@@ -21,7 +21,7 @@ class MY_AIA_NF_SAVE_TO_POST extends NF_Notification_Base_Type {
 	 */
 	function __construct($post_type = 'post') {
 		$this->name = __( 'Save to Custom Post', 'ninja-forms' );
-		$this->post_type = $post;
+		$this->post_type = $post_type;
 	}
 	
 	public function initialize($post_type = NULL) {

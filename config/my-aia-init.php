@@ -8,7 +8,7 @@
 // Define actions
 register_activation_hook('my-aia-install.php','my_aia_install');
 
-/*add_action( 'plugins_loaded', 'MY_AIA::load_textdomain', 0 );
+add_action( 'plugins_loaded', 'MY_AIA::load_textdomain', 0 );
 add_action( 'init', 'my_aia_register_taxonomy_sport' );
 add_action( 'init', 'my_aia_register_taxonomy_sport_level' );
 add_action( 'init', 'my_aia_register_taxonomy_taal' );
@@ -16,7 +16,7 @@ add_action( 'init', 'my_aia_register_taxonomy_sportweek_eigenschap' );
 add_action( 'init', 'my_aia_register_taxonomy_kerkstroming' );
 add_action( 'init', 'my_aia_register_taxonomy_overnachting' );
 add_action( 'init', 'my_aia_register_taxonomy_product_categorie' );
-add_action( 'init', 'my_aia_register_post_type_partner' );
+/*add_action( 'init', 'my_aia_register_post_type_partner' );
 add_action( 'init', 'my_aia_register_post_type_contract' );
 add_action( 'init', 'my_aia_register_post_type_order' );
 add_action( 'init', 'my_aia_register_post_type_payment' );
@@ -51,4 +51,4 @@ add_action( 'wp_ajax_nopriv_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);		
 
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 
-add_action ( 'init', 'MY_AIA::init');
+add_action ( 'init', 'MY_AIA::init', -1, 1);

@@ -68,4 +68,21 @@ class MY_AIA_PRODUCT extends MY_AIA_MODEL {
 		
 		return my_aia_add_attributes_form(MY_AIA_POST_TYPE_PRODUCT, MY_AIA_POST_TYPE_PRODUCT, $data);
 	}
+	
+	/**
+	 * Save post hook, save download ID
+	 */
+	public function save_post($post_id, $post, $update) {
+		if (isset($_REQUEST['download_id']) || $_REQUEST['download_id'] > 0) {
+			$download = new MY_AIA_WPDMPRO();
+			$download->get($_REQUEST['download_id']);
+			if ($download->ID) {
+				$download->product_id = $post_id;
+				$download->update_post_meta(FALSE);
+			}
+		}
+		
+		// call parent
+		parent::save_post($post_id, $post, $update);
+	}
 }

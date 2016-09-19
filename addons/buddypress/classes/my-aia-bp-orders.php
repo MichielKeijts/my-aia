@@ -93,7 +93,7 @@ class BP_MY_AIA_ORDER_Component extends BP_Component {
 			'parent_url' => $my_aia_link,
 			'screen_function' => 'my_aia_bp_my_order_edit',
 			'position' => 10,
-			'user_has_access' => true,//bp_is_my_profile()
+			'user_has_access' => bp_is_my_profile()
 		);
 		
 		$sub_nav[] = array(
@@ -103,7 +103,7 @@ class BP_MY_AIA_ORDER_Component extends BP_Component {
 			'parent_url' => $my_aia_link,
 			'screen_function' => 'my_aia_bp_my_order_status',
 			'position' => 20,
-			'user_has_access' => true,//bp_is_my_profile(), // Only the logged in user can access this on his/her profile
+			'user_has_access' => bp_is_my_profile(), // Only the logged in user can access this on his/her profile
 		);
 	
 		/*if( $can_manage_events ){

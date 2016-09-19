@@ -33,6 +33,11 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	public $invoice_city;
 	public $invoice_country;
 	
+	public $total_amount;
+	public $total_amount_ex_btw;
+	
+	public $order_items;
+	
 	/**
 	 * Template ID used to generate PDF
 	 * @var int 
@@ -49,13 +54,25 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	 * Parent ID is th
 	 * @var int the id of the order
 	 */
-	public $order_id = 1;	//initialize
+	public $order_id;	//initialize
 	
 	/**
 	 * The PDF or attachment
 	 * @var string $attachment 
 	 */
 	public $attachment = NULL; 
+	
+	/**
+	 * User ID attached..
+	 * @var int 
+	 */
+	public $assigned_user_id;
+	
+	/**
+	 *
+	 * @var MY_AIA_ORDER 
+	 */
+	public $order;
 	
 	/**
 	 * @var array List of Fields saved into database. Same list as class variables
@@ -77,8 +94,9 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		'invoice_attachment'=> array('name'=>'invoice_attachment','type'=>'%d'),
 		'order_id'			=> array('name'=>'order_id', 'type'=>'%d'),
 		'total_amount'		=> array('name'=>'total_amount', 'type'=>'%d'),
-		'attachment'		=> array('name'=>'attachment', 'type'=>'%d')
-		//'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
+		'total_amount_ex_btw'	=> array('name'=>'total_amount_ex_btw', 'type'=>'%d'),
+		'attachment'		=> array('name'=>'attachment', 'type'=>'%d'),
+		'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
 		//'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
 	);
 	
@@ -134,6 +152,10 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	 * @return type
 	 */
 	public function save_post($post_id, $post, $update) {
+		if ($post_id >0 && $this->ID != $post_id) {
+			//$this->get($post_id);
+			$this->apply($post);
+		}
 		if (!preg_match("/[0-9]+/",$post->post_title)) {
 			$this->post_title = $this->get_invoice_nr();
 			return $this->save(false);
@@ -166,7 +188,7 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		
 		$pdf = new MY_AIA_TEMPLATE_CONTROLLER();
 		$pdf->TEMPLATE->get($this->invoice_template);
-		$filename = $pdf->parse($this->invoice_template, $this->parent_id, MY_AIA_INVOICE_DIR);
+		$filename = $pdf->parse($this->invoice_template, $this->ID, MY_AIA_INVOICE_DIR);
 		
 		if ($filename) {
 			$this->attachment = $filename;
@@ -203,7 +225,8 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	 */
 	public function pdf_link() {
 		if (empty($this->attachment)) return "#";
-		return str_replace(WP_CONTENT_DIR, WP_CONTENT_URL, $this->attachment);
+		//return str_replace(WP_CONTENT_DIR, WP_CONTENT_URL, $this->attachment);
+		return sprintf('%s/?post=%d', MY_AIA_DOWNLOAD_SLUG, $this->ID);
 	}
 	
 	/**
@@ -235,4 +258,26 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		// check total amount done
 		return $total_amount_done >= $this->total_amount;
 	}
+	
+	/**
+	 * Output template for order_items
+	 */
+	public function template_order_items() {
+		$this->order = new MY_AIA_ORDER($this->order_id);
+		
+		if ($this->order) {
+			$view = new MY_AIA_VIEW(new MY_AIA_CONTROLLER());
+			$view->set('order', $this->order);
+			return $view->render("/post_type_templates/" . __FUNCTION__, 'empty',false);
+		}
+	}
+	
+	
+	public function total_amount_ex_btw() {
+		if (!$this->order) $this->order = new MY_AIA_ORDER($this->order_id);
+		
+		if ($this->order) {
+			return $this->order->total_amount_ex_btw;
+		}
+	} 
 }

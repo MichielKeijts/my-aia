@@ -37,6 +37,9 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	public $ORDER;
 	
+	public $message = "";
+	public $error = FALSE;
+	
 	/**
 	 * Before Filter function
 	 * called before most of the wordpress logic happens.
@@ -92,6 +95,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 				$jsonAr = Array();
 				foreach ($products as $p) {
 					$jsonAr[] = array(
+						'name'	=>	$p->post_title,
 						'value'  => $p->post_title,
 						'price' => $p->price,
 						'id'	=> $p->ID,
@@ -114,6 +118,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * @retun MY_AIA_INVOICE $invoice
 	 */
 	public function create_invoice($template_id = 0) {
+		global $wpdb;
 		if (!($this->ORDER->invoice instanceof MY_AIA_INVOICE)) 
 			$this->ORDER->invoice = $this->ORDER->get_invoice(TRUE); // gets or creates invoice
 			
@@ -130,9 +135,8 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 			$this->ORDER->invoice->save();
 
 			// always publish
-			wp_publish_post($this->ORDER->invoice->ID);
+			$wpdb->update( $wpdb->posts, array( 'post_status' => 'publish' ), array( 'ID' => $this->ORDER->invoice->ID ) );
 
-			$this->ORDER->invoice = $invoice;// overrule to be sure
 			return $this->ORDER->invoice;
 		}		
 		
@@ -326,11 +330,18 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		if (count($this->ORDER->order_items) <= 0)			return false;
 		
 		// check all
+		$this->message = __('Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder kunt.','my-aia');
 		foreach ($this->ORDER->fields as $field) {
 			if (strpos($field['name'], 'shipping') === FALSE && strpos($field['name'], 'invoice') === FALSE) continue;
-			if (!filter_input(INPUT_POST, $field['name']) || empty(filter_input(INPUT_POST, $field['name']))	) return FALSE;
+			if (!filter_input(INPUT_POST, $field['name']) || empty(filter_input(INPUT_POST, $field['name']))	) {
+				// not all values set
+				$this->message .='<br>'. $field['name'];
+				$this->error=true;
+				continue;
+			}
 			$this->{$field['name']} = filter_input(INPUT_POST, $field['name'], FILTER_SANITIZE_STRING);
 		}
+		if ($this->error) return false;
 		
 		// check if there is an old draft status order
 		$draft_post = $this->ORDER->find(array(
@@ -346,7 +357,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		if ($draft_post) {
 			$this->ORDER->ID = $draft_post[0]->ID;
 			delete_post_meta($this->ORDER->ID, '_order_items');
-			$this->ORDER->prepare_shopping_cart_items($user_id);
+			$this->prepare_shopping_cart_items($user_id);
 		}
 				
 		// first get all the order items from cookie variable
@@ -354,11 +365,11 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 			$this->ORDER->name			=	$this->ORDER->set_order_nr(TRUE);
 			$this->ORDER->post_content =	'Geen Meldingen';
 			$this->ORDER->create();
-			$this->ORDER->assigned_user_id = $user_id;
 		}
 		
 		// set other data
-		$this->ORDER->post_status = MY_AIA_ORDER_AWAITING_PAYMENT;		
+		$this->ORDER->order_status = MY_AIA_ORDER_STATUS_AWAITING_PAYMENT;		
+		$this->ORDER->assigned_user_id = $user_id;
 		
 		$this->ORDER->save();		
 	}
@@ -380,6 +391,10 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 			   if ($this->ORDER->assigned_user_id == bp_current_user_id()) {
 				   if (!$this->ORDER->invoice) $this->create_invoice(4936);
 				   if (!$this->ORDER->invoice->check_payment_status()) {
+					   // remove cookie
+					   unset($_COOKIE['my_aia_shopping_cart']);
+					   setcookie('my_aia_shopping_cart', NULL, time()-36000);
+					   
 					   $url = $this->ORDER->invoice->create_payment_link();
 					   header('Location: '.$url);
 					   exit();
@@ -435,13 +450,17 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		// get contents
 		if (is_numeric(filter_input(INPUT_GET, 'payment_id', FILTER_SANITIZE_NUMBER_INT))) {
 			//redirect to controller
-			$order_id = MY_AIA::$controllers[MY_AIA_POST_TYPE_PAYMENT]->payment_processing();
-		} else {wp_die('no access');}
+			$order_id = my_aia_payment()->payment_processing();
+		} elseif (is_numeric(filter_input(INPUT_GET, 'order_id', FILTER_SANITIZE_NUMBER_INT))){
+			$order_id = filter_input(INPUT_GET, 'order_id', FILTER_SANITIZE_NUMBER_INT);
+		} else { wp_die('no access'); }
 		
 		if ($order_id) {
-			$this->ORDER = $this->ORDER->get($order_id);
-		}
-		
+			$this->ORDER->get($order_id);
+			if ($this->ORDER && $this->ORDER->assigned_user_id!=NULL && $this->ORDER->assigned_user_id !=  get_current_user_id()) { 
+				wp_die('no access'); 
+			}
+		} 		
 
 		add_action( 'bp_template_title', array($this, 'my_aia_bp_my_order_status_title' ));
 		add_action( 'bp_template_content', array($this, 'my_aia_bp_my_order_status_content' ));

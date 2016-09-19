@@ -36,6 +36,7 @@ function my_aia_bp_after_register_page() {
  */
 function my_aia_bp_before_registration_submit_buttons() {
 	?>
+	<div class="" style='float: left;margin-top: 25px;'><a href='<?= wp_login_url(MY_AIA_BP_ROOT); ?>'><?= __('Ik heb al een login','my-aia'); ?></a></div>
 	<div class="submit"><a href="#" class="button blauw" id="registration-profile-open-button">Verder &gt;&gt;</a></div>
 	<?php
 }
@@ -51,7 +52,7 @@ add_filter( 'bp_before_registration_submit_buttons', 'my_aia_bp_before_registrat
 
 function do_template_modification() {
 	// array of components to not modify:
-	$_do_not_load = array('events','orders','documents');
+	$_do_not_load = array('orders', 'documents');
 	
 	if (in_array(buddypress()->current_component, $_do_not_load)) return FALSE;
 	return TRUE;
@@ -64,6 +65,15 @@ function my_aia_is_orders() {
 
 function my_aia_is_documents() {
 	return (bool) bp_is_current_component('documents');
+}
+
+/**
+ * Load
+ */
+function my_aia_bp_before_template_content() {
+	if (!defined("MY_AIA_BEFORE_TEMPLATE_LOADED"))
+		return my_aia_bp_before_profile_content ();
+	return "";
 }
 
 
@@ -101,7 +111,9 @@ function my_aia_bp_before_profile_content() {
  * @return string
  */
 function my_aia_bp_before_groups_content() {
-	if (!do_template_modification()) return "";
+	if (!do_template_modification() || defined("MY_AIA_BEFORE_TEMPLATE_LOADED")) return "";
+	
+	define("MY_AIA_BEFORE_TEMPLATE_LOADED", TRUE); // execute once!
 	// break column-4-1
 	// get new class
 	?>
@@ -126,9 +138,26 @@ function my_aia_bp_after_member_body_default () {
 	<?php
 }
 
+global $EM_Notices;
 add_action( 'bp_before_member_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_profile_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_member_groups_content', 'my_aia_bp_before_groups_content');
+add_action( 'bp_before_member_notifications_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_member_messages_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_group_plugin_template', 'my_aia_bp_before_profile_content');
+add_action( 'bp_template_title', 'my_aia_bp_before_template_content', -1);
+add_action( 'bp_after_members_directory_order_options', 'my_aia_bp_before_profile_content');
+
+// groups
+add_action( 'bp_before_group_activity_post_form', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_group_admin_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+
+
 //add_action( 'bp_before_events_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_member_body', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_member_body', 'my_aia_bp_after_member_body_default');
+add_action( 'bp_before_directory_members_tabs', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_directory_members', 'my_aia_bp_after_member_body_default');
+add_action( 'bp_before_group_body', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_group_body', 'my_aia_bp_after_member_body_default');

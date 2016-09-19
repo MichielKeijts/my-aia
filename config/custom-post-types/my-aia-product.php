@@ -17,7 +17,7 @@ function my_aia_register_post_type_product(){
 		'can_export' => true,
 		'exclude_from_search' => true,
 		'publicly_queryable' => true,
-		'rewrite' => array('slug' => MY_AIA_POST_TYPE_PRODUCT_SLUG, 'with_front'=>false),
+		'rewrite' => array('slug' => MY_AIA_POST_TYPE_PRODUCT_SLUG, 'with_front'=>true),
 		'has_archive' => true,//get_option('my-aia_cp_events_has_archive', false) == true,
 		'supports' => array('title','editor','thumbnail','author'),
 		'capability_type' => MY_AIA_POST_TYPE_PRODUCT,

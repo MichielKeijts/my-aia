@@ -13,7 +13,7 @@ function my_aia_register_taxonomy_product_categorie() {
         'show_ui' => true,
 		'show_admin_column' => true,
         'query_var' => true,
-        'rewrite' => false, // no rewrite//array('slug' => MY_AIA_TAXONOMY_SPORT_SLUG,'with_front'=>false),
+        'rewrite' => array('slug' => MY_AIA_TAXONOMY_PRODUCT_CATEGORIE_SLUG,'with_front'=>true),
         //'update_count_callback' => '',
         //'show_tagcloud' => true,
         //'show_in_nav_menus' => true,

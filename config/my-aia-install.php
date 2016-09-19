@@ -35,6 +35,10 @@ function my_aia_install() {
 	
 	echo "<br>Taxonomies written";
 	
+	my_aia_update_event_manager_defaults();
+	
+	echo "Updated Event Manager Defaults";
+	
 	delete_option('my-aia-version');
 	delete_option('my-aia-registered-hooks');
 	
@@ -106,4 +110,19 @@ function my_aia_create_crm_sync_table() {
 	
 	
 	return true;
+}
+
+
+function my_aia_update_event_manager_defaults() {
+	$dbem_options = array(
+		'dbem_bp_events_list_format_header'		=> get_option("dbem_event_list_item_format_header"),
+		'dbem_bp_events_list_format'			=> get_option("dbem_event_list_item_format"),
+		'dbem_bp_events_list_format_footer'		=> get_option("dbem_event_list_item_format_footer"),
+	);
+	
+	//add new options, overwrite
+	foreach($dbem_options as $key => $value){
+		delete_option($key);
+		update_option($key, $value);
+	}
 }

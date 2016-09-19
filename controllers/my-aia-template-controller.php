@@ -105,16 +105,11 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	private function parse_content() {
 		// first get info from the parent type
-		$className = 'MY_AIA_' . strtoupper($this->parent_type);
+		$className = 'MY_AIA_' . strtoupper($this->TEMPLATE->parent_type);
 		if (class_exists($className)) {
 			$parent = new $className;
 			if ($parent->get($this->parent_id)!==FALSE) {
-				foreach ($parent as $key=>$value) {
-					// if is a property
-					if (property_exists($parent, $key)) {
-						$this->_template_fields[sprintf('%%%s%%',$key)] = $value;	// set 
-					}
-				}
+				$this->parse_parent_type($parent);
 			}
 		} 
 		
@@ -125,22 +120,32 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		if ($user_id) {
 			$user = get_user_by('id', $user_id);
-			foreach ($parent as $key=>$value) {
-				// if is a property
-				if (property_exists($parent, $key)) {
-					$this->_template_fields[sprintf('%%%s%%',$key)] = $value;	// set 
-				}
-			}
+			$this->parse_parent_type($user);
 		}
 		
-		//$this->TEMPLATE->post_content_filtered = apply_filters('the_content', $this->TEMPLATE->post_content);
+		$this->TEMPLATE->post_content_filtered = apply_filters('the_content', $this->TEMPLATE->post_content);
 		
 		// parse the content
 		$this->TEMPLATE->post_content_filtered = str_replace(
-				array_keys($this->_template_fields),
-				$this->_template_fields,
-				apply_filters('the_content', $this->TEMPLATE->post_content)
-			);
+			array_keys($this->_template_fields),
+			$this->_template_fields,
+			$this->TEMPLATE->post_content_filtered
+		);
+	}
+	
+	/**
+	 * Sets the _template_fields 
+	 * @param array $parent
+	 */
+	private function parse_parent_type($parent = array()) {
+		foreach ($parent as $key=>$value) {
+			// if is a property/method of the parent
+			if (method_exists($parent, sprintf('template_%s', strtolower($key)))) {
+				$this->_template_fields[sprintf('%%%s%%',  strtoupper($key))] = $parent->{sprintf('template_%s', strtolower($key))}($value);	// set 
+			} elseif (property_exists($parent, $key) && !is_object($parent->{$key}) && !is_array($parent->{$key})) {
+				$this->_template_fields[sprintf('%%%s%%',  strtoupper($key))] = $value;	// set 
+			}
+		}
 	}
 	
 	/**
@@ -271,7 +276,7 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	public function get_parent_type_fields($post_type = NULL) {
 		if (!$post_type) {
-			$post_type = $this->parent_type;
+			$post_type = $this->TEMPLATE->parent_type;
 		}
 		
 		$return_fields = array(

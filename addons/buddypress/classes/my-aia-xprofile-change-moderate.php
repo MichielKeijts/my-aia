@@ -62,7 +62,7 @@ class MY_AIA_XPROFILE_CHANGE_MODERATE {
 			}
 	
 			//self::save_xprofile_changes($data, bp_displayed_user_id());
-			self::save_xprofile_changes($data, 1);
+			self::save_xprofile_changes($data, bp_displayed_user_id());
 		}
 	}
 	

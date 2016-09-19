@@ -18,13 +18,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach ($order_items as $item): ?>
+			<?php
+			foreach ($order_items as $item): ?>
 			<tr class="hidden">
 				<td width="10%"><span class="count"><?= get_the_post_thumbnail($item->product_id); ?></span></td>
 				<td width="80%"><span class="name"><?= $item->post_title; ?></span></td>
 				<td width="10%"><span class="count"><?= $item->count; ?></span></td>
 				<td width="10%"><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count);; ?></span></td>
-				<td width="10%"><a href="#" data-id="0" class="button-remove-product">X</a></td>
+				<td width="10%"><a href="#" data-id="<?= $item->ID; ?>" class="button-remove-product">X</a></td>
 			</tr>
 			<?php endforeach; //$order_items ?>
 		</tbody>

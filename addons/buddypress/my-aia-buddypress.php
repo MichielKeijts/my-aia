@@ -33,6 +33,9 @@ function my_aia_xprofile_edit_init() {
  */
 function bp_my_aia_load_core_components() {
 	global $bp;
+	
+	my_aia_redirect_to_profile();
+	
 	if (!isset($bp->documents)) {
 		include_once 'classes/my-aia-bp-group-extension-location.php';
 		include_once 'classes/my-aia-bp-group-extension-group-type.php';
@@ -118,10 +121,10 @@ function my_aia_xprofile_sync_wp_profile( $user_id = 0) {
 	
 
 	// update user_meta (wrapper from BP)
-	bp_update_user_meta( $user_id, 'nickname',   $fullname  );
-	bp_update_user_meta( $user_id, 'first_name', $first_name );
-	bp_update_user_meta( $user_id, 'middle_name', $middle_name );
-	bp_update_user_meta( $user_id, 'last_name',  $last_name  );
+	if (!empty($fullname) && $fullname) bp_update_user_meta( $user_id, 'nickname',   $fullname  );
+	if (!empty($first_name) && $first_name) bp_update_user_meta( $user_id, 'first_name', $first_name );
+	if (!empty($last_name) && $last_name) bp_update_user_meta( $user_id, 'middle_name', $middle_name );
+	if (!empty($middle_name) && $middle_name) bp_update_user_meta( $user_id, 'last_name',  $last_name  );
 
 	// update wp_user data
 	$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET display_name = %s WHERE ID = %d", $fullname, $user_id ) );
@@ -135,6 +138,9 @@ function my_aia_xprofile_sync_wp_profile( $user_id = 0) {
  * @return boolean
  */
 function my_aia_wp_profile_sync_xprofile( $user_id =0 , $old_user_data = NULL) {
+	// only update if profile.php direct
+	if (strpos($_SERVER['REQUEST_URI'], 'profile.php') === FALSE) return FALSE;
+		
 	// fields to update
 	$field_names = array('first_name','middle_name', 'last_name', 'display_name');
 	
@@ -153,3 +159,55 @@ function my_aia_wp_profile_sync_xprofile( $user_id =0 , $old_user_data = NULL) {
 		xprofile_set_field_data( $field_name, $user_id, $value );
 	}
 }
+
+
+/**
+ * Check url for Buddypress URL and redirect if so
+ */
+function my_aia_redirect_to_profile() {
+	global $post;
+	
+	if (get_current_user_id() > 0) {
+		if ($_SERVER['REQUEST_URI'] =='/mijn-aia/' || $_SERVER['REQUEST_URI'] == '/mijn-aia') {
+			// redirect to profile page
+			header(sprintf('Location: /%s/%s/%s', MY_AIA_BP_ROOT, MY_AIA_BP_MEMBERS,  bp_core_get_username( get_current_user_id() )));
+			exit(); // redirect..
+		}
+	}
+	
+	return  true;
+}
+
+
+
+/**
+ * Function is a filter function which also adds the groups result from BuddyPress
+ * - nasty solution, normally should be via class-bp-members-suggestions style
+ * @param array $results
+ * @param BP_Members_Suggestions $bp_members_suggestions
+ */
+function my_aia_admin_group_mention($results, $bp_members_suggestions) {
+	// check if we need to add 
+	if (empty($_GET['term']) || strlen($_GET['term']) < 2) return $results;
+	
+	// find groups
+	$bp_group = new BP_Groups_Group();
+	$groups = $bp_group->get(array('name'=>  filter_input(INPUT_GET, 'term')));
+	if (count($groups['groups']) > 0) {
+		foreach ($groups['groups'] as $group) {
+			$result        = new stdClass();
+			$result->ID    = $group->slug;
+			$result->image = bp_core_fetch_avatar(
+					array( 
+						'html' => false, 
+						'item_id' => $group->id, 
+						'avatar_dir' => 'group-avatars', 
+						'object'     => 'group') 
+				);
+			$result->name  = $group->id;
+			array_push($results, $result);
+		}
+	}
+	return $results;
+}
+add_filter('bp_members_suggestions_get_suggestions', 'my_aia_admin_group_mention', 10, 2);

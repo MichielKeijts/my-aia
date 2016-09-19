@@ -102,14 +102,22 @@ class MY_AIA_MODEL {
 		
 		//if (is_a($post,'WP_Post') || is_a($this, 'MY_AIA_BASE')) {
 		 //if && $post->post_type = $this->post_type
-			foreach ($post as $key => $value) {
-				if (property_exists($this, $key)) {
-					$this->$key = $value;
-				}
-			}
+			$this->apply($post);
 		//}
 		
 		$this->get_meta();
+	}
+	
+	/**
+	 * Apply $postobject to $this when field exists
+	 * @param WP_Post $postobject
+	 */
+	public function apply($postobject) {
+		foreach ($postobject as $key => $value) {
+			if (property_exists($this, $key) && $key!='fields') {
+				$this->$key = $value;
+			}
+		}
 	}
 	
 	/**
@@ -224,8 +232,10 @@ class MY_AIA_MODEL {
 		
 		// set ID
 		$post_array['ID'] = $this->ID;
+		$tempObj = clone $this;
 		$post_saved = wp_update_post($post_array);
 		if ($post_saved) {
+			$this->apply($tempObj);
 			$this->update_post_meta($prepare_post_data);
 		}
 	}
@@ -236,7 +246,8 @@ class MY_AIA_MODEL {
 	 * - than updates the meta_data
 	 */
 	public function save_post($post_id, $post, $update ) {
-		$this->get($post); // not sure why?
+		//$this->get($post); // not sure why?
+		$this->apply($post);
 		$this->ID = $post_id; // to be safe
 		
 		// updates the current data

@@ -269,5 +269,5 @@ jQuery(document).ready( function () {
 	
 	condition_tree_init();
 	
-	initiate_sortable();
+	initiate_sortable();	
 });

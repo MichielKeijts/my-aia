@@ -36,7 +36,18 @@ class MY_AIA_PAGE_CONTROLLER extends MY_AIA_CONTROLLER {
 
 	}
 	
+	/**
+	 * Display the settings page
+	 */
 	public function index() {
+		if (filter_input(INPUT_POST, '_method') == 'post') {
+			$options = filter_input(INPUT_POST, 'my_aia_options', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+			if ($options) {
+				update_option('my-aia-options', $options, false);
+			}
+		}
 		
+		// set options
+		$this->view->set('my_aia_options', get_option('my-aia-options', MY_AIA::$default_options));
 	}
 }

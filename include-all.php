@@ -46,6 +46,7 @@ include_once ( 'addons/ninja-forms/my-aia-ninja-forms.php' );
 
 // All other necessary files
 include_once ( 'core/crmsync/iso3166.php');
+include_once ( 'core/lib/Download.php');
 
 // FINALLY: Initiate my-aia
 include_once ( 'config/my-aia-init.php' );

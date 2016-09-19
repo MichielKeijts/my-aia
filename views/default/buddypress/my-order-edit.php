@@ -5,9 +5,11 @@
  * @todo add SESSION / COOKIE data in initialisation instead of an empty list
  */
 
+$editable = my_aia_order()->error || (filter_input(INPUT_POST, '_method') != 'create');
+
 ?>
 <div id="shopping-cart">
-	<section class="buddypress-tiles">
+	<section class="buddypress-tiles address-details">
 		<div class="tile">
 		<table class="shopping-cart">
 			<thead>
@@ -15,7 +17,7 @@
 					<td width="20%"><span class="name"></span></td>
 					<td width="60%"><span class="name">omschrijving</span></td>
 					<td width="7%"><span class="count">aantal</span></td>
-					<td width="120"><span class="count">bedrag</span></td>
+					<td width="140"><span class="count">bedrag</span></td>
 					<td width="7%"></td>
 				</tr>
 			</thead>
@@ -24,9 +26,9 @@
 				<tr class="">
 					<td><div class="product-image"><?= get_the_post_thumbnail($item->product_id, array('width'=>150, 'height'=>150)); ?></div></td>
 					<td><span class="name"><?= $item->post_title; ?></span></td>
-					<td><span class="count"><?= $item->count; ?></span></td>
+					<td><span class="count"><input type="number" min="0" max="100" size="2" style="width: 50px;" value="<?= $item->count; ?>" name="count" data-id="<?= $item->get_product()->ID; ?>" <?= $editable?"":"readonly"?>></span></td>
 					<td><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count, 2, ',','.'); ?></span></td>
-					<td><a href="#" data-id="0" class="button-remove-product">X</a></td>
+					<td><?php if ($editable): ?><a href="#" data-id="<?= $item->get_product()->ID; ?>" class="button-remove-product">X</a><?php endif; //editable ?></td>
 				</tr>
 				<?php endforeach; //$order_items ?>
 			</tbody>
@@ -34,15 +36,24 @@
 				<tr>
 					<td></td>
 					<td colspan=2><span class="total_price"><?= __('TOTAAL','my-aia'); ?></span></td>
-					<td><span class="total_price">&euro; <?= number_format(my_aia_order()->ORDER->total_order_price, 2, ',','.'); ?></span></td>
+					<td><span class="total_price">&euro; <?= number_format(my_aia_order()->ORDER->total_amount, 2, ',','.'); ?></span></td>
 					<td></tD>
 				</tr>
 			</tfoot>
 		</table>
 		</div>
 	</section>
+	
 	<form class='' enctype="multipart/form-data" method='POST' action='?'>
-	<section class="buddypress-tiles">
+	<section class="buddypress-tiles address-details">
+		<?php if (my_aia_order()->error): ?>
+		<div class="column-wrapper">
+			<div class="column-1-1 column-sm-1">
+				<div class="column-inner center">
+				<span class="flash-message"><?= my_aia_order()->message; ?></span>
+			</div>
+		</div>
+		<?php endif; // error handling ?>
 		<div class="column-wrapper">
 			<div class="column-2-1 column-sm-1">
 				<div class="column-inner padding-left-25 tile">
@@ -54,7 +65,7 @@
 							<?= my_aia_order()->ORDER->shipping_postcode; ?> <?= my_aia_order()->ORDER->shipping_city; ?><br>
 							<?= my_aia_order()->ORDER->shipping_country; ?><br>
 						</span>
-						<button class="button blauw change-address">Wijzig</button>
+						<?php if ($editable): ?><button class="button blauw change-address">Wijzig</button><?php endif; //edit button ?>
 					</div>
 					<div class="hidden tab-input">
 						<?php my_aia_order()->get_attributes_form("shipping"); ?>
@@ -72,7 +83,7 @@
 							<?= my_aia_order()->ORDER->invoice_postcode; ?> <?= my_aia_order()->ORDER->invoice_city; ?><br>
 							<?= my_aia_order()->ORDER->invoice_country; ?><br>
 						</span>
-						<button class="button blauw change-address">Wijzig</button>
+						<?php if ($editable): ?><button class="button blauw change-address">Wijzig</button><?php endif; ?>
 					</div>
 					<div class="hidden tab-input">
 						<?php my_aia_order()->get_attributes_form("invoice"); ?>
@@ -83,7 +94,7 @@
 		</div>
 	</section>
 	
-	<section class="buddypress-tiles">
+	<section class="buddypress-tiles address-details">
 		<div class="column-wrapper">
 			<div class="column-inner tile">
 				<div class="padding-left-25">
@@ -94,22 +105,22 @@
 						<li>Betalingswijze: iDeal.</li>						
 					</ul>
 					<input type="hidden" name='akkoord-voorwaarden' value='0'>
-					<input type="checkbox" id="akkoord-voorwaarden" name='akkoord-voorwaarden' value='1' required="true">
+					<input type="checkbox" id="akkoord-voorwaarden" name='akkoord-voorwaarden' value='1' required="true" <?php if (!$editable) echo "checked disabled"; ?>>
 					<label for="akkoord-voorwaarden">Ik ga akkoord met de <a href='#' title='Opent in nieuw venster'>algemene voorwaarden</a> van Athletes in Action</label>
 
 				</div>
 				<div class="buttons center">
-		<?php if (gettype(filter_input(INPUT_GET, 'create')) == 'string'): ?>
-			<a href="/shop" class="button white link_to_order" id="link_to_order"><?= __('Terug naar de winkel'); ?></a>
+		<?php if ($editable): ?>
+			<a href="/shop" class="button blauw link_to_order" id="link_to_order"><?= __('Terug naar de winkel'); ?></a>
 			<input type='hidden' name='_method' value='create'>
-			<input type='submit' class="button white link_to_order" id="link_to_order" value='<?= __('Plaats bestelling'); ?>'>
+			<input type='submit' class="button blauw link_to_order" id="link_to_order" value='<?= __('Plaats bestelling'); ?>'>
 		<?php endif;?>
-		<?php if (filter_input(INPUT_POST, '_method') == 'create'): ?>
-			<a href="?reset" class="button white link_to_order" id="link_to_order"><?= __('Bestelling Annuleren'); ?></a>
-			<a href="?create" class="button white link_to_order" id="link_to_order"><?= __('Vorige Stap'); ?></a>
+		<?php if (!$editable): ?>
+			<a href="?reset" class="button rood link_to_order" id="link_to_order"><?= __('Bestelling Annuleren'); ?></a>
+			<a href="?create" class="button blauw link_to_order" id="link_to_order"><?= __('Vorige Stap'); ?></a>
 			<input type='hidden' name='_method' value='pay'>
 
-			<a href='?make_payment&order_id=<?= my_aia_order()->ORDER->ID; ?>' class="button white link_to_order" id="link_to_pay"><?= __('Bevestigen & Betalen met iDeal'); ?></a>
+			<a href='?make_payment&order_id=<?= my_aia_order()->ORDER->ID; ?>' class="button blauw link_to_order" id="link_to_pay"><?= __('Bevestigen & Betalen met iDeal'); ?></a>
 		<?php endif;?>
 				</div>
 			</div>

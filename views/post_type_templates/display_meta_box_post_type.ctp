@@ -3,7 +3,7 @@
 <select name="parent_type">
 	<?php
 		foreach (MY_AIA::$CUSTOM_POST_TYPES as $post_type) {
-			echo sprintf('<option value="%s" %s>%s</option>', $post_type, ($post_type == $this->parent_type)?'selected':'', $post_type);
+			echo sprintf('<option value="%s" %s>%s</option>', $post_type, ($post_type == $this->TEMPLATE->parent_type)?'selected':'', $post_type);
 		}
 	?>
 </select>

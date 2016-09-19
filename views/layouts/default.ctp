@@ -7,6 +7,7 @@
 			<div class="clearfix rtm-row-container">
 				<div id="bp-media-settings-boxes" class="bp-media-settings-boxes-container rtm-setting-container">
 					<form id="bp_media_settings_form" name="bp_media_settings_form" method="post" enctype="multipart/form-data" action="">
+						<input type="hidden" name="_method" value="post">
 						<div class="bp-media-metabox-holder">
 							<div class="rtm-button-container top">
 								<h2><?= $title; ?></h2>

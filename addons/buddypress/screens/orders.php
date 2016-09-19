@@ -24,7 +24,7 @@ function my_aia_bp_orders() {
 }
 	
 function my_aia_bp_orders_title() {
-	echo __( 'Mijn Winkelwagen', 'my-aia');
+	echo __( 'Mijn Orders', 'my-aia');
 }
 /**
  * Determines whether to show event page or events page, and saves any updates to the event or events

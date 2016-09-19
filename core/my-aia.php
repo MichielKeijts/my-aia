@@ -34,6 +34,8 @@ class MY_AIA {
 		MY_AIA_POST_TYPE_INVOICE,
 		MY_AIA_POST_TYPE_PAYMENT,
 		MY_AIA_POST_TYPE_TEMPLATE,
+		MY_AIA_POST_TYPE_DOCUMENT,
+		'wpdmpro'
 	);
 	
 	/*
@@ -51,6 +53,18 @@ class MY_AIA {
 		'supporter',
 		'fan',
 		'public',	// add role for public (for all google bots and so on, to define it clearly)
+	);
+	
+	static $default_options = array(
+		'email_server' => '',
+		'email_port' => '',
+		'email_username' => '',
+		'email_password' => '',
+		'email_from' => '',
+		'mollie_key' => '',
+		'mollie_test_mode' => '',
+		'webshop_verzendkosten' => 4.95,
+		//'' => '',		
 	);
 	
 	/**
@@ -99,9 +113,11 @@ class MY_AIA {
 	 * Initializes the MY_AIA
 	 * @global \WP_Rewrite $wp_rewrite
 	 * @global \WP_Roles $wp_roles
+	 * @global \WP_Query $wp_query
 	 */
 	static function init() {
-		global $wp_rewrite, $wp_roles;
+		global $wp_rewrite, $wp_roles, $wp_query;
+		$_GET['wpdmdl'] = -1;
 		
 		//Upgrade/Install Routine
 		if( is_admin() && current_user_can('list_users') ){
@@ -109,6 +125,12 @@ class MY_AIA {
 				my_aia_install();
 			}
 		}
+		
+		// get options
+		self::$settings = get_option('my-aia-options', self::$default_options);
+		
+		// pre-parse login settings
+		self::apply_register_magic();
 		
 		// register the post_types 
 		self::register_post_types();
@@ -121,6 +143,9 @@ class MY_AIA {
 		
 		// register javascript and more
 		self::enque_scripts();	
+		
+		
+		
 		
 		// INIT ADMIN
 		self::hide_admin_bar_for_users(FALSE); // also hide for admin
@@ -145,6 +170,8 @@ class MY_AIA {
 		add_action( 'wp_ajax_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);					// AJAX hook to get Events 	
 		add_option('my-aia-registered-hooks', array('save_post'));
 		add_option('my-aia-hook-save_post');
+		add_feed( 'my-aia-download', "MY_AIA::get_my_download" );
+		
 		update_option('my-aia-hook-save_post', 
 				
 		array(
@@ -303,18 +330,20 @@ class MY_AIA {
 			$fn = 'my_aia_register_post_type_'.$post_type;
 			if (function_exists($fn)) {
 				call_user_func($fn);
-				
-				// LOAD CONTROLLER
-				$cstm_file = sprintf('%smy-aia-%s-controller.php',$controllerDir, $post_type);
-				$model_file = sprintf('%s../models/my-aia-%s.php',$controllerDir, $post_type);
-				if (file_exists($cstm_file)) {
-					include_once($cstm_file);
-					include_once($model_file);
-					
-					$className = strtoupper(sprintf("MY_AIA_%s_CONTROLLER",$post_type));
-					self::$controllers[$post_type] = new $className();
-				}
 			}
+			
+			// skip register function if custom post type exists via other plugin
+			// LOAD CONTROLLER
+			$cstm_file = sprintf('%smy-aia-%s-controller.php',$controllerDir, $post_type);
+			$model_file = sprintf('%s../models/my-aia-%s.php',$controllerDir, $post_type);
+			if (file_exists($cstm_file)) {
+				include_once($cstm_file);
+				include_once($model_file);
+
+				$className = strtoupper(sprintf("MY_AIA_%s_CONTROLLER",$post_type));
+				self::$controllers[$post_type] = new $className();
+			}
+			
 		}
 		
 		// save post action
@@ -349,7 +378,10 @@ class MY_AIA {
  * Remove Scroll on front page
  */
 	static function body_class_add ( $classes ) {
-		if (empty(buddypress()->current_component) && strpos($_SERVER['REQUEST_URI'], '/shop')===FALSE) return $classes;
+		if (empty(buddypress()->current_component) && 
+			strpos($_SERVER['REQUEST_URI'], '/shop') === FALSE &&		
+			strpos($_SERVER['REQUEST_URI'], '/product') === FALSE
+		) return $classes;
 		return array_merge( $classes, array( 'no-scroll', 'scroll') );
 	}
 	
@@ -384,7 +416,7 @@ class MY_AIA {
 		$bookings = EM_Bookings::get(array(
 			'owner' => false,
 			'person' => $user_id,
-			'scope'	=> $future_events ? 'future':'all',			
+			'scope'	=> $future_events ? 'future':'past',			
 		));
 		
 		$my_events = array();
@@ -399,7 +431,7 @@ class MY_AIA {
 	}
 	
 	static function get_my_orders($user_id = 0, $future_events = FALSE) {
-		$orders = my_aia_order()->findByUserID($user_id);
+		$orders = my_aia_order()->ORDER->findByUserID($user_id);
 		
 		if (!$orders) {
 			$orders = array(); //safety, prevent PHP warning, show empty list
@@ -417,12 +449,33 @@ class MY_AIA {
 	static function get_recommended_events($user_id = 0) {
 		if ($user_id == 0) $user_id = get_current_user_id ();
 		
-		$events = new EM_Events(array(
+		$events = EM_Events::get(array(
 			'limit' => 5,
-			'scope' => 'all' //@TODO only for testing purpose
+			//'scope' => 'all', //@TODO only for testing purpose
+			//'order' => 'event_start_date',
+			'orderby' => 'DESC'
 		));
 		
 		return $events;
+	}
+	
+	/**
+	 * Return object with  new and total count
+	 * 
+	 * obj->new
+	 * obj->total
+	 * 
+	 * @param int $user_id (optional, default current_logged in user
+	 * @return \stdClass
+	 */
+	static function get_my_messages_count($user_id = 0) {
+		if ($user_id == 0) $user_id = get_current_user_id ();
+		
+		$obj = new stdClass();
+		$obj->messages = messages_get_unread_count($user_id);
+		$obj->notifications = BP_Notifications_Notification::get_current_notifications_for_user()['total'];
+		
+		return $obj;
 	}
 	
 	/**
@@ -483,6 +536,7 @@ class MY_AIA {
 			</div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
+		<div class="page-cover display-none"></div>
 		<?php	
 	}
 	
@@ -514,18 +568,18 @@ class MY_AIA {
 			
 			$id++;
 			$items[$id]->title = __('Members','my-aia');
-			$items[$id]->url = '/mijn-aia/members/';
+			$items[$id]->url = sprintf('/%s/%s/', MY_AIA_BP_ROOT, MY_AIA_BP_MEMBERS);
 		} else {
 			$items[$id]->title = 'Mijn AIA';
-			$items[$id]->url = '/join-us/';
+			$items[$id]->url = '/mijn-aia/join-us/';
 			
 			$id++;
 			$items[$id]->title = __('Inloggen','my-aia');
-			$items[$id]->url = wp_login_url('/mijn-aia/');
+			$items[$id]->url = wp_login_url(MY_AIA_BP_ROOT);
 
 			$id++;
 			$items[$id]->title = __('Join Us','my-aia');
-			$items[$id]->url = '/join-us/';
+			$items[$id]->url = '/mijn-aia/join-us/';
 		}
 		return $items;
 	}
@@ -556,6 +610,41 @@ class MY_AIA {
 		
 		return $default;
 	}
+	
+	/**
+	 * Apply some register magic, so login without some variables is possible
+	 */
+	static function apply_register_magic() {
+		$data = filter_input(INPUT_POST, '_wp_http_referer');
+		if ($data && strpos($data, '/mijn-aia/join-us')!==FALSE) {
+			if (empty($_POST['field_1'])) {
+				$_POST['field_1'] = $_POST['signup_username'];
+			}	
+		}
+	}
+	
+	/**
+	 * Function redirects to download file, if user has acces
+	 * @global wpdb $current_user
+	 */
+	static function get_my_download($post_id = NULL) {
+		global $current_user;
+		if (!$post_id) $post_id = filter_input(INPUT_GET, 'post');
+		if (!$post_id) throw_404();
+		
+		// get user access
+		$post = new MY_AIA_INVOICE($post_id);
+		
+		if ($post->assigned_user_id && $post->assigned_user_id == $current_user->ID 
+				|| is_admin()
+				|| current_user_can('moderate',$post_id)) {
+			
+			// get download link
+			WPFB_Download::SendFile($post->attachment);
+		}
+		
+		return throw_404();
+	}
 }
 
 
@@ -566,3 +655,4 @@ class MY_AIA {
 function MY_AIA_INIT() {
     return MY_AIA::instance();
 }
+

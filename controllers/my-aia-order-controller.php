@@ -333,7 +333,8 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		$this->message = __('Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder kunt.','my-aia');
 		foreach ($this->ORDER->fields as $field) {
 			if (strpos($field['name'], 'shipping') === FALSE && strpos($field['name'], 'invoice') === FALSE) continue;
-			if (!filter_input(INPUT_POST, $field['name']) || empty(filter_input(INPUT_POST, $field['name']))	) {
+			$name = filter_input(INPUT_POST, $field['name']);
+			if (!filter_input(INPUT_POST, $field['name']) || empty($name)) {
 				// not all values set
 				$this->message .='<br>'. $field['name'];
 				$this->error=true;

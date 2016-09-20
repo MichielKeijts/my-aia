@@ -430,8 +430,8 @@ class MY_AIA {
 		return $my_events;
 	}
 	
-	static function get_my_orders($user_id = 0, $future_events = FALSE) {
-		$orders = my_aia_order()->ORDER->findByUserID($user_id);
+	static function get_my_orders($user_id = 0, $count=3) {
+		$orders = my_aia_order()->ORDER->findByUserID($user_id, $count);
 		
 		if (!$orders) {
 			$orders = array(); //safety, prevent PHP warning, show empty list

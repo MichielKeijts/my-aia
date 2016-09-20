@@ -134,8 +134,9 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	 * @param type $id
 	 * @return type
 	 */
-	public function findByUserID($id) {
+	public function findByUserID($id, $count=0) {
 		return $this->find(array(
+			'numberposts' => $count,
 			'post_status' => 'any',
 			'meta_query' =>array(array('key'=>'assigned_user_id', 'value' =>	$id))
 		));

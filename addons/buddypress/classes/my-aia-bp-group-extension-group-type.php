@@ -8,7 +8,7 @@
 /**
  * Creates a custom group extension for BuddyPress in the MY_AIA plugin
  */
-include_once BUDDYPRESS_DIR . 'bp-groups/classes/class-bp-group-extension.php';
+buddypress()->autoload('BP_Group_Extension');
 class MY_AIA_BP_Group_Extension_Group_Type extends BP_Group_Extension {
 	private $default_group_type = 'sportcommunity'; // DEFAULT
 	

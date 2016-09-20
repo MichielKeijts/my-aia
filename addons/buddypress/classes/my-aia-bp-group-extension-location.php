@@ -8,7 +8,6 @@
 /**
  * Creates a custom group extension for BuddyPress in the MY_AIA plugin
  */
-buddypress()->autoload('BP_Group_Extension');
 class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	/**
 	 * Location holder

@@ -11,7 +11,7 @@
  * - Insert Taxonomy data (register & on install: insert taxonomy tags)
  */
 
-$my_aia_extension_list = array('soap','curl','mbstring','memcached');
+$my_aia_extension_list = array('soap','curl','mbstring');
 
 /**
  * Function to install everything (or reinstall)

@@ -31,6 +31,13 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	public $classname = 'template';
 	
+	
+	/**
+	 * Template model
+	 * @var MY_AIA_TEMPLATE
+	 */
+	public $TEMPLATE;
+	
 	/**
 	 * Has a attribute form
 	 * @var bool
@@ -254,7 +261,7 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * Add Meta Box to display
 	 */
 	public function set_meta_boxes() {
-		add_meta_box('my-aia-'.$this->post_type.'-post_type', __('Applies to Post Type','my-aia'), array($this,'display_meta_box_post_type'), $this->TEMPLATE->post_type, 'side', 'high');
+		add_meta_box('my-aia-'.$this->TEMPLATE->post_type.'-post_type', __('Applies to Post Type','my-aia'), array($this,'display_meta_box_post_type'), $this->TEMPLATE->post_type, 'side', 'high');
 	}
 	
 	

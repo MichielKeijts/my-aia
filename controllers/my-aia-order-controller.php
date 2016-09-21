@@ -179,13 +179,13 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	public function get_order_form() {
 		global $post;
 		
-		if (!$this->ID && $post && $post->ID)	parent::get($post);		
+		if (!$this->ORDER->ID && $post && $post->ID)	$this->ORDER->get($post);		
 		
 		$displayed_fields = array('ID','name', 'description','assigned_user_id','bp_group_id','total_order_price'); // hide
 		//
 		// return data
 		$data = array();
-		foreach ($this->fields as $field):
+		foreach ($this->ORDER->fields as $field):
 			if (in_array($field['name'], $displayed_fields)) continue; // step over already displayed fields..
 			$field['label'] = __($field['name'],'my-aia'); //my_aia_get_default_field_type($_field);
 
@@ -201,7 +201,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		// enque script
 		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 		
-		return my_aia_order_form($this->ID, $this->order_items);
+		return my_aia_order_form($this->ORDER->ID, $this->ORDER->order_items);
 	}
 	
 	/**
@@ -221,7 +221,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 				$order_item->product_id = $product_id;
 				$order_item->count = $values['count'];
 				$order_item->price = $values['price'];
-				$order_item->order_id = $this->ID;
+				$order_item->order_id = $this->ORDER->ID;
 				
 				// check if count = 0, delete!
 				if ($order_item->count > 0) 
@@ -242,11 +242,13 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * Returns an] key=>value array of the templates
 	 */
 	private function get_invoice_templates() {
-		$posts = $this->invoice->find(array(
-			'post_title'	=> 'Factuur'
+		$post = new MY_AIA_TEMPLATE();
+		
+		$templates = $post->find(array(
+			'post_title'	=> 'Factuur',
 		));
 		
-		return $posts;
+		return $templates;
 	}
 	
 	/**
@@ -277,7 +279,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		$this->ORDER->invoice = $this->ORDER->get_invoice(FALSE);
 		
 		// enque script
-		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
+		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', 'jquery', MY_AIA_VERSION );
 		
 		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
 	}

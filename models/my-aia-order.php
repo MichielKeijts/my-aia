@@ -34,6 +34,8 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public $invoice_country;	
 	public $total_amount;
 	public $total_amount_ex_btw;
+	public $total_amount_btw6;
+	public $total_amount_btw21;
 	public $order_status;		// Prefix use MY_AIA_ORDER_STATUS
 	public $assigned_user_id;
 	
@@ -60,6 +62,9 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		'invoice_country'	=> array('name'=>'invoice_country','type'=>'%s'),
 		'order_status'		=> array('name'=>'order_status', 'type'=>'%s'),
 		'total_amount'		=> array('name'=>'total_amount', 'type'=>'%d'),
+		'total_amount_ex_btw'	=>	array('name'=>'total_amount_ex_btw', 'type'=>'%d'),
+		'total_amount_btw6'		=>	array('name'=>'total_amount_btw6', 'type'=>'%d'),
+		'total_amount_btw21'	=>	array('name'=>'total_amount_btw21', 'type'=>'%d'),
 		'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
 		'order_items'		=> array('name'=>'_order_items', 'type'=>'%a'),	// type is array!
 		'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
@@ -243,6 +248,8 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public function prepare_shopping_cart_items($shopping_cart) {
 		$this->order_items = array();
 		$this->total_amount = 0.0;
+		$this->total_amount_btw6 = 0.0;
+		$this->total_amount_btw21 = 0.0;
 		$this->total_amount_ex_btw = 0.0;
 		foreach ($shopping_cart->items as $item) {
 			$order_item = new MY_AIA_ORDER_ITEM();
@@ -255,8 +262,18 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 					$order_item
 			);						
 
-			$this->total_amount += $order_item->get_product()->price * $order_item->count;
-			$this->total_amount_ex_btw += $order_item->get_product()->price / (1 + intval(trim($order_item->get_product()->vat,'%'))/100) * $order_item->count;
+			$subtotal = $order_item->get_product()->price * $order_item->count;
+			$btw = intval(trim($order_item->get_product()->vat,'%'))/100;
+			
+			// 6%
+			if ($btw < 0.15) {
+				$this->total_amount_btw6 += $subtotal / (1+$btw) * $btw;
+			} else {
+				$this->total_amount_btw21 += $subtotal / (1+$btw) * $btw;
+			}
+			
+			$this->total_amount += $subtotal;
+			$this->total_amount_ex_btw += $subtotal / (1 + $btw);
 		}
 
 		$this->assigned_user_id = $user_id;

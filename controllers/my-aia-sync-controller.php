@@ -890,8 +890,15 @@ vrijwaring_ok	0
 						
 						// if a CHILD class
 						if ($to_def[1] != $to_def[2]) {
-							if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
-							$to_data[ $to_def[0] ][ $to_def[1] ] = ConversionHelper::from_sugar($from_field, $from_data);
+							// for Buddypress: BP::ID::NAME (numeric)
+							// otherwise: EM::CHILD::NAME (not numeric)
+							if (is_numeric($to_def[1])) {
+								if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
+								$to_data[ $to_def[0] ][ $to_def[1] ] = ConversionHelper::from_sugar($from_field, $from_data);
+							} else {
+								if (!is_array($to_data[$to_def[1]])) $to_data[$to_def[1]] = array();
+								$to_data[ $to_def[1] ][ $to_def[2] ] = ConversionHelper::from_sugar($from_field, $from_data);
+							}
 						} else {
 							if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
 							$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_sugar($from_field, $from_data);

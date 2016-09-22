@@ -431,6 +431,7 @@ class MY_AIA {
 	}
 	
 	static function get_my_orders($user_id = 0, $count=3) {
+		if ($user_id == 0) $user_id = get_current_user_id ();
 		$orders = my_aia_order()->ORDER->findByUserID($user_id, $count);
 		
 		if (!$orders) {
@@ -645,6 +646,43 @@ class MY_AIA {
 		}
 		
 		return throw_404();
+	}
+	
+	/**
+	 * Get products (downloads/Documents
+	 * @global wpdb $wpdb
+	 * @param int $user_id (default get_current_user_id()
+	 * @return array of WP_Posts
+	 */
+	static function get_my_documents($user_id=0) {
+		global $wpdb ;
+		
+		if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		
+		$documents = wp_cache_get('my_aia_get_my_documents_'.$user_id);
+		
+		if ($documents) return $documents;
+		
+		// first get all my orders
+		$orders = self::get_my_orders($user_id, 1000);
+		$products = array();
+		foreach ($orders as $order) {
+			if ($order->order_status == MY_AIA_ORDER_STATUS_PAID)
+				foreach ($order->order_items as $item) $products[$item->product_id] = 1; // save in Key format
+		}
+		
+		// if we have found products..
+		if (count($products) <=0 ) return array();
+		$querystr = "SELECT * FROM {$wpdb->posts} ap INNER JOIN {$wpdb->postmeta} apm ON ap.ID = apm.post_id AND apm.meta_key='product_id' AND apm.meta_value IN (
+			SELECT ID FROM {$wpdb->posts} WHERE post_type=" . MY_AIA_POST_TYPE_PRODUCT . " AND ID IN(". implode(',',  array_keys($products)) . "))";
+		
+		// retrieve all posts where product_id in PAID orders
+		$documents = $wpdb->get_results($querystr, OBJECT);
+		
+		wp_cache_set('my_aia_get_my_documents_'.$user_id, $documents, NULL, 300); // save for 5 minutes
+		
+		return $documents;
 	}
 }
 

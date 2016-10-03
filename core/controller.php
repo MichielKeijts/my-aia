@@ -41,7 +41,14 @@ class MY_AIA_CONTROLLER {
 	 * @var bool
 	 */
 	public $has_attribute_form = TRUE;
+	
+	/**
+	 * Additional fields to hide on attribute form
+	 * @var array
+	 */
+	public $additional_fields_hidden_on_attribute_form = array();
 
+	
 	
 	
 	public function __construct() {
@@ -69,7 +76,10 @@ class MY_AIA_CONTROLLER {
 		
 		if (!$this->get_model()->ID && $post && $post->ID)	$this->get_model()->get($post);		
 		
-		$displayed_fields = array('ID','name', 'description','assigned_user_id','order_items','total_order_price','parent_type'); // hide
+		$displayed_fields = array('ID','name', 'description','assigned_user_id','order_items','_order_items','total_order_price','parent_type'); // hide
+		$displayed_fields = array_merge($displayed_fields, $this->additional_fields_hidden_on_attribute_form);// hide other
+		
+		
 		//
 		// return data
 		$data = array();

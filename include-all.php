@@ -27,9 +27,9 @@ include_once ('config/custom-taxonomies/my-aia-sportbetrokkenheid.php');
 include_once ('config/custom-taxonomies/my-aia-product-categorie.php');
 
 // Classes: Load MY_AIA class
-include_once ( 'controllers/my-aia-processflow.php' );
-include_once ( 'core/processflow/my-aia-processflow-static-condition.php' );
-include_once ( 'controllers/my-aia-html-helper.php' );
+//include_once ( 'controllers/my-aia-processflow.php' );
+//include_once ( 'core/processflow/my-aia-processflow-static-condition.php' );
+//include_once ( 'controllers/my-aia-html-helper.php' );
 include_once ( 'core/my-aia-view.php' );
 include_once ( 'core/controller.php' );
 include_once ( 'core/model.php' );
@@ -46,7 +46,6 @@ include_once ( 'addons/ninja-forms/my-aia-ninja-forms.php' );
 
 // All other necessary files
 include_once ( 'core/crmsync/iso3166.php');
-include_once ( 'core/lib/Download.php');
 
 // FINALLY: Initiate my-aia
 include_once ( 'config/my-aia-init.php' );

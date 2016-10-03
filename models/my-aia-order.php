@@ -109,7 +109,7 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 			$this->ID = $post_id;	// to be save
 			
 			$this->set_order_nr(TRUE);	// update order number
-			return $this->save(false);
+			return $this->save(true);	// update fields by post data
 		}
 		parent::save_post($post_id, $post, $update);
 	}
@@ -155,9 +155,11 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public function parse_order_items($values) {
 		//$_values = maybe_unserialize($values[0]);
 
-		foreach (maybe_unserialize(reset($values)) as $order_item_raw) {
+		foreach (maybe_unserialize(reset($values)) as $key=>$order_item_raw) {
 			if ($order_item_raw) {
 				if (!is_array($order_item_raw)) $order_item_raw = maybe_unserialize($order_item_raw);
+				
+				if (is_numeric($key) && $key>0 && $order_item_raw['id'] < 0) $order_item_raw['product_id'] = $key;
 				if (!($order_item_raw instanceof MY_AIA_ORDER_ITEM)) {
 					$item = new MY_AIA_ORDER_ITEM($order_item_raw, $this->ID);
 				} else {
@@ -308,7 +310,7 @@ class MY_AIA_ORDER_ITEM {
 		
 		if ($order_item instanceof MY_AIA_ORDER_ITEM) {
 			foreach ($order_item as $key=>$val) {
-				$this-$key = $val;
+				$this->$key = $val;
 			}
 		} else {
 			if ($order_item && ($order_item['product_id'] || isset($order_item['id'])) && ($order_item['order_id'] || $order_id)) {

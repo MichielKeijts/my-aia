@@ -20,8 +20,8 @@ add_action( 'init', 'my_aia_register_taxonomy_product_categorie' );
 add_action( 'init', 'my_aia_register_post_type_contract' );
 add_action( 'init', 'my_aia_register_post_type_order' );
 add_action( 'init', 'my_aia_register_post_type_payment' );
-add_action( 'init', 'my_aia_register_post_type_product' );
-add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );*/
+add_action( 'init', 'my_aia_register_post_type_product' );*/
+add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );
 
 // Used for user-taxonomy
 add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user', 3);						// s
@@ -43,11 +43,9 @@ add_action( 'nf_notification_types', 'my_aia_nf_add_notifications');									// 
 // Hooks for custom post save
 //add_action( 'save_post',  'my_aia_post_save_action', 99, 2);
 
-
 // Ajax Functions for Front Page
 add_action( 'wp_ajax_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);					// AJAX hook to get Events 	
 add_action( 'wp_ajax_nopriv_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);				// AJAX hook to get Events, no login
-
 
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 

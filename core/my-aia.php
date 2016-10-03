@@ -102,7 +102,7 @@ class MY_AIA {
 	 * Returns an instance (or the instance) of MY_AIA
 	 * @return \MY_AIA
 	 */
-	public function instance() {
+	static function instance() {
 		if ( !isset( self::$instance ) && ! (self::$instance instanceof MY_AIA ) ) {
 			self::$instance = new MY_AIA();
 		}
@@ -334,15 +334,15 @@ class MY_AIA {
 			
 			// skip register function if custom post type exists via other plugin
 			// LOAD CONTROLLER
-			$cstm_file = sprintf('%smy-aia-%s-controller.php',$controllerDir, $post_type);
-			$model_file = sprintf('%s../models/my-aia-%s.php',$controllerDir, $post_type);
-			if (file_exists($cstm_file)) {
-				include_once($cstm_file);
-				include_once($model_file);
+			//$cstm_file = sprintf('%smy-aia-%s-controller.php',$controllerDir, $post_type);
+			//$model_file = sprintf('%s../models/my-aia-%s.php',$controllerDir, $post_type);
+			//if (file_exists($cstm_file)) {
+				//include_once($cstm_file);
+				//include_once($model_file);
 
 				$className = strtoupper(sprintf("MY_AIA_%s_CONTROLLER",$post_type));
 				self::$controllers[$post_type] = new $className();
-			}
+			//}
 			
 		}
 		
@@ -685,13 +685,3 @@ class MY_AIA {
 		return $documents;
 	}
 }
-
-
-/**
- * Wrapper to get the MY_AIA Class
- * @return \MY_AIA
- */
-function MY_AIA_INIT() {
-    return MY_AIA::instance();
-}
-

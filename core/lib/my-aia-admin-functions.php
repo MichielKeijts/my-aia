@@ -126,7 +126,7 @@ function my_aia_post_type_partner_display_assigned_user_id_metabox() {
 /**
  * Display an order form with items 
  * @param type $order_id
- * @param type $order_items
+ * @param MY_AIA_ORDER_ITEM $order_items
  */
 function my_aia_order_form($order_id, $order_items) {
 	?>

@@ -425,3 +425,33 @@ function throw_404 ($die = TRUE) {
 	include( get_query_template( '404' ) );
 	if ($die) die();
 }
+
+/**
+ * Auto class loader
+ * @param type $classname
+ */
+function my_aia_autoloader($classname) {
+	$classname = str_replace(array('MY_AIA_','_'),array('','-'), $classname);
+	if (strpos(strtolower($classname),'controller')) {
+		$filename = sprintf('%s/controllers/my-aia-%s.php', MY_AIA_PLUGIN_DIR, strtolower($classname));
+	} elseif (strpos(strtolower($classname),'processflow')) {
+		$filename = sprintf('%s/core/processflow/my-aia-%s.php', MY_AIA_PLUGIN_DIR, strtolower($classname));
+	} else {
+	
+		// find in ./models/
+		$filename = sprintf('%s/models/my-aia-%s.php', MY_AIA_PLUGIN_DIR, strtolower($classname));
+		
+		// find in ./core/lib
+		if (!file_exists($filename))				
+			$filename = sprintf('%s/core/lib/my-aia-%s.php', MY_AIA_PLUGIN_DIR, strtolower($classname));
+	
+		// find in ./core/crmsync
+		if (!file_exists($filename))				
+			$filename = sprintf('%s/core/lib/my-aia-%s.php', MY_AIA_PLUGIN_DIR, strtolower($classname));
+	}
+
+	// try and load classname if fileexists
+	if (file_exists($filename))
+		include_once($filename);
+}
+spl_autoload_register('my_aia_autoloader');

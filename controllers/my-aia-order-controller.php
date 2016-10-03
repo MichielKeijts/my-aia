@@ -205,40 +205,6 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	}
 	
 	/**
-	 * Updates the post_meta for the order object
-	 * @param type $prepare_post_data
-	 */
-	public function update_post_meta($prepare_post_data = true) {
-		if ($prepare_post_data) $this->prepare_post_data();
-		
-		// checks for order item data
-		if (!is_array($this->order_items) || count($this->order_items)<=0) {
-			$this->order_items = array(); // start from zero.
-			if (isset($_POST['order_items'])) $this->order_items = $_POST['order_items'];
-		
-			$order_item = new MY_AIA_ORDER_ITEM();
-			foreach ($this->order_items as $product_id=>$values) {
-				$order_item->product_id = $product_id;
-				$order_item->count = $values['count'];
-				$order_item->price = $values['price'];
-				$order_item->order_id = $this->ORDER->ID;
-				
-				// check if count = 0, delete!
-				if ($order_item->count > 0) 
-					$this->order_items[] =  $order_item->toString();
-			}
-		}
-		// to string to save
-		$_order_items = $this->order_items;
-		foreach ($this->order_items as $order_item) 
-			$this->order_items[] =  $order_item->toString();		
-	
-		parent::update_post_meta(FALSE);	// we already updated post data
-		
-		$this->order_items = $_order_items;
-	}
-	
-	/**
 	 * Returns an] key=>value array of the templates
 	 */
 	private function get_invoice_templates() {

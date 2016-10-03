@@ -276,6 +276,7 @@ class MY_AIA_MODEL {
 	
 	/**
 	 * Update the object with post data, saved in $_POST
+	 * Only update if property already exists, ie. not creating new properties
 	 */
 	protected function prepare_post_data() {
 		foreach ($_POST as $key=>$value) {

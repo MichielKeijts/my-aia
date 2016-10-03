@@ -101,8 +101,8 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 					$order->order_status = MY_AIA_ORDER_STATUS_AWAITING_PAYMENT;
 				}
 			}
-			$order->update_post_meta(FALSE);
-			$this->PAYMENT->save();
+			$order->update_post_meta(FALSE);	// not update via $_POST
+			$this->PAYMENT->save(FALSE);		// not update via $_POST
 			return $order->ID;
 		}
 		return $order->ID;

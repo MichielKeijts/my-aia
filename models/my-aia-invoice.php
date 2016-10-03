@@ -192,7 +192,7 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		
 		if ($filename) {
 			$this->attachment = $filename;
-			$this->update_post_meta();
+			$this->update_post_meta(FALSE);
 		}
 		
 		return $filename;

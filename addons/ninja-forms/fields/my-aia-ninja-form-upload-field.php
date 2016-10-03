@@ -15,7 +15,7 @@ function my_aia_ninja_forms_upload_field_enque_scripts() {
 	wp_enqueue_script('jquery-fileupload-image', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload-image.js', array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery-fileupload-audio', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload-audio.js', array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery-fileupload-video', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload-video.js', array('jquery','jquery-ui-core'));
-	wp_enqueue_script('jquery-fileupload-validate', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.iframe-validate.js', array('jquery','jquery-ui-core'));
+	//wp_enqueue_script('jquery-fileupload-validate', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.iframe-validate.js', array('jquery','jquery-ui-core'));
 	
 	// wp_enqueue_script('jquery-file-upload', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/main.js', array('jquery','jquery-ui-core'));
 }
@@ -59,8 +59,6 @@ function my_aia_ninja_forms_upload_field_register(){
 	);
 
 	ninja_forms_register_field('upload', $args);
-	add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
-	add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
 }
 
 /**
@@ -104,6 +102,9 @@ function ninja_forms_field_upload_req_validation($field_id, $user_value) {
  * @param int $form_id
  */
 function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '' ) {
+	add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
+	add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
+	
 	if ( isset( $data['default_value'] ) ) {
 		$default_value = $data['default_value'];
 	} elseif( isset( $data['number_min'] ) ) {

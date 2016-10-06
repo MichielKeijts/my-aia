@@ -8,7 +8,7 @@
 /*
 Plugin Name: MyAIA
 Plugin URI:  http://michielkeijts.nl/my-aia
-Description: My AIA is a plugin which combines functionality of Buddypress, Events-Manager and more. 
+Description: My AIA is a plugin which combines functionality of Buddypress, Events-Manager and more... 
 Version:     0.1
 Author:      Michiel Keijts
 Author URI:  http://www.mchielkeijts.nl/

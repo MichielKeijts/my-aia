@@ -13,10 +13,11 @@ include_once 'classes/my-aia-bp-orders.php';
 
 
 // add hooks
-add_action( 'xprofile_updated_profile',		'my_aia_xprofile_sync_wp_profile'	, 99, 1);			// update user_date with xprofile data
-add_action( 'profile_update',				'my_aia_wp_profile_sync_xprofile'	, 99, 2 );			// update xprofile with user_data
-add_action( 'profile_update',				'MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save', 10, 2 );			// update xprofile with user_data
-add_action( 'bp_loaded',					'bp_my_aia_load_core_components' );						// load front-end 
+add_action( 'xprofile_updated_profile',			'my_aia_xprofile_sync_wp_profile'	, 99, 1);			// update user_date with xprofile data
+add_action( 'profile_update',					'my_aia_wp_profile_sync_xprofile'	, 99, 2 );			// update xprofile with user_data
+add_action( 'profile_update',					'MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save', 10, 2 );			// update xprofile with user_data
+add_action( 'bp_loaded',						'bp_my_aia_load_core_components' );						// load front-end 
+add_action( 'bp_get_the_profile_field_name',	'my_aia_language_wrapper', 10, 1);	// add language to group name
 //add_action( 'bp_xprofile_settings_before_save', MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save, '',	1, 2);						// save profile edits to an review table
 
 /**
@@ -211,3 +212,14 @@ function my_aia_admin_group_mention($results, $bp_members_suggestions) {
 	return $results;
 }
 add_filter('bp_members_suggestions_get_suggestions', 'my_aia_admin_group_mention', 10, 2);
+
+/**
+ * Wrap the domain around ($name), for translation:
+ * __($name, $domain
+ * @param string $name
+ * @param string $domain (default = 'my-aia')
+ * @return string
+ */
+function my_aia_language_wrapper ($name, $domain='my-aia') {
+	return __($name, $domain);
+}

@@ -9,6 +9,8 @@
 register_activation_hook('my-aia-install.php','my_aia_install');
 
 add_action( 'plugins_loaded', 'MY_AIA::load_textdomain', 0 );
+
+// Register taxnonomies
 add_action( 'init', 'my_aia_register_taxonomy_sport' );
 add_action( 'init', 'my_aia_register_taxonomy_sport_level' );
 add_action( 'init', 'my_aia_register_taxonomy_taal' );
@@ -16,11 +18,6 @@ add_action( 'init', 'my_aia_register_taxonomy_sportweek_eigenschap' );
 add_action( 'init', 'my_aia_register_taxonomy_kerkstroming' );
 add_action( 'init', 'my_aia_register_taxonomy_overnachting' );
 add_action( 'init', 'my_aia_register_taxonomy_product_categorie' );
-/*add_action( 'init', 'my_aia_register_post_type_partner' );
-add_action( 'init', 'my_aia_register_post_type_contract' );
-add_action( 'init', 'my_aia_register_post_type_order' );
-add_action( 'init', 'my_aia_register_post_type_payment' );
-add_action( 'init', 'my_aia_register_post_type_product' );*/
 add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );
 
 // Used for user-taxonomy
@@ -40,7 +37,7 @@ add_action( 'init', 'my_aia_ninja_forms_upload_field_register' );
 add_action( 'init', 'my_aia_ninja_forms_term_field_register' );
 add_action( 'nf_notification_types', 'my_aia_nf_add_notifications');									// add custom-post and other notification types
 
-// Hooks for custom post save
+// Hooks for custom post save --> not enabled yet
 //add_action( 'save_post',  'my_aia_post_save_action', 99, 2);
 
 // Ajax Functions for Front Page
@@ -49,4 +46,5 @@ add_action( 'wp_ajax_nopriv_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);		
 
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 
+// Main init function, before anything else
 add_action ( 'init', 'MY_AIA::init', -1, 1);

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: my-aia\n"
 "POT-Creation-Date: 2016-09-19 11:43+0200\n"
-"PO-Revision-Date: 2016-09-19 11:59+0200\n"
+"PO-Revision-Date: 2016-10-06 11:34+0200\n"
 "Last-Translator: \n"
 "Language-Team: Normit <michiel@normit.nl>\n"
 "Language: nl_NL\n"
@@ -153,7 +153,7 @@ msgstr "Registreer for Athletes in Action"
 
 #: addons/buddypress/classes/my-aia-bp-template-parser.php:39
 msgid "Ik heb al een login"
-msgstr "Ik heb al Een login"
+msgstr "Ik heb al een login"
 
 #: addons/buddypress/screens/my-documents.php:48
 msgid "Reschedule Events"
@@ -1388,64 +1388,61 @@ msgid "voorletters_c"
 msgstr "voorletters_c"
 
 msgid "middle_name"
-msgstr "Midden-naam"
+msgstr "Tussenvoegsel"
 
 msgid "first_name"
 msgstr "Voornaam"
 
 msgid "primary_address_street"
-msgstr "primary_address_street"
-
-msgid "primary_address_number_c"
-msgstr "primary_address_number_c"
+msgstr "Adres"
 
 msgid "primary_address_number_add_c"
-msgstr "primary_address_number_add_c"
+msgstr "Huisnummer Toev."
 
 msgid "primary_address_city"
-msgstr "primary_address_city"
+msgstr "Plaats"
 
 msgid "primary_address_postalcode"
-msgstr "primary_address_postalcode"
+msgstr "Postcode"
 
 msgid "primary_address_country"
-msgstr "primary_address_country"
+msgstr "Land"
 
 msgid "bankrekeningnummer_c"
-msgstr "bankrekeningnummer_c"
+msgstr "bankrekeningnummer"
 
 msgid "birthdate"
 msgstr "geboortedatum"
 
 msgid "gender_c"
-msgstr "gender_c"
+msgstr "Geslach"
 
 msgid "email1"
-msgstr "email1"
+msgstr "E-Mail"
 
 msgid "phone_home"
-msgstr "bel naar huis"
+msgstr "Huistelefoon"
 
 msgid "phone_mobile"
-msgstr "phone_mobile"
+msgstr "Mobiele Telefoon"
 
 msgid "paspoortnr_c"
-msgstr "paspoortnr_c"
+msgstr "Paspoortnr"
 
 msgid "debiteurnr_c"
-msgstr "debiteurnr_c"
+msgstr "Debiteurnr"
 
 msgid "manyware_regnr_c"
-msgstr "manyware_regnr_c"
+msgstr "Manyware RegNr."
 
 msgid "id"
 msgstr "id"
 
 msgid "aia_teamleden"
-msgstr "aia_teamleden"
+msgstr "aia teamleden"
 
 msgid "aia_teamleiders"
-msgstr "aia_teamleiders"
+msgstr "aia teamleiders"
 
 msgid "begindatum"
 msgstr "begindatum"
@@ -1454,13 +1451,13 @@ msgid "einddatum"
 msgstr "einddatum"
 
 msgid "gewenst_teamgrootte"
-msgstr "gewenst_teamgrootte"
+msgstr "gewenste teamgrootte"
 
 msgid "icb"
 msgstr "ICB"
 
 msgid "land"
-msgstr "land-"
+msgstr "land"
 
 msgid "modified_user_id"
 msgstr "modified_user_id"
@@ -1469,10 +1466,10 @@ msgid "name"
 msgstr "naam"
 
 msgid "partner_teamleden"
-msgstr "partner_teamleden"
+msgstr "partner teamleden"
 
 msgid "partner_teamleiders"
-msgstr "partner_teamleiders"
+msgstr "partner teamleiders"
 
 msgid "penningmeester"
 msgstr "penningmeester"
@@ -1538,10 +1535,10 @@ msgid "visible_website"
 msgstr "visible_website"
 
 msgid "aia_ministry_project_id_c"
-msgstr "aia_ministry_project_id_c"
+msgstr "Evenement  ID"
 
 msgid "aia_ministry_project_name"
-msgstr "aia_ministry_project_name"
+msgstr "Evenement Naam"
 
 msgid "assigned_user_id"
 msgstr "assigned_user_id"
@@ -1577,7 +1574,7 @@ msgid "date_entered"
 msgstr "date_entered"
 
 msgid "date_modified"
-msgstr "DATE_MODIFIED"
+msgstr "Datum Aangepast"
 
 msgid "deelnemertype"
 msgstr "deelnemertype"
@@ -1595,10 +1592,10 @@ msgid "emergency_phonenumber"
 msgstr "emergency_phonenumber"
 
 msgid "extra_optie_1_c"
-msgstr "extra_optie_1_c"
+msgstr "extra optie 1"
 
 msgid "extra_optie_2_c"
-msgstr "extra_optie_2_c"
+msgstr "extra optie 2"
 
 msgid "familie_korting"
 msgstr "familie_korting"

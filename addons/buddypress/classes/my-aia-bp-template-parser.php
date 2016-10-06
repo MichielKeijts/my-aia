@@ -139,6 +139,14 @@ function my_aia_bp_after_member_body_default () {
 }
 
 global $EM_Notices;
+
+/**
+ * TEMPLATE ADDITIONS BETWEEN THE MAIN CONTENT
+ * 
+ * This additions are fired in the various template files. 
+ * should be inserted between the menu (left) and the content (right)
+ */
+// members
 add_action( 'bp_before_member_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_profile_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_member_groups_content', 'my_aia_bp_before_groups_content');
@@ -147,17 +155,28 @@ add_action( 'bp_before_member_messages_content', 'my_aia_bp_before_profile_conte
 add_action( 'bp_before_group_plugin_template', 'my_aia_bp_before_profile_content');
 add_action( 'bp_template_title', 'my_aia_bp_before_template_content', -1);
 add_action( 'bp_after_members_directory_order_options', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_member_settings_template', 'my_aia_bp_before_profile_content');
 
 // groups
 add_action( 'bp_before_group_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_group_admin_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_groups_loop', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_groups_between_groups_content_directory', 'my_aia_bp_before_profile_content');
 
 
+/**
+ * TEMPLATE ADDITIONS BEFORE AND AFTER THE MAIN CONTENT
+ * 
+ * This additions are fired in the various template files. 
+ * should be inserted before and after the buddypress pages
+ */
 //add_action( 'bp_before_events_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_member_body', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_member_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_before_directory_members_tabs', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_members', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_before_group_body', 'my_aia_bp_before_member_body_default');
-add_action( 'bp_after_group_body', 'my_aia_bp_after_member_body_default');
+add_action( 'bp_groups_index_before_content', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_directory_groups_content', 'my_aia_bp_after_member_body_default');

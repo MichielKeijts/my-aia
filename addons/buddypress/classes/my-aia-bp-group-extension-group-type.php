@@ -29,8 +29,10 @@ class MY_AIA_BP_Group_Extension_Group_Type extends BP_Group_Extension {
 		?>
 			<p>Selecteer een type:</p>
 			<select name="group_setting_group_type">
+				<option value="default"><?= __('Huddle','my-aia'); ?></option>
 				<option value="huddle"><?= __('Huddle','my-aia'); ?></option>
 				<option value="sportcommunity"><?= __('Sportcommunity','my-aia'); ?></option>
+				<option value="sport_specifiek"><?= __('Sport Specifiek','my-aia'); ?></option>
 			</select>
 		<?php
 	}

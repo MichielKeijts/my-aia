@@ -8,20 +8,20 @@
 /**
  * Creates a custom group extension for BuddyPress in the MY_AIA plugin
  */
-class MY_AIA_BP_Group_Extension_Sportlevel extends BP_Group_Extension {
+class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	/**
-	 * Sportlevel holder
-	 * @var \EM_Sportlevels
+	 * Location holder
+	 * @var \EM_Locations
 	 */
-	private $sportlevel = NULL;
+	private $location = NULL;
 	
 	/*
 	 * Initialize
 	 */
 	public function __construct($args= NULL) {
 		parent::init(array(
-			'slug' => 'Sportlevel',
-			'name' => 'Sportlevel',
+			'slug' => 'Location',
+			'name' => 'Location',
 			'nav_item_name' => __('Locatie','my-aua')
 		));
 	}
@@ -33,7 +33,7 @@ class MY_AIA_BP_Group_Extension_Sportlevel extends BP_Group_Extension {
 	public function settings_screen($group_id = null) {
 		parent::edit_screen($group_id);
 	
-		$location = new EM_Sportlevels;
+		$location = new EM_Locations;
 		$locations = $location->get();
 		?>
 			<p>Selecteer een locatie:</p>

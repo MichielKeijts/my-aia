@@ -42,4 +42,5 @@ include_once ( 'addons/ninja-forms/my-aia-ninja-forms.php' );
 include_once ( 'core/crmsync/iso3166.php');	// conversion for country names to 2-char or 3-char abbreviations
 
 // FINALLY: Initiate my-aia
-include_once ( 'config/my-aia-definitions.php' );
+
+include_once ( 'config/my-aia-action-list.php' );

@@ -33,15 +33,18 @@ class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	public function settings_screen($group_id = null) {
 		parent::edit_screen($group_id);
 	
-		$location = new EM_Locations;
-		$locations = $location->get();
+		// get sportlevel terms
+		$term_name = MY_AIA_TAXONOMY_SPORT_LEVEL;
+		$terms = get_terms($term_name, array('hide_empty'=>FALSE));
+
 		?>
-			<p>Selecteer een locatie:</p>
-			<select name="location">
-				<option value="temp">Amersfoort</option>
-				<?php foreach ($locations as $loc): ?>
-				<option value="<?= $loc->location_id; ?>"><?= $loc->location_name; ?></option>
-				<?php endforeach; ?>
+			<p>Selecteer een sportlevel:</p>
+			<select name="sportlevel">
+		<?php
+			foreach ($terms as $key=>$term) {
+				?><option value="<?= $term->name; ?>"><?= $term->name; ?></option><?php
+			}
+		?>
 			</select>
 		<?php
 	}

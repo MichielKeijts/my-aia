@@ -4,6 +4,9 @@
  * @copyright (c) 2016, Michiel Keijts
  */
 
+/**
+ * Enque the scripts necessary for the upload field
+ */
 function my_aia_ninja_forms_upload_field_enque_scripts() {
 	my_aia_ninja_forms_upload_field_enque_styles();
 	wp_enqueue_script('jquery-ui-widget', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/vendor/jquery.ui.widget.js', array('jquery','jquery-ui-core'));
@@ -26,6 +29,9 @@ function my_aia_ninja_forms_upload_field_enque_styles() {
 	wp_enqueue_style('jquery-fileupload', MY_AIA_PLUGIN_URL .		'vendor/jQuery-File-Upload/css/jquery.fileupload.css', '', MY_AIA_VERSION );
 }
 
+/**
+ * Register the upload field in the NINJA_FORMS
+ */
 function my_aia_ninja_forms_upload_field_register(){
 	$args = array(
 		'name' => 'File Upload',

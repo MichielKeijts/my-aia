@@ -7,6 +7,7 @@
  * (C) Michiel Keijts, 2016
  */
 
+// Including necessary files
 include_once 'classes/my-aia-xprofile-change-moderate.php';
 include_once 'classes/my-aia-bp-core.php';
 include_once 'classes/my-aia-bp-orders.php';

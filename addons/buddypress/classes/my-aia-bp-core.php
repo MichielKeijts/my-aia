@@ -16,6 +16,7 @@ class BP_MY_AIA_Component extends BP_Component {
 
 	function includes( $includes = array() ) {
 		// Files to include
+		// including the necessary files for functionality, see README in screens folder
 		$includes = array(
 			//'addons/buddypress/bp-my-aia-activity.php',
 			//'addons/buddypress/bp-my-aia-templatetags.php',
@@ -28,6 +29,7 @@ class BP_MY_AIA_Component extends BP_Component {
 			//'addons/buddypress/screens/my-order.php'
 		);
 		if( bp_is_active('groups') ){
+			// including the necessary files for functionality, see README in screens folder
 			$includes[] = 'addons/buddypress/screens/group-documents.php';
 			$includes[] = 'addons/buddypress/classes/my-aia-bp-groups.php';
 		}

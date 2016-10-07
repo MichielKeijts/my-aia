@@ -159,7 +159,12 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 			if ($order_item_raw) {
 				if (!is_array($order_item_raw)) $order_item_raw = maybe_unserialize($order_item_raw);
 				
-				if (is_numeric($key) && $key>0 && $order_item_raw['id'] < 0) $order_item_raw['product_id'] = $key;
+				// in some cases product_id was saved as a $key of the array
+				// update the order_item correspondinly
+				if (is_numeric($key) && $key>0) 
+					if (is_array($order_item_raw) && $order_item_raw['id'] < 0)
+						$order_item_raw['product_id'] = $key;
+					
 				if (!($order_item_raw instanceof MY_AIA_ORDER_ITEM)) {
 					$item = new MY_AIA_ORDER_ITEM($order_item_raw, $this->ID);
 				} else {

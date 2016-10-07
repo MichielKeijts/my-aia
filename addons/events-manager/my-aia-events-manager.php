@@ -51,9 +51,9 @@ function my_aia_em_bookings_show_ninja_form_from_booking(\EM_Booking $EM_Booking
 	if (filter_input(INPUT_POST, '_ninja_forms_display_submit') === FALSE) {
 		$extra_style="style='display: none;'";
 	}
-	echo "<div class='em-booking-single-edit' {$extra_style}>";
+	echo "<div class=stuffbox><h3>Aanmeldformulier</h3><div class='em-booking-single-edit' {$extra_style}>";
 	my_aia_em_bookings_show_ninja_form($EM_Event);
-	echo "</div>";
+	echo "</div></div>";
 	
 	if (isset($ninja_forms_processing) && is_a($ninja_forms_processing, "Ninja_Forms_Processing") && count($ninja_forms_processing->get_all_errors()) > 0) {
 		echo '<script>jQuery(function ($) {

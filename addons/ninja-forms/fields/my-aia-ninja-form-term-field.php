@@ -4,6 +4,9 @@
  * @copyright (c) 2016, Michiel Keijts
  */
 
+/**
+ * Register the taxonomy edit field (term selection in NINJA_FORMS)
+ */
 function my_aia_ninja_forms_term_field_register(){
 	$args = array(
 		'name' => 'Taxonomy Term',

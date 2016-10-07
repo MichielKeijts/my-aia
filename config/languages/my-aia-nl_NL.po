@@ -1313,7 +1313,7 @@ msgstr "Reset"
 
 #: core/my-aia.php:566
 msgid "Uitloggen"
-msgstr "Word lid van onze"
+msgstr "Uitloggen"
 
 #: core/my-aia.php:570
 msgid "Members"

@@ -274,6 +274,22 @@ function my_aia_events_manager_add_attributes_form() {
 }
 
 /**
+ * Filter the Events and group
+ * @param string $conditions
+ * @param mixed $args
+ * @return $conditions
+ */
+function my_aia_events_manager_group_recurrence($conditions, $args=NULL) {
+	if (is_admin() && !defined( 'DOING_AJAX' ) && DOING_AJAX)	return $conditions;	// no modifications (yet) for admin interface
+	
+	// group recurrence
+	$conditions['recurrence'] =		"((recurrence_interval IS NULL OR recurrence = 0 AND recurrence_interval=0) OR
+									(recurrence = 1 AND recurrence_interval=1))";
+	
+	return $conditions;
+}
+
+/**
  * Display the contents of the form submission (meta content) of the booking,
  * done by Ninja Forms. Saved in the form:
  *	$Ninjaforms::field::ADMIN_LABEL  =  {data}

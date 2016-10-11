@@ -51,7 +51,7 @@ function my_aia_em_bookings_show_ninja_form_from_booking(\EM_Booking $EM_Booking
 	if (filter_input(INPUT_POST, '_ninja_forms_display_submit') === FALSE) {
 		$extra_style="style='display: none;'";
 	}
-	echo "<div class=stuffbox><h3>Aanmeldformulier</h3><div class='em-booking-single-edit' {$extra_style}>";
+	echo "<div class=stuffbox><h3>Aanmeldformulier</h3>";
 	my_aia_em_bookings_show_ninja_form($EM_Event);
 	echo "</div></div>";
 	
@@ -331,13 +331,12 @@ function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) 
  * @param EM_Person $person
  * @return string HTML output
  */
-function my_aia_events_manager_profile_display_summary($output, $person) {
-	$no_user = get_option('dbem_bookings_registration_disable') && $person->ID == get_option('dbem_bookings_registration_user');
+function my_aia_events_manager_profile_display_summary($output, $person, $no_user = FALSE) {
+	$no_user = $no_user || get_option('dbem_bookings_registration_disable') && $person->ID == get_option('dbem_bookings_registration_user');
 	
 	// get XProfile Data From BuddyPress
 	bp_has_profile(array('user_id' => $person->ID)); // intiate
-	
-	
+		
 	ob_start();
 	?>
 	<table class="em-form-fields">
@@ -355,11 +354,11 @@ function my_aia_events_manager_profile_display_summary($output, $person) {
 				
 				
 				<?php while ( bp_profile_groups() ) : bp_the_profile_group();?>
-				<h4><?php bp_the_profile_group_name(); ?></h4>
+				<h4><?php bp_the_profile_group_name(); ?><div class="my_aia_form_opener dropdown_menu down"></div></h4>				
 				<table>
 					<?php while ( bp_profile_fields() ) : bp_the_profile_field(); ?>
 						<tr>
-							<th><?= __(bp_get_the_profile_field_name()); ?> : </th>
+							<th><?= __(bp_get_the_profile_field_name(),'my-aia'); ?> : </th>
 							<td><?= strip_tags(bp_get_the_profile_field_value()); ?></td>
 						</tr>
 						<?php do_action( 'bp_profile_field_item' ); ?>
@@ -371,4 +370,22 @@ function my_aia_events_manager_profile_display_summary($output, $person) {
 	</table>
 	<?php
 	return ob_get_clean();
+}
+
+/**
+ * Shows a form with the current values of the logged in user, to be displayed on top of the form
+ */
+function my_aia_show_default_profile_values_for_user_add_to_registration_form() {
+	$person = new EM_Person(get_current_user_id());
+	
+	?>
+							<h4>Automatisch ingevulde gegevens</h4>
+							<p>De volgende gegevens worden meegezonden met je aanvraag:</p>
+	<?php
+	
+	echo 
+		my_aia_events_manager_profile_display_summary("", $person, TRUE),
+		sprintf("<p>Als deze informatie niet klopt, dan kun je deze in je <a href='%sprofile/edit/'>profiel</a> aanpassen.</p>", bp_core_get_user_domain( get_current_user_id() )),
+		'<br><h3>Overige gegevens</h3>';
+	
 }

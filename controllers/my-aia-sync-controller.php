@@ -66,6 +66,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 			"86d7815a-2abf-e51b-14e3-4f070e7a73ca", // marcel
 			"a4910c38-455c-a5dc-63bb-4f07190c038a", // christiaan
 			"d0039759-0e53-c0c8-b70b-5278f15f0604", // jonathan
+			"17d8443c-6ed8-929a-f493-53329b669f51", // wytze
 			);
 	
 	

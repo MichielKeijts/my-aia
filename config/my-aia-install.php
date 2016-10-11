@@ -316,13 +316,12 @@ function my_aia_update_event_manager_defaults() {
 		'dbem_bp_events_list_format'			=> get_option("dbem_event_list_item_format"),
 		'dbem_bp_events_list_format_footer'		=> get_option("dbem_event_list_item_format_footer"),
 		'dbem_single_event_format'				=> '#_EVENTNOTES
-													{has_bookings}
-													<div class="stuffbox">
-													<h3>Reserveringspagina</h3>
-													#_BOOKINGFORM
-													</div>
-													
-													{/has_bookings}'
+								{has_bookings}
+								<div class="stuffbox">
+								<h3>Reserveringspagina<div class=\'my_aia_form_opener dropdown_menu down\'></div></h3>
+								#_BOOKINGFORM
+								</div>
+								{/has_bookings}'
 	);
 	
 	//add new options, overwrite

@@ -34,6 +34,7 @@ add_action( 'em_bookings_single_custom',"my_aia_em_bookings_show_ninja_form_from
 add_action( 'em_events_build_sql_conditions',"my_aia_events_manager_group_recurrence",99, 1);		// add ninja form to customize EM booking
 add_action( 'em_bookings_get_tickets',	'my_aia_em_bookings_remove_ninja_form', 99, 2);					// remove ninja form from EM Event page
 add_action( 'em_person_display_summary','my_aia_events_manager_profile_display_summary', 99, 2);
+add_action( 'ninja_forms_before_form_display', 'my_aia_show_default_profile_values_for_user_add_to_registration_form', 10,1);
 add_action( 'init', 'my_aia_ninja_forms_upload_field_register' );
 add_action( 'init', 'my_aia_ninja_forms_term_field_register' );
 add_action( 'nf_notification_types', 'my_aia_nf_add_notifications');									// add custom-post and other notification types

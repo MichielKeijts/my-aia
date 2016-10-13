@@ -35,9 +35,11 @@ function my_aia_bp_after_register_page() {
  * Add 'More information
  */
 function my_aia_bp_before_registration_submit_buttons() {
+	$ref = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:MY_AIA_BP_ROOT;
 	?>
-	<div class="" style='float: left;margin-top: 25px;'><a href='<?= wp_login_url(MY_AIA_BP_ROOT); ?>'><?= __('Ik heb al een login','my-aia'); ?></a></div>
+	<div class="" style='float: left;margin-top: 25px;'><a href='<?= wp_login_url($ref); ?>'><?= __('Ik heb al een login','my-aia'); ?></a></div>
 	<div class="submit"><a href="#" class="button blauw" id="registration-profile-open-button">Verder &gt;&gt;</a></div>
+	<input type="hidden" name="redirect_to" value="<?= $ref; ?>">
 	<?php
 }
 add_filter( 'bp_before_register_page', 'my_aia_bp_before_register_page');
@@ -75,6 +77,24 @@ function my_aia_bp_before_template_content() {
 		return my_aia_bp_before_profile_content ();
 	return "";
 }
+
+/**
+ * Create div tiles in Buddypress
+ * @global WP $wp;
+ */
+function my_aia_bp_before_group_body_default() {
+	global $wp;
+	if (strpos($wp->request,'members') === FALSE) return my_aia_bp_before_member_body_default();
+	
+	?>
+		<section class="buddy-press buddypress-tiles">
+			<div class="column-wrapper">
+				<div class="column-sm-1">
+					<div class="raster events-filter-label">
+						<div class="column-inner">
+	<?php
+}
+
 
 
 /**
@@ -160,9 +180,9 @@ add_action( 'bp_before_member_settings_template', 'my_aia_bp_before_profile_cont
 // groups
 add_action( 'bp_before_group_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_group_admin_content', 'my_aia_bp_before_profile_content');
-add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
 //add_action( 'bp_before_groups_loop', 'my_aia_bp_before_profile_content');
-add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
 add_action( 'bp_groups_between_groups_content_directory', 'my_aia_bp_before_profile_content');
 
 
@@ -177,6 +197,6 @@ add_action( 'bp_before_member_body', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_member_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_before_directory_members_tabs', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_members', 'my_aia_bp_after_member_body_default');
-add_action( 'bp_before_group_body', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_before_group_body', 'my_aia_bp_before_group_body_default');
 add_action( 'bp_groups_index_before_content', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_groups_content', 'my_aia_bp_after_member_body_default');

@@ -224,3 +224,68 @@ add_filter('bp_members_suggestions_get_suggestions', 'my_aia_admin_group_mention
 function my_aia_language_wrapper ($name, $domain='my-aia') {
 	return __($name, $domain);
 }
+
+
+/**
+ * Render the navigation markup for the displayed user.
+ * This function displayes the user information 
+ *	- cached
+ *  - for any location
+ *  - no ECHO, return string
+ * 
+ * @overrides bp_get_displayed_user_nav()
+ * @since 1.1.0
+ * 
+ * @return string
+ */
+function my_aia_bp_get_displayed_user_nav() {
+	$key = 'user_menu_'.get_current_user_id();
+	$menu = wp_cache_get($key, 'my-aia');
+	
+	// cache found..
+	if ($menu) {
+		return $menu;
+	} 
+	
+	// try and locate the menu
+	$bp = buddypress();
+
+	$menu = "";
+	foreach ( $bp->members->nav->get_primary() as $user_nav_item ) {
+		if ( empty( $user_nav_item->show_for_displayed_user ) && ! bp_is_my_profile() ) {
+			continue;
+		}
+
+		$selected = '';
+		if ( bp_is_current_component( $user_nav_item->slug ) ) {
+			$selected = ' class="current selected"';
+		}
+
+		if ( bp_loggedin_user_domain() ) {
+			// modification, use normal link
+			$link = $user_nav_item->link;
+			//$link = str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $user_nav_item->link );
+		} else {
+			$link = trailingslashit( bp_displayed_user_domain() . $user_nav_item->link );
+		}
+
+		/**
+		 * Filters the navigation markup for the displayed user.
+		 *
+		 * This is a dynamic filter that is dependent on the navigation tab component being rendered.
+		 *
+		 * @since 1.1.0
+		 *
+		 * @param string $value         Markup for the tab list item including link.
+		 * @param array  $user_nav_item Array holding parts used to construct tab list item.
+		 *                              Passed by reference.
+		 */
+		$menu = sprintf('%s%s', $menu, apply_filters_ref_array( 'bp_get_displayed_user_nav_' . $user_nav_item->css_id, array( '<li id="' . $user_nav_item->css_id . '-personal-li" ' . $selected . '><a id="user-' . $user_nav_item->css_id . '" href="' . $link . '">' . $user_nav_item->name . '</a></li>', &$user_nav_item ) ));
+	}
+	
+	// set cache, expire one day
+	wp_cache_set($key, $menu, 'my-aia', 86400);
+	
+	// return, no echo!
+	return $menu;
+}

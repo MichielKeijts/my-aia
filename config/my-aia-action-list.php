@@ -30,6 +30,7 @@ add_action( 'bp_xprofile_settings_before_save', "MY_AIA_XPROFILE_CHANGE_MODERATE
 add_action( 'em_booking_validate'	,	"my_aia_em_validate_ninja_form", 99, 2);						// add ninja form validation to EM Booking process
 add_action( 'em_booking_get_post'	,	"my_aia_em_booking_add_from_post", 99, 2);						// add ninja form data to EM Booking object (Meta)
 add_action( 'em_booking_form_custom',	"my_aia_em_bookings_show_ninja_form", 99, 1 );					// add ninja form to EM booking form
+add_action( 'ninja_forms_display_show_form', 'my_aia_ninja_forms_display_show_form', 10,2);				// return bool to show or hide form
 add_action( 'em_bookings_single_custom',"my_aia_em_bookings_show_ninja_form_from_booking",99, 1);		// add ninja form to customize EM booking
 add_action( 'em_events_build_sql_conditions',"my_aia_events_manager_group_recurrence",99, 1);		// add ninja form to customize EM booking
 add_action( 'em_bookings_get_tickets',	'my_aia_em_bookings_remove_ninja_form', 99, 2);					// remove ninja form from EM Event page

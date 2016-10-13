@@ -341,7 +341,7 @@ function my_aia_events_manager_profile_display_summary($output, $person, $no_use
 	?>
 	<table class="em-form-fields">
 		<tr>
-			<td><?php echo get_avatar($person->ID); ?></td>
+			<td stye="width: 100px; display: block;"><?php echo get_avatar($person->ID); ?></td>
 			<td style="padding-left:10px; vertical-align: top;">
 				<table>
 					<?php if( $no_user ): ?>
@@ -351,8 +351,10 @@ function my_aia_events_manager_profile_display_summary($output, $person, $no_use
 					<?php endif; ?>
 					<tr><th><?php _e('Email','events-manager'); ?> : </th><td><?php echo $person->user_email; ?></td></tr>
 				</table>
-				
-				
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">				
 				<?php while ( bp_profile_groups() ) : bp_the_profile_group();?>
 				<h4><?php bp_the_profile_group_name(); ?><div class="my_aia_form_opener dropdown_menu down"></div></h4>				
 				<table>
@@ -374,8 +376,12 @@ function my_aia_events_manager_profile_display_summary($output, $person, $no_use
 
 /**
  * Shows a form with the current values of the logged in user, to be displayed on top of the form
+
  */
-function my_aia_show_default_profile_values_for_user_add_to_registration_form() {
+function my_aia_show_default_profile_values_for_user_add_to_registration_form($form_id) {
+
+	
+	// continue looking up person
 	$person = new EM_Person(get_current_user_id());
 	
 	?>
@@ -388,4 +394,25 @@ function my_aia_show_default_profile_values_for_user_add_to_registration_form() 
 		sprintf("<p>Als deze informatie niet klopt, dan kun je deze in je <a href='%sprofile/edit/'>profiel</a> aanpassen.</p>", bp_core_get_user_domain( get_current_user_id() )),
 		'<br><h3>Overige gegevens</h3>';
 	
+}
+
+
+/**
+ * Check if MY_AIA prevents displaying a NINJA FORM:
+ * -	prevent if the form is attached to a EM_EVENT
+ * -	otherwise, enable
+ * @global EM_Event $EM_Event
+ * @param type $display
+ * @param type $form_id
+ * @return boolean
+ */
+function my_aia_ninja_forms_display_show_form($display, $form_id) {
+	global $EM_Event;
+	
+	// first check if the EM_Event has a form to display, which is form_id
+	if (!isset($EM_Event->attributes['ninja_forms_form']) || filter_var($EM_Event->attributes['ninja_forms_form'] , FILTER_VALIDATE_INT) != $form_id) 
+		return $display;
+	
+	// return is event has a form
+	return $display && ($EM_Event->event_rsvp == 1);
 }

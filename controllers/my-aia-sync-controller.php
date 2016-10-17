@@ -300,7 +300,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		if ($items < 100) 
+		//*if ($items < 100) 
 			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
@@ -310,7 +310,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		// update Wordpress with Sugar Registration Data
 		if ($items < 100) 
 			$items += $this->sync_registrations_sugar_to_wordpress($this->sync_dates['sync_registrations_sugar_to_wordpress']);
-		
+		/**/
 		//-- END FROM SUGAR TO WORDPRESS
 		//-- START FROM WORDPRESS TO SUGAR
 		//if ($items < 100) $items += $this->sync_profiles_wordpress_to_sugar();	// TODO: based on modifications table
@@ -713,9 +713,11 @@ vrijwaring_ok	0
 	 * Sync EM_Events from WP to Sugar. 
 	 * 
 	 * This is based on comparisson from date_modified (sugar) to the modification date in WP
+	 * @global \WPDB $wpdb
 	 * @return type
 	 */
 	private function sync_events_wordpress_to_sugar() {
+		global $wpdb;
 		// get list of modified events (post_type = EM_POST_TYPE_EVENT
 		
 		// try and find event by where modification is past last sync date
@@ -723,14 +725,25 @@ vrijwaring_ok	0
 			'post_type'			=> EM_POST_TYPE_EVENT,
 			'post_status'		=> 'any',
 			'posts_per_page'	=> -1,
-			'orderby'			=> 'post_modified',
+			'orderby'			=> 'post_modified_gmt',
 			'order'				=> 'DESC',
 			'date_query'		=>  array(
-				'after'			=>  $this->sync_dates['sync_events_wordpress_to_sugar'],
-				'column'		=> 'post_modified'
+				'after'			=>  $this->sync_dates['sync_events_wordpress_to_sugar']['date'],
+				'offset'		=>	$this->sync_dates['sync_events_wordpress_to_sugar']['offset'],
+				'column'		=>	'post_modified',
 			)
 		);
 		$events = get_posts($args);
+		
+		/*$events = $wpdb->get_results( $wpdb->prepare( sprintf("SELECT %s_posts.* FROM aia_posts  WHERE 1=1  AND (%sposts.post_modified > '%s') AND %sposts.post_type = 'event' AND ((%sposts.post_status <> 'trash' AND %sposts.post_status <> 'auto-draft'))  ORDER BY %sposts.post_modified DESC",
+				$wpdb->prefix,
+				$this->sync_dates['sync_events_wordpress_to_sugar']['date'],
+				$wpdb->prefix,
+				$wpdb->prefix,
+				$wpdb->prefix,
+				$wpdb->prefix,
+				$wpdb->prefix
+		) ) );*/
 		
 		// step over event
 		foreach ($events as $_event) {
@@ -770,6 +783,7 @@ vrijwaring_ok	0
 			$set_entry_data = $this->from_array_key_value_to_array_name_value_list($parsed_data['AIA_ministry_projecten'], $set_entry_data);
 			
 			// save the data..
+			continue; //STOP!
 			if ($sugar_id = $this->sugar->updateModule($set_entry_data, 'AIA_ministry_projecten')) {
 				// Finally, save set Sugar Meta and Update Datemodified
 				if ($create) $event->event_attributes['sugar_id'] = $sugar_id;
@@ -1094,10 +1108,14 @@ vrijwaring_ok	0
 					case "location_town":
 					case "location_country":	// Location
 						// fix Sugar (3) to WP (2) country code abbreviation
-						if (strlen($dataset['EM']['location_country'])>2) 
-							$dataset['EM']['location_country'] = ISO3166::from_3to2_characters($dataset['EM']['location_country']);
+						if (strlen($dataset['EM']['location_country'])>2) {
+							if ($dataset['EM']['location_country'] == 'NED') {
+								$dataset['EM']['location_country'] = 'NL'; // OVERRULE, correct 3166 is NLD
+							} else 
+								$dataset['EM']['location_country'] = ISO3166::from_3to2_characters($dataset['EM']['location_country']);
+						}
 						
-						$dataset['EM']['location_country'] = empty($dataset['EM']['location_country']) ? "NL":$dataset['EM']['location_country'];
+						$dataset['EM']['location_country'] = empty($dataset['EM']['location_country']) || !$dataset['EM']['location_country'] ? "NL":$dataset['EM']['location_country'];
 						$dataset['EM']['location_town'] = trim($dataset['EM']['location_town']);
 						
 						// try and find location in database					

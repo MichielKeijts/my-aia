@@ -1,171 +1,62 @@
-Aangepast alpine skiën
-Aangepast atletiek
-Aangepast bankdrukken
-Aangepast biatlon
-Aangepast dressuur
-Aangepast handboogschieten
-Aangepast langlaufen
-Aangepast sportschieten
-Aangepast triathlon
-Aangepast wielrennen
-Aangepast zeilen
-Aangepast zwemmen
-Alpine Skiën
+Voetbal
+Futsal
+Volleybal
+Basketball
+Beachvolleball
+Hockey
+Handbal
+Wielrennen
+Tennis
+Korfbal
 Atletiek
-Autosport
+Archery
 Baanwielrennen
 Badminton
-Ballonvaren
 Baseball
-Basketball
 Beachsoccer
-Beachtvolleybal
-Biatlon
-Biljart
-Blindenvoetbal
-BMX
-Bobslee
-Bobslee
-Boccia
 Bodybuilding
 Boksen
-Bowling
-Bowls
-Bridge
-CP voetbal
-Cricket
-Curling
-Dammen
+Body fit
+Streetdance
 Dansen
-Darts
-Degen
 Dressuur
-Driebanden
 Duatlon
-Endurance
-Enduro
-Eventing
-Floorball
-Floret
 Freestyle skiën
 Funboard
-Futsal
 Gewichtheffen
-Go
-Goalsball
-Golf
+Fintness
 Gymnastiek
-Handbal
 Handboogschieten
-Hockey
-Hockey
-IJshockey
-IJsklimmen
-IJszeilen
 Inline-skaten
-Jeu de boules
-Jiu Jitsu fighting
 Judo
-Kano
-Kano afvaart
-Kano freestyle
-Kano slalom
-Kano sprint
-Kano sprint aangepast
-Kanomarathon
+Kanoën
 Karate
-Karate sparring
-Karate stijl
-Kart/autoren
-Kendo
 Kitesurfen
 Klimmen
-Korfbal
-Kunstrolschaatsen
-Kuntstrijden
 Langebaanschaatsen
 Langlaufen
-Latin
-Moderne Vijfkamp
-Motocross
+Mountainbiken
+Motorcross
 Motorsport
-Mountainbike
-Noordse combinatie
 Paardrijden
-Para tafeltennis
-Parachutespringen
-Petanque
-Poolbiljarten
-Powerliften
-Rally
 Redden zwemmen
-Ritmische gymnastiek
-Rodelen
 Roeien
-Rolhockey
-Rolstoelcurling
-Rolstoelschermen
 Rolstoeltennis
-Rolstoolrugby
+Rolstoelbasketball
 Rugby
-Rugby 15 a side
-Rugby Sevens
-Sabel
-Schaatsen
-Schaken
-Schermen
-Schermvliegen
-Schieten
-Schoonspringen
-Shorttrack
-Skeleton
 Skiën
-Skispringen
-Sledgehockey
-Snooker
-Snowboard
 Softball
-Sportklimmen
-Springen
+Snowboarden
 Squash
-Standaard
-Streetdance
-Sumo
-Synchroonzwemmen
 Taekwondo
-Taekwondo sparring
-Taekwondo stijl
 Tafeltennis
-Tafeltennis
-Tennis
-Trampolinespringen
-Triathlon
 Triathlon
 Turnen
-Veldschieten
-VI Judo
-Vinzwemmen
-Voetbal
-Voetbal
-Volleybal
-Volleybal
-Wakeboard
+Waterskiën
+Wakeboarden
 Waterpolo
-Waterski
-Wegrace
-Wegwielrennen
-Wielrennen
 Windsurfen
 Worstelen
-Worstelen Grieks-Romeins
-Worstelen vrije stijl
-Wushu
-Wushu sparring
-Wushu stijl
-Zaalhockey
 Zeilen
-Zeilen
-Zeilvliegen
-Zitvolleybal
-Zweefvliegen
 Zwemmen
+Zitvolleybal

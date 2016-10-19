@@ -277,15 +277,48 @@ function my_aia_events_manager_add_attributes_form() {
  * Filter the Events and group to recurrence
  * @param string $conditions
  * @param mixed $args
+ * @global \wpdb $wpdb
  * @return $conditions
  */
 function my_aia_events_manager_group_recurrence($conditions, $args=NULL) {
+	global $wpdb;
 	if (is_admin() && !defined( 'DOING_AJAX' ) && DOING_AJAX)	return $conditions;	// no modifications (yet) for admin interface
 	
-	// group recurrence
-	$conditions['recurrence'] =		"((recurrence_interval IS NULL OR recurrence IS NULL OR recurrence = 0 AND recurrence_interval=0) OR
-									(recurrence = 1 AND recurrence_interval=1))";
+	/*
+	 *  @Todo: find a solution for this:
+	 * The complete query with subquery does not work all at once:
+	 * SELECT 
+    *
+			FROM
+				aia_dev.aia_em_events AS qw
+			WHERE	
+				(qw.recurrence_interval = 0 OR qw.recurrence_interval IS NULL) OR
+				((qw.recurrence_interval = 1) AND
+				qw.event_id IN(SELECT event_id FROM aia_em_events AS qwe WHERE qwe.event_start_date > DATE_FORMAT(NOW(), "%Y-%m-%d") AND qwe.recurrence_id > 0 GROUP BY qwe.recurrence_id))
+
+
+	 *	Thats why we first try to get the events ids from the subquery and then continue
+	 */
 	
+	$event_ids = wp_cache_get('my_aia_events_manager_group_recurrence','my-aia');
+	if (!$event_ids) {
+		$_event_ids = array();
+		// find all recurrent events, which are closest to today (in future)
+		$query = sprintf('SELECT event_id FROM %sem_events WHERE event_start_date > DATE_FORMAT(NOW(), "%%Y-%%m-%%d") AND recurrence_id IS NOT NULL GROUP BY recurrence_id', $wpdb->prefix);
+		$results = $wpdb->get_results($query, OBJECT);
+		
+		// loop throu results and add to $event_ids array
+		foreach ($results as $result) array_push($_event_ids, $result->event_id);
+		
+		// create string
+		$event_ids = implode(',', $_event_ids);
+		
+		wp_cache_set('my_aia_events_manager_group_recurrence',$event_ids,'my-aia', 3600); // one hour
+	}
+	
+	// group recurrence, grouped events are in $event_id
+	$conditions['recurrence'] =	sprintf("(recurrence_interval = 0 OR recurrence_interval IS NULL OR	event_id IN(%s))",$event_ids);
+		
 	return $conditions;
 }
 

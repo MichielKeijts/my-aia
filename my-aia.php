@@ -16,6 +16,7 @@ License:     GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Domain Path: /languages/
 Text Domain: my-aia
+Contributor: Bernard Bos
 */
 
 // Some definitions

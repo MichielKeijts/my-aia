@@ -300,7 +300,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		//*if ($items < 100) 
+		/*if ($items < 100) 
 			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
@@ -313,7 +313,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		/**/
 		//-- END FROM SUGAR TO WORDPRESS
 		//-- START FROM WORDPRESS TO SUGAR
-		//if ($items < 100) $items += $this->sync_profiles_wordpress_to_sugar();	// TODO: based on modifications table
+		if ($items < 100) $items += $this->sync_profiles_wordpress_to_sugar($this->sync_dates['sync_profiles_wordpress_to_sugar']);	// based on modifications table
 		//if ($items < 100) $items += $this->sync_events_wordpress_to_sugar();		
 		//if ($items < 100) $items += $this->sync_profiles_wordpress_to_sugar();	// TODO: based on modifications table
 		
@@ -327,7 +327,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	}
 	
 	/**
-	 * Synchronise a
+	 * Synchronise a Profile from Sugar to Wordpress
 	 * @param string $date_offset['date'] Sync from this date
 	 * @parem boolean $create if TRUE create, if not exists
 	 * @return boolean
@@ -714,10 +714,12 @@ vrijwaring_ok	0
 	 * 
 	 * This is based on comparisson from date_modified (sugar) to the modification date in WP
 	 * @global \WPDB $wpdb
-	 * @return type
+	 * @return int
 	 */
 	private function sync_events_wordpress_to_sugar() {
-		global $wpdb;
+		
+		$dataset = $this->format_wordpress_data_for_syncing(['EM'=>[]]);	
+		//global $wpdb;
 		// get list of modified events (post_type = EM_POST_TYPE_EVENT
 		
 		// try and find event by where modification is past last sync date
@@ -778,7 +780,7 @@ vrijwaring_ok	0
 			}
 			
 			// format the dataset according to be read by sync rules..
-			$dataset = $this->format_wordpress_data_for_syncing(array('EM'=>$event));											// format data
+			$dataset = $this->format_wordpress_data_for_syncing(['EM'=>$event]);											// format data
 			$parsed_data = $this->parse_crm_and_wordpress_data($dataset, array(), "event", FROM_WORDPRESS_TO_CRM);	// parse the data
 			$set_entry_data = $this->from_array_key_value_to_array_name_value_list($parsed_data['AIA_ministry_projecten'], $set_entry_data);
 			
@@ -796,6 +798,100 @@ vrijwaring_ok	0
 		
 		// return number of events
 		return (int) $offset;
+	}
+	
+	/**
+	 * Synchronise a Profile from Wordpress to Sugar
+	 * The way this goes
+	 * 1) updated profile data is got from the table with modification data.
+	 *	Date for synchronisation is got from the options table
+	 * 2) actions to create a user (also in Manyware) are done. 
+	 * 3) New user is created in Sugar
+	 * 4) 
+	 * 
+	 * @param string $date_offset['date'] Sync from this date
+	 * @parem boolean $create if TRUE create, if not exists
+	 * @return boolean
+	 */
+	private function sync_profiles_wordpress_to_sugar($date_offset, $create=TRUE) {
+		global $wpdb;
+		
+		$t = $this->parse_crm_and_wordpress_data([], []);
+		
+		// Set Queyry and go on
+		$items_found = TRUE;
+		$num_items_per_query = 50;
+		$offset = $date_offset['offset'];
+		while ($items_found && $date_offset['offset']-$offset<=100 ) { // 100 per time for speed issues
+			// get query (including offset)
+			// list of approved contact modifications
+			$query = sprintf("SELECT * FROM %smy_aia_crm_sync WHERE done = 0 && approved = 1 LIMIT %d, %d", $wpdb->prefix, $offset, $offset + 50);
+			$results = $wpdb->get_results($query, ARRAY_A);
+			
+			
+			foreach ($results as $contact) {
+				// not existing or invalid data: step over
+				if (empty($contact['crm_id']) && empty($contact['wp_id'])) continue;
+
+				
+				// try and find user by sugar_id
+				if (empty($contact['crm_id'])) {
+					$user = get_user_by('ID', $contact['wp_id']);
+					if(!$user) {
+						// cannot find user data
+						continue;
+					}
+					// get new User ID, also saved to user_meta
+					$id = $this->sugar_create_contact($user);
+				} else {
+					$id = $contact['crm_id'];
+				}
+				
+				// now get the new values to be updates
+				$values = maybe_unserialize($contact['new_values']);
+				//$values['UserMeta']['sugar_id']['sugar_id'] = $id;
+				
+				// other metadata (and sugarID normally..)
+				if ($this->update_sugar_user_data($id, $values)) {
+					$query = sprintf("UPDATE %smy_aia_crm_sync SET done = 1, modified = NOW() WHERE id=%d LIMIT 1", $wpdb->prefix, $contact['id']);
+					$wpdb->query($query);
+				}
+				
+				// check for script execution time
+				$this->get_elapsed_time_and_break(__FUNCTION__, $contact['date_modified']);
+			}
+			
+			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
+			$date_offset['offset'] += count($items); // increase by number of restults
+			
+			// update sync_date:
+			if (!$items_found) {			
+				$this->set_sync_dates(__FUNCTION__, $last_fromdate, 0 );
+			} else {
+				$last_fromdate =  $items[ count($items)-1 ]['date_modified'];
+				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
+			}
+		}
+	
+		return $date_offset['offset']-$offset;
+	}
+	
+	/**
+	 * Create a sugar contact by $user info
+	 * @param WP_User $user
+	 * @return string UUID sugar user
+	 */
+	private function sugar_create_contact($user, $create_manyware_contact = TRUE) {
+		$id = $this->sugar->createContact($user->user_firstname, $user->user_lastname, $user->user_email);
+		
+		// if ID created, 
+		if ($id && strlen($id) > 5) { // sugar id is UUID
+			// TODO: create manyware contact
+			
+			
+			return update_user_meta($user->ID, 'sugar_id', $id) > 0 ? $id : FALSE;
+		}
+		
 	}
 	
 	/**
@@ -928,20 +1024,33 @@ vrijwaring_ok	0
 					$from_def	= explode("::", $rule['internal_field']);
 					$to_def		= explode("::", $rule['external_field']);
 					
-					$from_field = $rule['internal_field'];
+					$from_field = $from_def[2]; 
 					$to_field = $to_def[2];
 					
+					// get field data
+					$_from_data = NULL;
+					// Buddypress::first_name::first_name
+					if (
+							array_key_exists($from_def[0], $from_data) && 
+							array_key_exists($from_def[1], $from_data[ $from_def[0] ])) {
+						$_from_data = $from_data[ $from_def[0] ][ $from_def[1] ];
+					}
+					
+					// old method, to overrule if also in array..
+					$_from_data = array_key_exists($from_field, $from_data) ? $from_data[$from_field] : $_from_data;
+					
 					// check for existence
-					if (array_key_exists($from_field, $from_data)) {// || $from_def[2]=='sugar_name') { //@TODO unsafe from_def
+					if (!empty($_from_data)) {// || $from_def[2]=='sugar_name') { //@TODO unsafe from_def
 						// form:	$to_data['BP'][id] = val
 						// or:		$to_data['WP'][name] = val
 						
 						if ($to_def[1] != $to_def[2]) {
 							if (!is_array($to_data[$to_def[1]])) $to_data[$to_def[1]] = array();
-							$to_data[ $to_def[1] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $from_data);
+							$to_data[ $to_def[1] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $_from_data, $_from_data);
 						} else {
 							if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
-							$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $from_data);
+							$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $_from_data, $from_data);
+							
 						}
 					}
 			}
@@ -964,7 +1073,7 @@ vrijwaring_ok	0
 	 * @return array formatted data
 	 */
 	private function format_wordpress_data_for_syncing($data) {
-		if (!is_array($data)) return array(); // empty array
+		if (!is_array($data)) return []; // empty array
 		
 		$formatted_data = array();
 		foreach ($data as $key=>$obj) {
@@ -1280,15 +1389,37 @@ vrijwaring_ok	0
 		// save booking
 		return $booking->save(FALSE); //NO EMAIL!
 	}
-	
+
 	/**
-	 * Private function to update the usermeta with CRM DATA
-	 * @param int $userID
-	 * @param int $eventID
-	 * @param array $crmData
+	 * Private function to update the userdata within SugarCRM
+	 * @param string $userID (UUID)
+	 * @param array $wordpressData
 	 * @return boolean
 	 */
-	private function update_crm_user_data($userID, $eventID, $crmData) {
+	private function update_sugar_user_data($userID, $wordpressData) {
+		$dataset = $this->parse_crm_and_wordpress_data($wordpressData, array(), "profile", FROM_WORDPRESS_TO_CRM);
+		
+		// update standard sugar profile data
+		if (isset($dataset['Contacts'])) { // UserMeta
+						
+			$data = array();
+			array_push($data, array(
+					'name' => 'id',
+					'value' => $userID
+				));
+			foreach ($dataset['Contacts'] as $key=>$val) {
+				array_push($data, array(
+					'name' => $key,
+					'value' => $val
+				));
+			}
+			
+			// update user command
+			$done = $this->sugar->updateContact($data);
+			$error = $error + $done;
+		}
+		
+		// TODO: add error handling!
 		return true;
 	}
 	

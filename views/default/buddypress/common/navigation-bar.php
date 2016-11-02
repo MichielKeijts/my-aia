@@ -12,8 +12,8 @@
 // Extra arguments: the extra arguments
 $data = array_merge(
 		array(
-			'title'			=>	the_title("","",FALSE),
-			'current_title' => "<b>Great, you're in the team!</b>",
+			'title'			=>	!strlen(get_the_title()) > 2 ? get_the_title() : xprofile_get_field_data(1, get_current_user_id()),
+			'current_title' => "&nbsp;&nbsp;<b>Great, you're in the team!</b>",
 			'nav'			=>	my_aia_bp_get_displayed_user_nav(),
 		),
 		$extra_arguments
@@ -28,7 +28,7 @@ $data = array_merge(
 
 				<div class='bp-menu column-4-2  column-sm-1'>
 					<div class='text'><?= $data['title']; ?></div>
-					<a class="dropdown_menu" href="javascript:void(0);">
+					<a class="dropdown_menu" id='dropdown_menu' href="javascript:void(0);">
 						<span class="select-button"></span>
 					</a>
 

@@ -126,6 +126,27 @@ function my_aia_bp_before_profile_content() {
 	<?php
 }
 
+
+/**
+ *  Above groups members list
+ * @return string
+ */
+function my_aia_bp_before_groups_members_content() {
+	if (!do_template_modification()) return "";
+	// break column-4-1
+	// get new class
+	?>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="column-4-3 column-md-3-2 column-sm-1">
+					<div class="raster buddypress-content">
+						<div class="column-inner">
+						
+	<?php
+}
+
 /**
  * Above GROUPS
  * @return string
@@ -175,14 +196,17 @@ add_action( 'bp_before_member_messages_content', 'my_aia_bp_before_profile_conte
 add_action( 'bp_before_group_plugin_template', 'my_aia_bp_before_profile_content');
 add_action( 'bp_template_title', 'my_aia_bp_before_template_content', -1);
 add_action( 'bp_after_members_directory_order_options', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_member_friends_content', 'my_aia_bp_before_groups_content');
 add_action( 'bp_before_member_settings_template', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_member_friends_content', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_member_friends_content', 'my_aia_bp_before_groups_content');
 
 // groups
 add_action( 'bp_before_group_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_group_admin_content', 'my_aia_bp_before_profile_content');
 //add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
 //add_action( 'bp_before_groups_loop', 'my_aia_bp_before_profile_content');
-//add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_group_members_content', 'my_aia_bp_before_groups_members_content');
 add_action( 'bp_groups_between_groups_content_directory', 'my_aia_bp_before_profile_content');
 
 
@@ -197,6 +221,7 @@ add_action( 'bp_before_member_body', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_member_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_before_directory_members_tabs', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_members', 'my_aia_bp_after_member_body_default');
-add_action( 'bp_before_group_body', 'my_aia_bp_before_group_body_default');
+add_action( 'bp_before_group_body', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_group_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_groups_index_before_content', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_groups_content', 'my_aia_bp_after_member_body_default');

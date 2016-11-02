@@ -156,7 +156,8 @@ class SoapSugar {
 
 
 	/**
-	 * 
+	 * Update contact based on name value list 
+	 * array('name'=>.., 'value'=>'')
 	 */
 	function updateContact($data) {
 		// UTF - 8 Failsafe

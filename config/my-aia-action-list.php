@@ -24,7 +24,7 @@ add_action( 'init', 'my_aia_register_taxonomy_sportbetrokkenheid' );
 add_action( 'bp_custom_profile_edit_fields', 'my_aia_edit_user', 3);						// s
 add_action( 'bp_xprofile_get_field_types', "my_aia_bp_xprofile_get_field_types", 99, 1);	// show extra field types for BuddyPress
 add_action( 'xprofile_fields_saved_field', "my_aia_xprofile_fields_saved_field", 99, 1);
-add_action( 'bp_xprofile_settings_before_save', "MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save", 10, 0);
+add_action( 'xprofile_updated_profile', "MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_updated_profile", 10, 5);
 
 // Used for adding Ninja Forms to EM_Booking formulier
 add_action( 'em_booking_validate'	,	"my_aia_em_validate_ninja_form", 99, 2);						// add ninja form validation to EM Booking process

@@ -96,19 +96,19 @@ function my_aia_create_crm_sync_table() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 	// execute;
-	dbDelta("CREATE TABLE ".$wpdb->prefix."_my_aia_crm_sync` (
+	dbDelta("CREATE TABLE ".$wpdb->prefix."my_aia_crm_sync (
 			`id` BIGINT NOT NULL AUTO_INCREMENT,
 			`wp_id` BIGINT NOT NULL DEFAULT 0,
 			`crm_id` VARCHAR(36) NOT NULL DEFAULT 0 COMMENT 'ID of the CRM Object (or 0 if not existing, thus creating)',
 			`approved` TINYINT(1) NULL DEFAULT 0,
 			`approved_by` BIGINT NULL,
 			`done` TINYINT NOT NULL DEFAULT 0,
-			`from_object` VARCHAR(255) NULL COMMENT 'from table (',
+			`from_object` VARCHAR(255) NULL COMMENT 'from table',
 			`to_object` VARCHAR(255) NULL,
 			`fields` MEDIUMTEXT NULL COMMENT 'serialized set of fields (array, names)',
-			`old_values` LONGTEXT NULL COMMENT 'serialized set of values (array, values) (for verification)\n',
+			`old_values` LONGTEXT NULL COMMENT 'serialized set of values (array, values) (for verification)',
 			`new_values` LONGTEXT NULL COMMENT 'serialized set of fields (array, values)',
-			`modifed` DATETIME NULL,
+			`modified` DATETIME NULL,
 			`created` DATETIME NULL,
 			PRIMARY KEY (`id`))
 		  ENGINE = InnoDB

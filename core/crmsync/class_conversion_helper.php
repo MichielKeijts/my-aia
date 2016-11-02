@@ -51,7 +51,7 @@ class ConversionHelper {
 	 * @param string $key name of the variable
 	 * @param array $dataset with $key=>$val
 	 */
-	static function from_wordpress($key, $dataset) {
+	static function from_wordpress($key, $value, $dataset) {
 		// check for right key
 		if (strpos($key,'::') !== FALSE) {
 			$_keys = explode('::', $key);
@@ -63,7 +63,7 @@ class ConversionHelper {
 		}
 		
 		// return the variable
-		return $dataset[$key];
+		return $value;
 	}
 	
 	/**

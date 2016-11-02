@@ -16,10 +16,10 @@ include_once 'classes/my-aia-bp-orders.php';
 // add hooks
 add_action( 'xprofile_updated_profile',			'my_aia_xprofile_sync_wp_profile'	, 99, 1);			// update user_date with xprofile data
 add_action( 'profile_update',					'my_aia_wp_profile_sync_xprofile'	, 99, 2 );			// update xprofile with user_data
-add_action( 'profile_update',					'MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save', 10, 2 );			// update xprofile with user_data
+//add_action( 'profile_update',					'MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save', 10, 2 );			// update xprofile with user_data
 add_action( 'bp_loaded',						'bp_my_aia_load_core_components' );						// load front-end 
 add_action( 'bp_get_the_profile_field_name',	'my_aia_language_wrapper', 10, 1);	// add language to group name
-//add_action( 'bp_xprofile_settings_before_save', MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save, '',	1, 2);						// save profile edits to an review table
+//add_action( 'bp_xprofile_settings_before_save', 'MY_AIA_XPROFILE_CHANGE_MODERATE::xprofile_before_save', '',	1, 2);						// save profile edits to an review table
 
 /**
  * INIT function, called in all child functions
@@ -251,41 +251,134 @@ function my_aia_bp_get_displayed_user_nav() {
 	$bp = buddypress();
 
 	$menu = "";
-	foreach ( $bp->members->nav->get_primary() as $user_nav_item ) {
-		if ( empty( $user_nav_item->show_for_displayed_user ) && ! bp_is_my_profile() ) {
-			continue;
-		}
-
-		$selected = '';
-		if ( bp_is_current_component( $user_nav_item->slug ) ) {
-			$selected = ' class="current selected"';
-		}
-
-		if ( bp_loggedin_user_domain() ) {
-			// modification, use normal link
-			$link = $user_nav_item->link;
-			//$link = str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $user_nav_item->link );
-		} else {
-			$link = trailingslashit( bp_displayed_user_domain() . $user_nav_item->link );
-		}
-
-		/**
-		 * Filters the navigation markup for the displayed user.
-		 *
-		 * This is a dynamic filter that is dependent on the navigation tab component being rendered.
-		 *
-		 * @since 1.1.0
-		 *
-		 * @param string $value         Markup for the tab list item including link.
-		 * @param array  $user_nav_item Array holding parts used to construct tab list item.
-		 *                              Passed by reference.
-		 */
-		$menu = sprintf('%s%s', $menu, apply_filters_ref_array( 'bp_get_displayed_user_nav_' . $user_nav_item->css_id, array( '<li id="' . $user_nav_item->css_id . '-personal-li" ' . $selected . '><a id="user-' . $user_nav_item->css_id . '" href="' . $link . '">' . $user_nav_item->name . '</a></li>', &$user_nav_item ) ));
-	}
 	
+	
+	$current_item = bp_current_item();
+	
+	if ($current_item && $current_item != 'members') {
+		$menu = my_aia_get_secondary_menu();
+	} else {
+	
+	
+		foreach ( $bp->members->nav->get_primary() as $user_nav_item ) {
+			if ( empty( $user_nav_item->show_for_displayed_user ) && ! bp_is_my_profile() ) {
+				continue;
+			}
+
+			$selected = '';
+			if ( bp_is_current_component( $user_nav_item->slug ) ) {
+				$selected = ' class="current selected"';
+			}
+
+			if ( bp_loggedin_user_domain() ) {
+				// modification, use normal link
+				$link = $user_nav_item->link;
+				//$link = str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $user_nav_item->link );
+			} else {
+				$link = trailingslashit( bp_displayed_user_domain() . $user_nav_item->link );
+			}
+
+			/**
+			 * Filters the navigation markup for the displayed user.
+			 *
+			 * This is a dynamic filter that is dependent on the navigation tab component being rendered.
+			 *
+			 * @since 1.1.0
+			 *
+			 * @param string $value         Markup for the tab list item including link.
+			 * @param array  $user_nav_item Array holding parts used to construct tab list item.
+			 *                              Passed by reference.
+			 */
+			$menu = sprintf('%s%s', $menu, apply_filters_ref_array( 'bp_get_displayed_user_nav_' . $user_nav_item->css_id, array( '<li id="' . $user_nav_item->css_id . '-personal-li" ' . $selected . '><a id="user-' . $user_nav_item->css_id . '" href="' . $link . '">' . $user_nav_item->name . '</a></li>', &$user_nav_item ) ));
+		}
+	}
+
 	// set cache, expire one day
 	wp_cache_set($key, $menu, 'my-aia', 86400);
 	
 	// return, no echo!
+	return $menu;
+}
+
+/**
+ * Return secondary menu (groups, ..)
+ * @return string
+ */
+function my_aia_get_secondary_menu() {
+	$bp = buddypress();
+
+	// If we are looking at a member profile, then the we can use the current
+	// component as an index. Otherwise we need to use the component's root_slug.
+	$component_index = !empty( $bp->displayed_user ) ? bp_current_component() : bp_get_root_slug( bp_current_component() );
+	$selected_item   = bp_current_action();
+
+	// Default to the Members nav.
+	if ( ! bp_is_single_item() ) {
+		// Set the parent slug, if not provided.
+		if ( empty( $parent_slug ) ) {
+			$parent_slug = $component_index;
+		}
+
+		$secondary_nav_items = $bp->members->nav->get_secondary( array( 'parent_slug' => $parent_slug ) );
+
+		if ( ! $secondary_nav_items ) {
+			return false;
+		}
+
+	// For a single item, try to use the component's nav.
+	} else {
+		$current_item = bp_current_item();
+		$single_item_component = bp_current_component();
+
+		// Adjust the selected nav item for the current single item if needed.
+		if ( ! empty( $parent_slug ) ) {
+			$current_item  = $parent_slug;
+			$selected_item = bp_action_variable( 0 );
+		}
+
+		// If the nav is not defined by the parent component, look in the Members nav.
+		if ( ! isset( $bp->{$single_item_component}->nav ) ) {
+			$secondary_nav_items = $bp->members->nav->get_secondary( array( 'parent_slug' => $current_item ) );
+		} else {
+			$secondary_nav_items = $bp->{$single_item_component}->nav->get_secondary( array( 'parent_slug' => $current_item ) );
+		}
+
+		if ( ! $secondary_nav_items ) {
+			return false;
+		}
+	}
+	
+	$menu = "";
+	// Loop through each navigation item.
+	foreach ( $secondary_nav_items as $subnav_item ) {
+		if ( empty( $subnav_item->user_has_access ) ) {
+			continue;
+		}
+
+		// If the current action or an action variable matches the nav item id, then add a highlight CSS class.
+		if ( $subnav_item->slug === $selected_item ) {
+			$selected = ' class="current selected"';
+		} else {
+			$selected = '';
+		}
+
+		// List type depends on our current component.
+		$list_type = bp_is_group() ? 'groups' : 'personal';
+
+		/**
+		 * Filters the "options nav", the secondary-level single item navigation menu.
+		 *
+		 * This is a dynamic filter that is dependent on the provided css_id value.
+		 *
+		 * @since 1.1.0
+		 *
+		 * @param string $value         HTML list item for the submenu item.
+		 * @param array  $subnav_item   Submenu array item being displayed.
+		 * @param string $selected_item Current action.
+		 */
+		
+		$menu = sprintf('%s%s', $menu, apply_filters( 'bp_get_options_nav_' . $subnav_item->css_id, '<li id="' . esc_attr( $subnav_item->css_id . '-' . $list_type . '-li' ) . '" ' . $selected . '><a id="' . esc_attr( $subnav_item->css_id ) . '" href="' . esc_url( $subnav_item->link ) . '">' . $subnav_item->name . '</a></li>', $subnav_item, $selected_item ));
+	}
+	
 	return $menu;
 }

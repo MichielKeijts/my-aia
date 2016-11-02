@@ -32,6 +32,7 @@ class MY_AIA_XPROFILE_CHANGE_MODERATE {
 	}
 	
 	/**
+	 * DEPRECIATED 
 	 * Save Changes before XProfile is saved.
 	 */
 	static function xprofile_before_save() {
@@ -65,6 +66,79 @@ class MY_AIA_XPROFILE_CHANGE_MODERATE {
 			self::save_xprofile_changes($data, bp_displayed_user_id());
 		}
 	}
+	
+	/**
+	* Action hooked to xprofile_updated_profile in class-bp-xprofile-user-admin.php
+	 *  after all XProfile fields have been saved for the current profile.
+	*
+	* @since 1.0.0
+	* @since 2.6.0 Added $old_values and $new_values parameters.
+	*
+	* @param int   $user_id          ID for the user whose profile is being saved.
+	* @param array $posted_field_ids Array of field IDs that were edited.
+	* @param bool  $errors           Whether or not any errors occurred.
+	* @param array $old_values       Array of original values before update.
+	* @param array $new_values       Array of newly saved values after update.
+	*/
+	static function xprofile_updated_profile($user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+		// set in appropriate format
+		$data_to_moderate	= array('BuddyPress'=>array());
+		$old_data			= array('BuddyPress'=>array());
+		foreach ($new_values as $key=>$value) {
+			// fix for date: check based on readable format, but update time string
+			if ( !empty( $_POST['field_' . $key . '_day'] ) && !empty( $_POST['field_' . $key . '_month'] ) && !empty( $_POST['field_' . $key . '_year'] ) ) {
+				$new_date_value = $_POST['field_'.$key];
+			} else {
+				$new_date_value = FALSE;
+			}			
+			
+			// first get old data
+			$old_value = $old_values[$key]['value'];
+			$new_value = $value['value'];
+			
+			// check if old != new ==> changed
+			if ($old_value != $new_value) {
+				// save into update field
+				$data_to_moderate	['BuddyPress'][$key] = $new_date_value!==FALSE ? $new_date_value : $new_value;
+				$old_data			['BuddyPress'][$key] = $old_value;
+			}
+		}
+
+		// insert into database if moderation necessary
+		if (count($data_to_moderate['BuddyPress']) > 0)
+			return self::insert_row($user_id, $old_data, $data_to_moderate);
+	}	
+	
+	/**
+	 * DEPRECIATED since introduction xprofile_updated_profile
+	 * Update the profile changes of the current user.
+	 * @param array array($key => $value) for field_id and its new value
+	 * @param int $user_id ID of the xprofile user
+	 */
+	static function save_xprofile_update($data, $user_id) {
+		$data_to_moderate	= array('BuddyPress'=>array());
+		$old_data			= array('BuddyPress'=>array());
+		foreach ($data as $key=>$value) {
+			// first get old data
+			$old_value = self::xprofile_get_field_data($key, $user_id);
+			
+			// check if changed
+			if ($old_value != $value) {
+				// save into update field
+				$data_to_moderate	['BuddyPress'][$key] = $value;
+				$old_data			['BuddyPress'][$key] = $old_value;
+			}
+		}
+		
+		// check if something is to be moderated..
+		if (!empty($data_to_moderate)) {
+			self::insert_row($user_id, $old_data, $data_to_moderate);
+		}
+		
+		
+		return TRUE;
+	}
+	
 	
 	/**
 	 * 
@@ -146,7 +220,7 @@ class MY_AIA_XPROFILE_CHANGE_MODERATE {
 			'from_object'	=>	'BuddyPress',
 			'to_object'		=>	'Contacts',
 			'fields'		=>	array(),
-			'modifed'		=>	date('Y-m-d H:i:s'),
+			'modified'		=>	date('Y-m-d H:i:s'),
 			'created'		=>	date('Y-m-d H:i:s')
 		);
 		$values = array_merge($options, $default);	// set default options
@@ -155,6 +229,8 @@ class MY_AIA_XPROFILE_CHANGE_MODERATE {
 		if (!	(is_numeric($wp_id) && self::get_user_by("ID", $wp_id))	) {
 			// NO ID set or found in database
 			return FALSE;
+			
+			//NEW: auto create in sugar!
 		}
 		
 		// get current CRM_ID
@@ -162,7 +238,9 @@ class MY_AIA_XPROFILE_CHANGE_MODERATE {
 			$id = get_user_meta($wp_id, 'sugar_id', TRUE);
 			if (!$id) {
 				// NO sugar ID found, we do not create either.
-				return FALSE;
+				//return FALSE;
+				//NEW: auto create in sugar!
+				$values['crm_id'] = NULL;
 			}
 			$values['crm_id'] = $id;
 		}

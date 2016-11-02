@@ -7215,3 +7215,36 @@ and open the template in the editor.
   font-size: 16px;
   cursor: move;
 }
+
+.modification_table, 
+.modification_table table,
+.modification_table tr, 
+.modification_table td {
+	margin:0px;
+	padding:0px;
+	border-collapse: collapse !important;
+	border-spacing: 0px !important;
+}
+
+.modification_table thead {
+	vertical-align: bottom;
+	font-weight: bold;
+	font-size:90%;
+	border-bottom: 2px solid #333;
+	background-color: #EEEEEE;	
+}
+
+.modification_table td,
+.modification_table th {
+	border-top: 1px solid #cccccc;
+	padding:1px;
+}
+
+.modification_table th {
+	text-align: right;
+	border-right:1px solid white;
+}
+
+.modification_table tr:nth-child(even) {
+	background-color: #EEEEEE;	
+} 

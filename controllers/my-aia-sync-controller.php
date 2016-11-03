@@ -279,12 +279,11 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		}
 	}
 	
-	
 	/**
-	 * Actual function to sync data. 
-	 * This function should be called to start the sync process
+	 * Initiates the SugarCRM client
+	 * saved in $this->sugar
 	 */
-	public function do_sync() {
+	private function create_sugar_client() {
 		// create a sugar Client
 		$this->sugar = new SoapSugar(
 			get_option('my_aia_sugar_url','').'/soap.php?wsdl',
@@ -293,6 +292,15 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 				'pass' => get_option('my_aia_sugar_user_password','')
 			)
 		);
+	}
+	
+	/**
+	 * Actual function to sync data. 
+	 * This function should be called to start the sync process
+	 */
+	public function do_sync() {
+		$this->create_sugar_client();
+		
 		// set sync dates, the start date from which syncing is needed
 		$this->sync_dates = $this->get_sync_dates();
 		$items = 0; // number of updates
@@ -300,7 +308,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		/*if ($items < 100) 
+		//*if ($items < 100) 
 			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
@@ -314,8 +322,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		//-- END FROM SUGAR TO WORDPRESS
 		//-- START FROM WORDPRESS TO SUGAR
 		if ($items < 100) $items += $this->sync_profiles_wordpress_to_sugar($this->sync_dates['sync_profiles_wordpress_to_sugar']);	// based on modifications table
-		//if ($items < 100) $items += $this->sync_events_wordpress_to_sugar();		
-		//if ($items < 100) $items += $this->sync_profiles_wordpress_to_sugar();	// TODO: based on modifications table
+		//if ($items < 100) $items += $this->sync_events_wordpress_to_sugar();		// based on events->push
+		//if ($items < 100) $items += $this->sync_registrations_wordpress_to_sugar();	// based on modifications table
 		
 		//-- END FROM WORDPRESS TO SUGAR
 		
@@ -337,7 +345,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		// seleect only a small number of ID, namely AIA employees
 		
-		$subset = sprintf("contacts.id IN ('%s') AND ", implode("','", $this->ids));
+		$subset = "";//sprintf("contacts.id IN ('%s') AND ", implode("','", $this->ids));
 		
 		// loop over all contacts
 		$items_found = TRUE;
@@ -603,7 +611,7 @@ vrijwaring_ok	0
 		$items_found = TRUE;
 		$num_items_per_query = 50;
 		$offset = $date_offset['offset'];
-		$subset = sprintf("AIA_ministry_deelnames.contact_id_c IN ('%s') AND ", implode("','", $this->ids));
+		$subset = "";//sprintf("AIA_ministry_deelnames.contact_id_c IN ('%s') AND ", implode("','", $this->ids));
 		while ($items_found && $date_offset['offset']-$offset<=100 ) { //TEMP !! FOR DEBUG!!
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
@@ -716,36 +724,39 @@ vrijwaring_ok	0
 	 * @global \WPDB $wpdb
 	 * @return int
 	 */
-	private function sync_events_wordpress_to_sugar() {
-		
-		$dataset = $this->format_wordpress_data_for_syncing(['EM'=>[]]);	
-		//global $wpdb;
-		// get list of modified events (post_type = EM_POST_TYPE_EVENT
-		
-		// try and find event by where modification is past last sync date
-		$args = array(
-			'post_type'			=> EM_POST_TYPE_EVENT,
-			'post_status'		=> 'any',
-			'posts_per_page'	=> -1,
-			'orderby'			=> 'post_modified_gmt',
-			'order'				=> 'DESC',
-			'date_query'		=>  array(
-				'after'			=>  $this->sync_dates['sync_events_wordpress_to_sugar']['date'],
-				'offset'		=>	$this->sync_dates['sync_events_wordpress_to_sugar']['offset'],
-				'column'		=>	'post_modified',
-			)
-		);
-		$events = get_posts($args);
-		
-		/*$events = $wpdb->get_results( $wpdb->prepare( sprintf("SELECT %s_posts.* FROM aia_posts  WHERE 1=1  AND (%sposts.post_modified > '%s') AND %sposts.post_type = 'event' AND ((%sposts.post_status <> 'trash' AND %sposts.post_status <> 'auto-draft'))  ORDER BY %sposts.post_modified DESC",
-				$wpdb->prefix,
-				$this->sync_dates['sync_events_wordpress_to_sugar']['date'],
-				$wpdb->prefix,
-				$wpdb->prefix,
-				$wpdb->prefix,
-				$wpdb->prefix,
-				$wpdb->prefix
-		) ) );*/
+	public function sync_events_wordpress_to_sugar($event = NULL) {
+		global $wpdb;
+
+		if (empty($event)) {
+			// get list of modified events (post_type = EM_POST_TYPE_EVENT
+
+			// try and find event by where modification is past last sync date
+			$args = array(
+				'post_type'			=> EM_POST_TYPE_EVENT,
+				'post_status'		=> 'any',
+				'posts_per_page'	=> -1,
+				'orderby'			=> 'post_modified_gmt',
+				'order'				=> 'DESC',
+				'date_query'		=>  array(
+					'after'			=>  $this->sync_dates['sync_events_wordpress_to_sugar']['date'],
+					'offset'		=>	$this->sync_dates['sync_events_wordpress_to_sugar']['offset'],
+					'column'		=>	'post_modified',
+				)
+			);
+			$events = get_posts($args);
+
+			/*$events = $wpdb->get_results( $wpdb->prepare( sprintf("SELECT %s_posts.* FROM aia_posts  WHERE 1=1  AND (%sposts.post_modified > '%s') AND %sposts.post_type = 'event' AND ((%sposts.post_status <> 'trash' AND %sposts.post_status <> 'auto-draft'))  ORDER BY %sposts.post_modified DESC",
+					$wpdb->prefix,
+					$this->sync_dates['sync_events_wordpress_to_sugar']['date'],
+					$wpdb->prefix,
+					$wpdb->prefix,
+					$wpdb->prefix,
+					$wpdb->prefix,
+					$wpdb->prefix
+			) ) );*/
+		} else {
+			$events = array($event);
+		}
 		
 		// step over event
 		foreach ($events as $_event) {
@@ -785,10 +796,12 @@ vrijwaring_ok	0
 			$set_entry_data = $this->from_array_key_value_to_array_name_value_list($parsed_data['AIA_ministry_projecten'], $set_entry_data);
 			
 			// save the data..
-			continue; //STOP!
+			//continue; //STOP!
+			if (!$this->sugar) $this->create_sugar_client ();
+			// save.. 
 			if ($sugar_id = $this->sugar->updateModule($set_entry_data, 'AIA_ministry_projecten')) {
 				// Finally, save set Sugar Meta and Update Datemodified
-				if ($create) $event->event_attributes['sugar_id'] = $sugar_id;
+				$event->event_attributes['sugar_id'] = $sugar_id;
 				$event->event_attributes['sugar_date_modified'] = date('Y-m-d H:i:s'); // now. Should be bigger than sugar_date_modified (by default)
 				$event->save_meta(); // save metadata to wp_post_meta
 			}
@@ -815,8 +828,6 @@ vrijwaring_ok	0
 	 */
 	private function sync_profiles_wordpress_to_sugar($date_offset, $create=TRUE) {
 		global $wpdb;
-		
-		$t = $this->parse_crm_and_wordpress_data([], []);
 		
 		// Set Queyry and go on
 		$items_found = TRUE;
@@ -1052,7 +1063,30 @@ vrijwaring_ok	0
 							$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $_from_data, $from_data);
 							
 						}
-					}
+					} else {
+						
+						// DEPRECATED WAY, still used:
+						
+						$from_def	= explode("::", $rule['internal_field']);
+						$to_def		= explode("::", $rule['external_field']);
+
+						$from_field = $rule['internal_field'];
+						$to_field = $to_def[2];
+
+						// check for existence
+						if (array_key_exists($from_field, $from_data)) {// || $from_def[2]=='sugar_name') { //@TODO unsafe from_def
+							// form:	$to_data['BP'][id] = val
+							// or:		$to_data['WP'][name] = val
+
+							if ($to_def[1] != $to_def[2]) {
+								if (!is_array($to_data[$to_def[1]])) $to_data[$to_def[1]] = array();
+								$to_data[ $to_def[1] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $from_data[$from_field], $from_data);
+							} else {
+								if (!is_array($to_data[$to_def[0]])) $to_data[$to_def[0]] = array();
+								$to_data[ $to_def[0] ][ $to_def[2] ] = ConversionHelper::from_wordpress($from_field, $from_data[$from_field], $from_data);
+							}
+						}
+					}					
 			}
 			
 			
@@ -1073,7 +1107,7 @@ vrijwaring_ok	0
 	 * @return array formatted data
 	 */
 	private function format_wordpress_data_for_syncing($data) {
-		if (!is_array($data)) return []; // empty array
+		if (!is_array($data)) return array(); // empty array
 		
 		$formatted_data = array();
 		foreach ($data as $key=>$obj) {
@@ -1083,7 +1117,7 @@ vrijwaring_ok	0
 					// create form: <TYPE>::<ID>::<READABLE NAME>
 					// set values
 					foreach ($data['EM']->fields as $field)								$formatted_data[	'EM::' . $field['name'] . '::' . $field['name']]	= $data['EM']->{$field['name']};	// EM_Event fields
-					foreach ($data['EM']->get_tickets()->get_first()->fields as $field=>$key)	$formatted_data[	'EM::TICKET::' . $field	]					= $data['EM']->get_tickets()->get_first()->{$field};	
+					if ($data['EM']->get_tickets()->get_first()) foreach ($data['EM']->get_tickets()->get_first()->fields as $field=>$key)	$formatted_data[	'EM::TICKET::' . $field	]					= $data['EM']->get_tickets()->get_first()->{$field};	
 					foreach ($data['EM']->event_attributes as $field=>$val)				$formatted_data[	'EM::' . $field . '::' . $field]					= $val;	
 					
 					$formatted_data[	'EM::location_town::location_town']			= $data['EM']->get_location()->location_town;	
@@ -1385,6 +1419,8 @@ vrijwaring_ok	0
 				$booking->booking_meta[$key] = $val;
 			}
 		}
+		// set sugar ID
+		$booking->booking_meta['sugar_id'] = $crmData['id'];
 		
 		// save booking
 		return $booking->save(FALSE); //NO EMAIL!
@@ -1421,6 +1457,98 @@ vrijwaring_ok	0
 		
 		// TODO: add error handling!
 		return true;
+	}
+	
+	
+	/**
+	 * Create OR Update a AIA_Ministry_deelname entity in SugarCRM
+	 * @param \EM_Booking $booking
+	 * @return \EM_Booking Or False on Failure
+	 */
+	public function sugar_update_aia_ministry_deelname ($booking, $create = TRUE) {
+		if (!isset($booking->booking_meta['sugar_id']) || strlen($booking->booking_meta['sugar_id']) < 10 ) {
+			// create..
+			$create = TRUE;
+		} else {
+			$create = FALSE;
+		}
+		
+		//$internal_fields = array();
+		// create form: <TYPE>::<ID>::<READABLE NAME>
+	
+		// fill the dataset with current booking info
+		$dataset = [];
+		foreach ($booking->fields as $field) {
+			if (!empty($booking->{$field['name']})) 
+				$dataset ['EM::BOOKING::' . $field['name'] ] = $booking->{$field['name']};
+		}
+		foreach ($booking->booking_meta as $field=>$val) {
+			if (!empty($val)) 
+				$dataset ['EM::BOOKING_META::' . $field ] = $val;
+		}
+	
+		// get sugar id for contact and event
+		$event_id = $booking->event->event_attributes['sugar_id'];
+		$user_id = get_user_meta($booking->person_id,'sugar_id', TRUE);	// single value
+		
+		if (!$event_id || !$user_id || strlen($event_id) < 10 || strlen($user_id) < 10) 
+			return FALSE;
+		
+		$dataset['EM::BOOKING::event_id'] = $event_id;
+		$dataset['UserMeta::sugar_id::sugar_id'] = $user_id;
+		
+		// format the insert data
+		$sugar_data = $this->parse_crm_and_wordpress_data($dataset, $sugar_data, 'registration', FROM_WORDPRESS_TO_CRM);
+		// user full name in buddypress
+		$sugar_data['AIA_ministry_deelnames']['contact_name'] = xprofile_get_field_data(1, $booking->person_id);
+		$sugar_data['AIA_ministry_deelnames']['aia_ministry_project_name'] = $booking->event->post_title;
+		
+		
+		$formated_sugar_data = $this->from_array_key_value_to_array_name_value_list(
+				$sugar_data['AIA_ministry_deelnames'],
+				$create ? array() : array(array('name'=> 'id', 'value'=>$booking->booking_meta['sugar_id']))
+		);
+	
+		// finally try and insert to sugar
+		$this->create_sugar_client();
+		if ($id = $this->sugar->updateDeelname($formated_sugar_data)) {
+			// update sugar id and save booking
+			$booking->booking_meta['sugar_id'] = $id;
+			$booking->save(FALSE);
+			return TRUE;
+		}
+		
+		return FALSE; // fail!
+	}
+	
+	/**
+	 * Delete a AIA_Ministry_deelname entity in SugarCRM
+	 * @param \EM_Booking $booking
+	 * @return boolean
+	 */
+	public function sugar_remove_aia_ministry_deelname ($booking) {
+		if (!isset($booking->booking_meta['sugar_id']) || strlen($booking->booking_meta['sugar_id']) < 10 ) {
+			return TRUE;	// nothing to remove, succes!
+		} else {
+			$create = FALSE;
+		}
+		
+		// set data
+		$formated_sugar_data = [
+			['name'=> 'id', 'value'=>$booking->booking_meta['sugar_id']],
+			['name'=> 'deleted', 'value'=>1]				
+		];
+		
+		// finally try and insert to sugar
+		$this->create_sugar_client();
+		if ($id = $this->sugar->updateDeelname($formated_sugar_data)) {
+			// update sugar id and save booking
+			$booking->booking_meta['sugar_id'] = NULL;
+			$booking->save(FALSE);
+			return TRUE;
+		}
+		
+		return FALSE; // fail!
 	}
 	
 	

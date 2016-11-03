@@ -184,7 +184,7 @@ class MY_AIA_ADMIN {
 		// enqueue scripts
 		//wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 			
-		$this->add_metaboxes_to_post_types();
+		//$this->add_metaboxes_to_post_types();
 		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
 		remove_action( 'admin_notices', 'update_nag', 3 );
@@ -194,7 +194,7 @@ class MY_AIA_ADMIN {
 	 * Adds metaboxes to the various admin interface pages
 	 * Metabox is described in the custom post type library, found in the classes directory
 	 */
-	private function add_metaboxes_to_post_types() {
+	public function add_metaboxes_to_post_types() {
 		my_aia_events_manager_add_form_widget();		// Enable Events Manager Addons
 		my_aia_post_type_partner_add_metaboxes();
 		

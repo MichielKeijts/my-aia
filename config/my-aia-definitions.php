@@ -26,8 +26,8 @@ define('MY_AIA_POST_TYPE_ORDER', 'order');				// order has products
 define('MY_AIA_POST_TYPE_INVOICE', 'invoice');				// order has invoice
 define('MY_AIA_POST_TYPE_PAYMENT', 'payment');				// invoice has a payment
 define('MY_AIA_POST_TYPE_TEMPLATE', 'template');				// invoice has a payment
-define('MY_AIA_POST_TYPE_DOCUMENT', 'document');			// documents (library)
-define('MY_AIA_POST_TYPE_DOCUMENT_SLUG', 'document');
+define('MY_AIA_POST_TYPE_DOCUMENT', 'wpdmpro');			// documents (library)
+define('MY_AIA_POST_TYPE_DOCUMENT_SLUG', 'download');
 
 
 

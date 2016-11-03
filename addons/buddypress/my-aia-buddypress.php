@@ -9,7 +9,7 @@
 
 // Including necessary files
 include_once 'classes/my-aia-xprofile-change-moderate.php';
-include_once 'classes/my-aia-bp-core.php';
+include_once 'classes/my-aia-bp-documents.php';
 include_once 'classes/my-aia-bp-orders.php';
 
 
@@ -41,12 +41,12 @@ function bp_my_aia_load_core_components() {
 	if (!isset($bp->documents)) {
 		include_once 'classes/my-aia-bp-group-extension-location.php';
 		include_once 'classes/my-aia-bp-group-extension-group-type.php';
-		$bp->documents = new BP_MY_AIA_Component();
+		$bp->documents = new BP_MY_AIA_DOCUMENT_Component();
 		bp_register_group_extension('MY_AIA_BP_Group_Extension_Location');
 		bp_register_group_extension('MY_AIA_BP_Group_Extension_Group_Type');
 	}
 	
-	if (!isset($bp->my_orders)) {
+	if (!isset($bp->orders)) {
 		//include_once 'classes/my-aia-bp-group-extension-location.php';
 		//include_once 'classes/my-aia-bp-group-extension-group-type.php';
 		$bp->orders = new BP_MY_AIA_ORDER_Component();

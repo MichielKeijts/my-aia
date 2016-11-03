@@ -196,29 +196,20 @@ class SoapSugar {
 		$options=Array('session'=>$this->IdKey, 'module_name'=>'AIA_ministry_deelnames', 'name_value_list'=>$data);
 		$response=$this->SOAP->__soapCall('set_entry', $options);
 		$this->debug($response);
-		return $response;
+		return $response->id;	// return ID
 	 }
 
 	/**
 	 * 
 	 */
 	function createDeelname() {
-		$table='aia_ministry_deelnames';
-		$this->mysqli->free_result();
-		$this->mysqli->multi_query("INSERT INTO {$table}
-					(id, name, date_entered, date_modified, modified_user_id, created_by, description, deleted, assigned_user_id)
-			VALUES (UUID(),' ',NOW(),NOW(), 1, 1, ' ', 0, 1);
-			SELECT id FROM {$table} ORDER BY date_entered DESC LIMIT 1;");
+		// UTF - 8 Failsafe
+		$data=$this->correctArray($data); 
 
-		$result=$this->mysqli->use_result();
-
-		if ($result) {
-			while ($data=$result->fetch_assoc()) {
-			   $this->debug($data['id']);
-				return $data['id'];
-			}
-		} else 
-			return false;
+		$options=Array('session'=>$this->IdKey, 'module_name'=>'AIA_ministry_deelnames', 'name_value_list'=>$data);
+		$response=$this->SOAP->__soapCall('set_entry', $options);
+		$this->debug($response);
+		return $response;
 	}
 	
 	/*function createPartnership() {

@@ -267,6 +267,15 @@ function my_aia_payment() {
 	return MY_AIA::$controllers[MY_AIA_POST_TYPE_PAYMENT];
 }
 
+/**
+ * Shorthand to return the controller of MY_AIA_INVOICE declared in 
+ * MY_AIA::$post_types[MY_AIA_POST_TYPE_PAYMENT]
+ * @return MY_AIA_WPDMPRO_CONTROLLER Payment Instace
+ */
+function my_aia_wpdmpro() {
+	return MY_AIA::$controllers[MY_AIA_POST_TYPE_DOCUMENT];
+}
+
 
 
 

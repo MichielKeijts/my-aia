@@ -449,3 +449,89 @@ function my_aia_ninja_forms_display_show_form($display, $form_id) {
 	// return is event has a form
 	return $display && ($EM_Event->event_rsvp == 1);
 }
+
+
+/**
+ * Connection from the events manager plugin to update sugar;
+ * Either create a registration in sugar, or update or delete.
+ * @param boolean $result
+ * @param \EM_Booking $booking
+ * @param \wpdb $wpdb database interface
+ * return boolean
+ */
+function my_aia_events_manager_registration_sugar_sync($result, $booking) {
+	global $wpdb;
+	// logic to sync the sugarsettings
+	// options: 
+	/*$booking->status_array = array(
+			0 => __('Pending','events-manager'),		// DO NOTHING
+			1 => __('Approved','events-manager'),		
+			2 => __('Rejected','events-manager'),
+			3 => __('Cancelled','events-manager'),	// REMOVE
+			4 => __('Awaiting Online Payment','events-manager'),
+			5 => __('Awaiting Payment','events-manager')
+		);*/
+	
+	// get the sync controller
+	$sync = new MY_AIA_SYNC_CONTROLLER();
+	
+	$current_result = TRUE; // check for right processing
+	
+	// previos not approved, now approved: SUGAR INSERT
+	if ($booking->previous_status != 1 && $booking->booking_status==1) {
+		$current_result = $sync->sugar_update_aia_ministry_deelname($booking, TRUE);
+		$booking->feedback_message .= sprintf(__('Booking created to SugarCRM.','mya-aia'));
+	} 
+	// Booking from approved to pending (0) rejected  / cancelled (4/5 is not implemented) -> Remove from SUGAR
+	// Deleted booking: booking_status === FALSE
+	elseif ($booking->booking_status === FALSE || $booking->previous_status == 1 && ($booking->booking_status>1 || $booking->booking_status ==0)) {
+		if (strlen($booking->booking_meta['sugar_id']) > 10) {
+			$current_result = $sync->sugar_remove_aia_ministry_deelname($booking);
+			$booking->feedback_message .= sprintf(__('Booking removed from SugarCRM.','mya-aia'));
+		}
+	} 
+	// Booking only modified --> update Sugar
+	elseif ($booking->previous_status == $booking->booking_status) {
+		$current_result = $sync->sugar_update_aia_ministry_deelname($booking);	
+		$booking->feedback_message .= sprintf(__('Booking updated to SugarCRM.','mya-aia'));
+	} 
+	
+	// something with sugar went wrong, set back:
+	if (!$current_result) {
+		$booking->booking_status = $booking->previous_status; // return status
+		$booking->previous_status = 0; // pending...
+		
+		//using wpdb prevents do_action () filters...
+		$result = $wpdb->query($wpdb->prepare('UPDATE '.EM_BOOKINGS_TABLE.' SET booking_status=%d WHERE booking_id=%d', array($booking->booking_status, $booking->booking_id)));
+		
+		// feedback
+		$booking->feedback_message = sprintf(__('Booking could not be inserted to SugarCRM.','events-manager'));
+		$booking->add_error(sprintf(__('Booking could not be updated to SugarCRM.','events-manager')));
+		$result =  false;
+		
+		// give back to filter
+		return FALSE;
+	}
+	
+	return $result && $current_result;
+}
+
+
+/**
+ * Hook to save the event to sugarcrm, after save.
+ * @param bool $result
+ * @param EM_Event $event
+ * @return bool	resultaat
+ */
+function my_aia_events_post_to_sugarcrm($result, $event) {
+	if (!$event) return FALSE;
+	
+	// get the sync controller
+	$sync = new MY_AIA_SYNC_CONTROLLER();
+
+	$current_result = TRUE; // check for right processing
+	
+	$sync->sync_events_wordpress_to_sugar($event);	// push to SUGAR
+	
+	return $result;
+}

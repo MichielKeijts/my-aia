@@ -86,6 +86,12 @@ class MY_AIA {
 	static $_viewVars;
 	
 	/**
+	 * holder for the admin
+	 * @var \MY_AIA_ADMIN 
+	 */
+	static $my_aia_admin;
+	
+	/**
 	 * $controllers (Custom Post Types) holders
 	 * Controlling the Custom Posts
 	 * @var array 
@@ -145,11 +151,17 @@ class MY_AIA {
 		self::enque_scripts();	
 		
 		
-		
-		
 		// INIT ADMIN
 		self::hide_admin_bar_for_users(FALSE); // also hide for admin
-		if (is_admin()) $my_aia_admin = new MY_AIA_ADMIN();
+		if (is_admin()) self::$my_aia_admin = new MY_AIA_ADMIN();
+	}
+	
+	/**
+	 * add the metaboxes to the post types
+	 */
+	static function admin_add_metaboxes() {
+		if (is_admin()) 
+			self::$my_aia_admin->add_metaboxes_to_post_types();
 	}
 	
 	/**
@@ -681,6 +693,34 @@ class MY_AIA {
 		$documents = $wpdb->get_results($querystr, OBJECT);
 		
 		wp_cache_set('my_aia_get_my_documents_'.$user_id, $documents, NULL, 300); // save for 5 minutes
+		
+		return $documents;
+	}
+	
+		/**
+	 * Get products (downloads/Documents
+	 * @global wpdb $wpdb
+	 * @param int $user_id (default get_current_user_id()
+	 * @return array of WP_Posts
+	 */
+	static function get_documents($user_id=0) {
+		global $wpdb ;
+		
+		if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		
+		$documents = wp_cache_get('my_aia_get_documents');
+		
+		if ($documents) return $documents;
+		
+		// first get all my orders
+		//$querystr = "SELECT * FROM {$wpdb->posts} ap WHERE post_type=" . MY_AIA_POST_TYPE_PRODUCT . " AND ID IN(". implode(',',  array_keys($products)) . "))";
+		$documents = my_aia_wpdmpro()->get_model()->find(array());
+		
+		// retrieve all posts where product_id in PAID orders
+		//$documents = $wpdb->get_results($querystr, OBJECT);
+		
+		wp_cache_set('my_aia_get_documents', $documents, NULL, 300); // save for 5 minutes
 		
 		return $documents;
 	}

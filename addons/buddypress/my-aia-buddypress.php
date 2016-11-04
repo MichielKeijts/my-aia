@@ -261,11 +261,13 @@ function my_aia_bp_get_displayed_user_nav() {
 		$menu = my_aia_get_secondary_menu();
 	} else {
 	
-	
+		// get primary (members) menu
 		foreach ( $bp->members->nav->get_primary() as $user_nav_item ) {
 			if ( empty( $user_nav_item->show_for_displayed_user ) && ! bp_is_my_profile() ) {
 				continue;
 			}
+			
+			if ($user_nav_item->slug == 'profile') continue;
 
 			$selected = '';
 			if ( bp_is_current_component( $user_nav_item->slug ) ) {

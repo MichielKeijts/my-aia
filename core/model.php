@@ -149,7 +149,7 @@ class MY_AIA_MODEL {
 			// return as WP_Posts array
 			return $posts;
 		}
-		return FALSE;
+		return array();
 	}
 	
 	/**

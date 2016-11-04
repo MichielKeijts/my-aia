@@ -8,7 +8,7 @@
 /**
  * Creates a custom group extension for BuddyPress in the MY_AIA plugin
  */
-class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
+class MY_AIA_BP_Group_Extension_Documents extends BP_Group_Extension {
 	/**
 	 * Location holder
 	 * @var \EM_Locations
@@ -20,9 +20,9 @@ class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	 */
 	public function __construct($args= NULL) {
 		parent::init(array(
-			'slug' => 'documents',
-			'name' => 'Documenten',
-			'nav_item_name' => __('Documents','my-aua')
+			'slug' => 'Location',
+			'name' => 'Location',
+			'nav_item_name' => __('Locatie','my-aua')
 		));
 	}
 

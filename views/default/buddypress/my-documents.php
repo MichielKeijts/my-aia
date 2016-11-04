@@ -16,7 +16,6 @@
 					<td width="14%"><span class="count">Omschrijving</span></td>
 					<td width="7%"><span class="count">Tags</span></td>
 					<td width="120"><span class="count">Download</span></td>
-					<td></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -35,7 +34,7 @@
 					<td width="14%"><span class="count">Omschrijving</span></td>
 					<td width="7%"><span class="count">Tags</span></td>
 					<td width="120"><span class="count">Download</span></td>
-					<td></td>
+
 				</tr>
 			</tfoot>
 		</table>

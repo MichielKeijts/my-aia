@@ -761,6 +761,7 @@ vrijwaring_ok	0
 		// step over event
 		foreach ($events as $_event) {
 			$event = new EM_Event($_event);	// load EM Event
+			if ($event->recurrence_id && $event->recurrence_id > 0) continue; // not the event with recurrence
 			
 			// check if sugar_id, otherwise create
 			if (!array_key_exists('sugar_id', $event->event_attributes)) {

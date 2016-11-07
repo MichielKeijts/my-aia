@@ -14,7 +14,7 @@
 							<p>
 								Deze paginalaad middels AJAX calls steeds een nieuwe sync regel op, totdat het einde is bereikt.
 								
-								<button onclick="javascript:get_sync()">Go!</button>
+								<a href="javascript:get_sync();" class="button btn">Go!</a>
 							</p>
 							<p>
 								<fieldset>

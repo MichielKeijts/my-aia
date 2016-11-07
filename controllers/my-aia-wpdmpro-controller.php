@@ -29,6 +29,13 @@ class MY_AIA_WPDMPRO_CONTROLLER extends MY_AIA_CONTROLLER {
 	public $classname = 'wpdmpro';
 	public $has_attribute_form = FALSE;
 	
+	
+	public function __construct() {
+		parent::__construct();
+		
+		// create child controller
+		$this->roles = new MY_AIA_ROLE_CONTROLLER();
+	}
 	/**
 	 * Before Filter function
 	 * called before most of the wordpress logic happens.
@@ -47,6 +54,7 @@ class MY_AIA_WPDMPRO_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	public function set_meta_boxes() {
 		add_meta_box('my-aia-'.$this->classname.'-display-add-box', __('Product (Webshop)','my-aia'), array($this, 'display_meta_box_wpdmpro_add_product'), $this->classname, 'side', 'high');
+		add_meta_box('my-aia-'.$this->classname.'-display-document-roles', __('Toegangsregels','my-aia'), array($this, 'display_meta_box_wpdmpro_add_roles'), $this->classname, 'normal', 'high');
 	}
 	
 	/** Meta Box Display Functions */
@@ -61,6 +69,13 @@ class MY_AIA_WPDMPRO_CONTROLLER extends MY_AIA_CONTROLLER {
 		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
 	}
 	
+	
+	/**
+	 * display the metabox to add roles to the product to give groups access
+	 */
+	public function display_meta_box_wpdmpro_add_roles() {
+		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
 	
 		
 	/**

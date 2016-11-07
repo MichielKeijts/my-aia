@@ -29,6 +29,7 @@ function my_aia_install() {
 	if ($fail) return false;
 
 	my_aia_create_crm_sync_table();
+	my_aia_create_roles_table();
 	my_aia_init_db();
 	echo "<br>Database Updated";
 	
@@ -116,6 +117,33 @@ function my_aia_create_crm_sync_table() {
 		  COMMENT = 'Sync Table for My_AIA and CRM software';
 		  ");
 	
+	
+	return true;
+}
+
+/**
+ * Create the Roles Table for CRM (Sugar in this case)
+ * @global wpdb $wpdb
+ */
+function my_aia_create_roles_table() {
+	global $wpdb;
+	
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+	// execute;
+	dbDelta("CREATE TABLE ".$wpdb->prefix.MY_AIA_TABLE_ROLES." (
+			`post_id` BIGINT NOT NULL,
+			`type` VARCHAR(36) NOT NULL COMMENT 'member or group',
+			`id` BIGINT NOT NULL,
+
+	UNIQUE INDEX `unique` (`id` ASC, `type` ASC, `post_id` ASC),
+	INDEX `id` (`id` ASC),
+	INDEX `post_id` (`post_id` ASC))
+		  ENGINE = InnoDB
+		  DEFAULT CHARACTER SET = utf8
+		  COMMENT = 'Roles table for linking posts to buddypress groups/users';
+		  ");
+
 	
 	return true;
 }

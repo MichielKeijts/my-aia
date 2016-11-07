@@ -20,9 +20,9 @@ class MY_AIA_BP_Group_Extension_Documents extends BP_Group_Extension {
 	 */
 	public function __construct($args= NULL) {
 		parent::init(array(
-			'slug' => 'Location',
-			'name' => 'Location',
-			'nav_item_name' => __('Locatie','my-aua')
+			'slug' => 'documents',
+			'name' => 'Documents',
+			'nav_item_name' => __('Documents','my-aua')
 		));
 	}
 
@@ -57,4 +57,15 @@ class MY_AIA_BP_Group_Extension_Documents extends BP_Group_Extension {
         groups_update_groupmeta( $group_id, 'group_extension_example_2_setting', $setting );
     }
 
+	
+	/**
+	 * Call the display function
+	 * @param int $group_id
+	 */
+	public function display($group_id = null) {
+		MY_AIA::set('documents', MY_AIA::get_my_documents(get_current_user_id(), $group_id));
+		echo "<h3>Documenten in deze groep </h3>";
+		my_aia_locate_template('buddypress/group-documents.php', true);
+		
+	}
 }

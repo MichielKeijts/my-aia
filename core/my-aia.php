@@ -682,12 +682,13 @@ class MY_AIA {
 	}
 	
 	/**
-	 * Get products (downloads/Documents
+	 * Get products (downloads/Documents) and the other documents which are
+	 * attached to me via the roles database 
 	 * @global wpdb $wpdb
 	 * @param int $user_id (default get_current_user_id()
 	 * @return array of WP_Posts
 	 */
-	static function get_my_documents($user_id=0) {
+	static function get_my_documents($user_id=0, $group_id = NULL) {
 		global $wpdb ;
 		
 		if ($user_id == 0 ) $user_id = get_current_user_id ();
@@ -697,18 +698,38 @@ class MY_AIA {
 		
 		if ($documents) return $documents;
 		
-		// first get all my orders
-		$orders = self::get_my_orders($user_id, 1000);
-		$products = array();
-		foreach ($orders as $order) {
-			if ($order->order_status == MY_AIA_ORDER_STATUS_PAID)
-				foreach ($order->order_items as $item) $products[$item->product_id] = 1; // save in Key format
+		// check, if group_id set-> only show group
+		if ($group_id) {
+			// first get all my orders
+			$orders = self::get_my_orders($user_id, 1000);
+			$products = array();
+			foreach ($orders as $order) {
+				if ($order->order_status == MY_AIA_ORDER_STATUS_PAID)
+					foreach ($order->order_items as $item) $products[$item->product_id] = 1; // save in Key format
+			}
+
+			// if we have found products..
+			if (count($products) >0 ) {		
+				// first: bought documents
+				$querystr1 = "SELECT ID FROM {$wpdb->posts} ap INNER JOIN {$wpdb->postmeta} apm ON ap.ID = apm.post_id AND apm.meta_key='product_id' AND apm.meta_value IN (
+					SELECT ID FROM {$wpdb->posts} WHERE post_type='" . MY_AIA_POST_TYPE_PRODUCT . "' AND ID IN(". implode(',',  array_keys($products)) . "))";
+			} else {
+				$querystr1 = "0";
+			}
+		} else {
+			$querystr1="0";
 		}
 		
-		// if we have found products..
-		if (count($products) <=0 ) return array();
-		$querystr = "SELECT * FROM {$wpdb->posts} ap INNER JOIN {$wpdb->postmeta} apm ON ap.ID = apm.post_id AND apm.meta_key='product_id' AND apm.meta_value IN (
-			SELECT ID FROM {$wpdb->posts} WHERE post_type='" . MY_AIA_POST_TYPE_PRODUCT . "' AND ID IN(". implode(',',  array_keys($products)) . "))";
+		// get documents which belong to me via personal or group inheritance
+		$querystr2 = "SELECT post_id  FROM {$wpdb->prefix}".MY_AIA_TABLE_ROLES." WHERE 
+			(type = 'member' AND id = '".  get_current_user_id()."') OR
+			(type = 'group' AND id IN (
+				SELECT group_id FROM {$wpdb->prefix}bp_groups_members WHERE user_id='" . get_current_user_id() . "' 
+			))";
+				
+				
+		// get documents where ID in ..
+		$querystr = "SELECT * FROM {$wpdb->posts} WHERE id IN({$querystr1}) OR id IN({$querystr2})";
 		
 		// retrieve all posts where product_id in PAID orders
 		$documents = $wpdb->get_results($querystr, OBJECT);

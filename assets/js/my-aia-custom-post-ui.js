@@ -22,6 +22,21 @@ jQuery(document).ready(function($) {
 		}
 	});
 	
+	/* Initialize autocomplete */
+	$('#my-aia-product-role-add' ).autocomplete({
+		source:    ajaxurl + '?action=my_aia_admin_get_roles&controller=role',
+		//source:		ajaxurl + '?action=bp_get_suggestions&term=voet&type=members',
+		delay:     500,
+		minLength: 2,
+		position:  ( 'undefined' !== typeof isRtl && isRtl ) ? { my: 'right top', at: 'right bottom', offset: '0, -1' } : { offset: '0, -1' },
+		open:      function() { $(this).addClass('open'); },
+		close:     function() { $(this).removeClass('open'); $(this).val(''); },
+		select:    function( event, ui ) { 
+			//ui.item.id /value/..
+			create_role(ui.item);
+		}
+	});
+	
 	$('#my-aia-product-select' ).autocomplete({
 		source:    ajaxurl + '?action=my_aia_admin_get_products_wpdmpro&controller=wpdmpro',
 		delay:     500,
@@ -105,7 +120,75 @@ jQuery(document).ready(function($) {
 	MY_AIA_ORDER_APPLICATION.update_order_listeners();
 	
 	var MY_AIA_INVOICE_APPLICATION = new MY_AIA_INVOICE_FORM();
+	
+	// initiate role edit
+	update_role_callback();
 });
+
+
+/**
+ * create a rolw
+ * @param {type} id
+ * @returns {undefined}
+ */
+function create_role(item, callee) {
+	if (typeof callee === 'undefined') {
+		var callee = jQuery('#tagchecklist');
+	}
+	var postID=jQuery('#post_ID').val();
+	var el = jQuery('<span>').html('<a id="post_tag-check-nu" class="ntdelbutton" tabindex="0" data-id="'+item.id+'" data-type="'+item.type+'">X</a>&nbsp;'+item.label);
+	el.appendTo(callee);
+	
+	// save via ajax
+	jQuery.post(
+			ajaxurl,
+			{
+				action:			'my_aia_admin_create_role',
+				controller:		'role',
+				id:				item.id,
+				type:			item.type,
+				post_id:		postID
+			}
+	);
+	
+	update_role_callback(callee);
+}
+
+/**
+ * Updates the setter for the roles callback 
+ * @returns {undefined}
+ */
+var update_role_callback = function(calllee) {
+	if (typeof callee === 'undefined') {
+		var callee = jQuery('#tagchecklist');
+	}
+	
+	callee.find('span .ntdelbutton').off('click');
+	callee.find('span .ntdelbutton').on('click', delete_role_callback);
+}
+
+var delete_role_callback = function(e, element) {
+	var id = jQuery(this), me = jQuery(this);
+	var postID=jQuery('#post_ID').val();
+	// delete via 
+	jQuery.post(
+			ajaxurl,
+			{
+				action:			'my_aia_admin_delete_role',
+				controller:		'role',
+				id:				jQuery(this).data('id'),
+				type:			jQuery(this).data('type'),
+				post_id:		postID
+			},
+			function(response) {
+				if (response.success) {
+					// delete
+					me.parent().remove();
+				}
+			},
+			'json'
+	);
+}
 
 var MY_AIA_ORDER_FORM = function(scope) {
 	this.scope = scope;

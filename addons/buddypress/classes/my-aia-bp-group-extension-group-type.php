@@ -16,7 +16,8 @@ class MY_AIA_BP_Group_Extension_Group_Type extends BP_Group_Extension {
 		parent::init(array(
 			'slug' => 'group-type',
 			'name' => 'group-type',
-			'nav_item_name' => __('Type'),
+			'enable_nav_item' => FALSE,
+			//'nav_item_name' => __('Type'),
 		));
 	}
 

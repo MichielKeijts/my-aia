@@ -20,9 +20,10 @@ class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	 */
 	public function __construct($args= NULL) {
 		parent::init(array(
-			'slug' => 'documents',
-			'name' => 'Documenten',
-			'nav_item_name' => __('Documents','my-aua')
+			'slug' => 'location',
+			'name' => 'Locations',
+			'enable_nav_item' => FALSE,
+			//'nav_item_name' => __('Location','my-aua')
 		));
 	}
 

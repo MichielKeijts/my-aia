@@ -46,6 +46,7 @@ define( "MY_AIA_ORDER_STATUS_SENT", 'sent');
 define( "MY_AIA_ORDER_STATUS_PAID", 'paid');
 define( "MY_AIA_ORDER_STATUS_AWAITING_PAYMENT", 'awaiting_payment');
 define( "MY_AIA_DATE_FORMAT", 'm/d');	// date format for date() function
+define( "MY_AIA_TABLE_ROLES", 'my_aia_roles');
 
 // --- BUDDYPRESS 
 define( 'BUDDYPRESS_DIR', MY_AIA_PLUGIN_DIR.'../buddypress/'  );

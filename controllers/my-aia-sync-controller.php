@@ -308,15 +308,15 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		//*if ($items < 100) 
+		if (filter_input(INPUT_POST, 'user_sync')>0 && $items < 100) 
 			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
-		if ($items < 100) 
+		if (filter_input(INPUT_POST, 'event_sync')>0 && $items < 100) 
 			$items += $this->sync_events_sugar_to_wordpress($this->sync_dates['sync_events_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Registration Data
-		if ($items < 100) 
+		if (filter_input(INPUT_POST, 'registration_sync')>0 && $items < 100) 
 			$items += $this->sync_registrations_sugar_to_wordpress($this->sync_dates['sync_registrations_sugar_to_wordpress']);
 		/**/
 		//-- END FROM SUGAR TO WORDPRESS

@@ -13,6 +13,38 @@
 							<h3 class="rtm-option-title"><?= __("Algemeen","my-aia"); ?></h3>
 							<p>
 								Deze paginalaad middels AJAX calls steeds een nieuwe sync regel op, totdat het einde is bereikt.
+								
+								<button onclick="javascript:get_sync()">Go!</button>
+							</p>
+							<p>
+								<fieldset>
+									<span class="rtm-field-wrap"><span class="rtm-form-checkbox"><label for="rtm-form-checkbox-123" class="switch"><input data-toggle="switch" id="rtm-form-checkbox-123" name="user_sync" value="1" type="checkbox" checked><span class="switch-label" data-on="On" data-off="Off"></span><span class="switch-handle"></span> </label></span></span>
+									<span class="rtm-tooltip">
+										<i class="dashicons dashicons-info rtmicon"></i>
+										<span class="rtm-tip">
+											User Synchronisatie
+										</span>
+									</span>
+								</fieldset>
+								<fieldset>
+									<span class="rtm-field-wrap"><span class="rtm-form-checkbox"><label for="rtm-form-checkbox-1234" class="switch"><input data-toggle="switch" id="rtm-form-checkbox-1234" name="event_sync" value="1" type="checkbox" checked><span class="switch-label" data-on="On" data-off="Off"></span><span class="switch-handle"></span> </label></span></span>
+									<span class="rtm-tooltip">
+										<i class="dashicons dashicons-info rtmicon"></i>
+										<span class="rtm-tip">
+											Event Synchronisatie
+										</span>
+									</span>
+								</fieldset>
+								<fieldset>
+									<span class="rtm-field-wrap"><span class="rtm-form-checkbox"><label for="rtm-form-checkbox-1235" class="switch"><input data-toggle="switch" id="rtm-form-checkbox-1235" name="registration_sync" value="1" type="checkbox" checked><span class="switch-label" data-on="On" data-off="Off"></span><span class="switch-handle"></span> </label></span></span>
+									<span class="rtm-tooltip">
+										<i class="dashicons dashicons-info rtmicon"></i>
+										<span class="rtm-tip">
+											Booking Synchronisatie
+										</span>
+									</span>
+								</fieldset>
+								
 							</p>
 						</div>
 					</div>
@@ -46,9 +78,6 @@
 
 <script>
 	var sync_counter=0;
-	jQuery(document).ready(function(){
-		setTimeout(get_sync, 100); //start
-	});
 	
 	get_sync = function() {
 		// the actual query
@@ -58,7 +87,9 @@
 				'action': 'my_aia_admin_sync_start',
 				'controller': 'sync',
 				'type': jQuery('#sync_fields').data('type'),
-				'data':  {}
+				user_sync: jQuery('input[name=user_sync]').is(':checked')?1:0,
+				event_sync: jQuery('input[name=event_sync]').is(':checked')?1:0,
+				registration_sync: jQuery('input[name=registration_sync]').is(':checked')?1:0
 			}, 
 			function(response){
 				if (response.sync_profiles_sugar_to_wordpress) {

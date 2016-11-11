@@ -616,8 +616,9 @@ vrijwaring_ok	0
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
-					$subset.
-					"AIA_ministry_deelnames.contact_id_c <>'' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($date_offset['date'])),
+					
+					$subset . "AIA_ministry_deelnames.contact_id_c <>'' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($date_offset['date'])),
+					//$subset . "AIA_ministry_deelnames.contact_id_c = 'a4910c38-455c-a5dc-63bb-4f07190c038a' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($date_offset['date'])),
 					"AIA_ministry_deelnames",
 					$num_items_per_query,
 					$date_offset['offset'],
@@ -635,6 +636,8 @@ vrijwaring_ok	0
 				if (count($contacts) > 0) {
 					$contact = reset($contacts);
 				} else {
+					echo "could not find contact" . $sugar_registration['contact_id_c'];
+					debug($sugar_registration);
 					continue; // no valid data found
 				}
 				

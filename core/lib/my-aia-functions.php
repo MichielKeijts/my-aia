@@ -79,7 +79,8 @@ function my_custom_field_register(){
 }*/
 
 function my_aia_nf_add_notifications ($nf_notification_types) {
-	$nf_notification_types['custom_post'] = require_once (MY_AIA_PLUGIN_DIR . 'addons/ninja-forms/custom-notifications/custom-post-notification.php');
+	//$nf_notification_types['custom_post'] = require_once (MY_AIA_PLUGIN_DIR . 'addons/ninja-forms/custom-notifications/custom-post-notification.php');
+	$nf_notification_types['custom_email'] = require_once (MY_AIA_PLUGIN_DIR . 'addons/ninja-forms/custom-notifications/custom-email-notification.php');
 	return $nf_notification_types;
 }
 

@@ -27,6 +27,9 @@ function my_aia_em_bookings_show_ninja_form(\EM_Event $EM_Event) {
 			//if ($EM_Event->get_bookings()->has_booking() === FALSE) {
 				// remove the nonce, as it will overwrite the EM Event nonce. Not desirable
 				remove_action("ninja_forms_display_after_open_form_tag", "nf_form_nonce");
+				
+				// global variable, to only prepend form at reservation page.
+				define('MY_AIA_DO_PREPEND_FORM', true);
 				ninja_forms_display_form( $EM_Event->attributes['ninja_forms_form'] ); 
 			//}
 		}
@@ -409,10 +412,12 @@ function my_aia_events_manager_profile_display_summary($output, $person, $no_use
 
 /**
  * Shows a form with the current values of the logged in user, to be displayed on top of the form
-
+ * @global WP_Post $post
  */
 function my_aia_show_default_profile_values_for_user_add_to_registration_form($form_id) {
-
+	global $post;
+	
+	if (defined('MY_AIA_DO_PREPEND_FORM') && get_post_meta($post->ID, '_event_id', true) > 0) {
 	
 	// continue looking up person
 	$person = new EM_Person(get_current_user_id());
@@ -427,6 +432,7 @@ function my_aia_show_default_profile_values_for_user_add_to_registration_form($f
 		sprintf("<p>Als deze informatie niet klopt, dan kun je deze in je <a href='%sprofile/edit/'>profiel</a> aanpassen.</p>", bp_core_get_user_domain( get_current_user_id() )),
 		'<br><h3>Overige gegevens</h3>';
 	
+	}	
 }
 
 

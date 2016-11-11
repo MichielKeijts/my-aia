@@ -41,9 +41,9 @@ add_action( 'em_booking_delete',		'my_aia_events_manager_registration_sugar_sync
 add_action( 'em_event_save',			'my_aia_events_post_to_sugarcrm', 10, 2);						// update and save event to SUGARCRM
 
 add_action( 'ninja_forms_before_form_display', 'my_aia_show_default_profile_values_for_user_add_to_registration_form', 10,1);
+add_action( 'nf_email_notification_process_setting', 'my_aia_ninja_forms_email_to_address_group_leader', 10, 3);
 add_action( 'init', 'my_aia_ninja_forms_upload_field_register' );
 add_action( 'init', 'my_aia_ninja_forms_term_field_register' );
-add_action( 'nf_notification_types', 'my_aia_nf_add_notifications');									// add custom-post and other notification types
 
 // Hooks for custom post save --> not enabled yet
 //add_action( 'save_post',  'my_aia_post_save_action', 99, 2);

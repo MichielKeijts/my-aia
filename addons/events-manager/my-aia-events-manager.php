@@ -541,3 +541,13 @@ function my_aia_events_post_to_sugarcrm($result, $event) {
 	
 	return $result;
 }
+
+
+/**
+ * Removes the hook which set the event to private.
+ */
+function my_aia_events_manager_remove_hook_bp_em_group_event_save() {
+	//add_action('em_event_save','bp_em_group_event_save',1,2); --> bp-em-groups.php
+	
+	remove_action('em_event_save','bp_em_group_event_save',1,2);
+}

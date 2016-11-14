@@ -466,6 +466,8 @@ function my_aia_ninja_forms_display_show_form($display, $form_id) {
  * return boolean
  */
 function my_aia_events_manager_registration_sugar_sync($result, $booking) {
+	if (defined('DOING_SYNC')) return TRUE; // stop if syncing 
+	
 	global $wpdb;
 	// logic to sync the sugarsettings
 	// options: 
@@ -530,6 +532,7 @@ function my_aia_events_manager_registration_sugar_sync($result, $booking) {
  * @return bool	resultaat
  */
 function my_aia_events_post_to_sugarcrm($result, $event) {
+	if (defined('DOING_SYNC')) return TRUE; // stop if syncing 
 	if (!$event) return FALSE;
 	
 	// get the sync controller

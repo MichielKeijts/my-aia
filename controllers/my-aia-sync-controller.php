@@ -299,6 +299,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * This function should be called to start the sync process
 	 */
 	public function do_sync() {
+		define('DOING_SYNC', true);	// set doing sync to true: doing this.
+		
 		$this->create_sugar_client();
 		
 		// set sync dates, the start date from which syncing is needed
@@ -308,7 +310,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		if (filter_input(INPUT_POST, 'user_sync')>0 && $items < 100) 
+		/*if (filter_input(INPUT_POST, 'user_sync')>0 && $items < 100) 
 			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
@@ -316,7 +318,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 			$items += $this->sync_events_sugar_to_wordpress($this->sync_dates['sync_events_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Registration Data
-		if (filter_input(INPUT_POST, 'registration_sync')>0 && $items < 100) 
+		if (filter_input(INPUT_POST, 'registration_sync')>0 && $items < 100) */
 			$items += $this->sync_registrations_sugar_to_wordpress($this->sync_dates['sync_registrations_sugar_to_wordpress']);
 		/**/
 		//-- END FROM SUGAR TO WORDPRESS
@@ -633,6 +635,8 @@ vrijwaring_ok	0
 					echo "no project or contact set\r\n";
 					continue;
 				}
+				
+				var_export($sugar_registration);
 
 				// popuplate fields with user_data
 				$contacts = $this->sugar->searchContact("contacts.id = '{$sugar_registration['contact_id_c']}'"); 
@@ -659,7 +663,10 @@ vrijwaring_ok	0
 				$events = get_posts($args);
 
 				// event exist in Wordpress?
-				if (!$events) continue;	 //STOP!
+				if (!$events) {
+					echo "no event found for Sugar ID >> {$sugar_registration['aia_ministry_project_id_c']} << \r\n";
+					continue;	 //STOP!
+				}
 
 				// get event idsync_registrations_sugar_to_wordpress
 				$event_meta = get_post_meta($events[0]->ID,'_event_id');

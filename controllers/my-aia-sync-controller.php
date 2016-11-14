@@ -629,7 +629,10 @@ vrijwaring_ok	0
 			
 			// step through Sugar Events
 			foreach ($items as $sugar_registration) {
-				if (empty($sugar_registration['aia_ministry_project_id_c']) || empty($sugar_registration['contact_id_c'])) continue;
+				if (empty($sugar_registration['aia_ministry_project_id_c']) || empty($sugar_registration['contact_id_c'])) {
+					echo "no project or contact set\r\n";
+					continue;
+				}
 
 				// popuplate fields with user_data
 				$contacts = $this->sugar->searchContact("contacts.id = '{$sugar_registration['contact_id_c']}'"); 
@@ -695,9 +698,12 @@ vrijwaring_ok	0
 							// saving is also done in update function !
 							$this->update_wordpress_registration_data($booking, $sugar_registration,$ticketID);	
 						}
+					} else {
+						echo "no ticket found for Event ID {$eventID} \r\n";
 					}
 				} else {
 					//@TODO error: no event found.. or could not create new one..
+					echo "no event found for Sugar ID {$sugar_registration['aia_ministry_project_id_c']} \r\n";
 				}
 				
 				// check for script execution time

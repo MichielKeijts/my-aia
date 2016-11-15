@@ -93,7 +93,7 @@ function my_aia_em_bookings_remove_ninja_form(\EM_Tickets $ticket, \EM_Bookings 
  * @return array modified $data
  */
 function my_aia_em_set_ninja_forms_field_default_value($data, $field_id) {
-	global $EM_Booking;
+	global $EM_Booking, $current_user;
 	
 	// EM booking meta is always saved as $key = $data['admin_label']
 	if (array_key_exists($data['admin_label'], $EM_Booking->booking_meta)) {
@@ -148,11 +148,49 @@ function my_aia_em_booking_add_from_post ($error,\EM_Booking $caller) {
 			
 			if (!is_array($caller->booking_meta)) $caller->booking_meta = array();
 			$caller->booking_meta[$field_name] = $val;
+			
+			if (strtolower($field_name) == 'mailchimp') {
+				// save user to mailchimp
+				my_aia_save_to_mailchimp();
+			}
 		}
 	}
 	
+	// SET Global Variable
+	$_SESSION['last_booking_id'] = $caller->booking_id;
+	
+	
+	
 	return $caller;
 }
+
+/**
+ * Preprocess the posted fields and add to MailChimp
+ * this is a nasty function, because regardless validation, the user is added if
+ * mailchimp is true
+ */
+function my_aia_nf_add_mailchimp() {
+	// loop over all the request variables
+	foreach ($_REQUEST as $key=>$val) {
+		if (substr($key, 0, 12) == 'ninja_forms_') {
+			// try and find the admin label for this form
+			$field_id = (int) str_replace('ninja_forms_field_', '', $key);
+			$field = ninja_forms_get_field_by_id($field_id);
+			
+			// option to convert admin label to the right name of the parameter
+			if (isset($field['data']['admin_label']) && !empty($field['data']['admin_label'])) {
+				$field_name = $field['data']['admin_label'];
+			} else 
+				$field_name = $key;
+			
+			if (strtolower($field_name) == 'mailchimp' && $val) {
+				// save user to mailchimp
+				my_aia_save_to_mailchimp();
+			}
+		}
+	}
+}
+
 
 /**
  * Ninja Form validator. Called in the validation of the booking form to add 
@@ -553,4 +591,32 @@ function my_aia_events_manager_remove_hook_bp_em_group_event_save() {
 	//add_action('em_event_save','bp_em_group_event_save',1,2); --> bp-em-groups.php
 	
 	remove_action('em_event_save','bp_em_group_event_save',1,2);
+}
+
+
+
+/**
+ * Save User to Mailchimp
+ * @global WP_User
+ */
+function my_aia_save_to_mailchimp() {
+	global $current_user;
+	
+	$options = get_option('my-aia-options');
+	$first_name = xprofile_get_field_data('first_name', get_current_user_id());
+	$midde_name = xprofile_get_field_data('middle_name', get_current_user_id());
+	$last_name = trim($midde_name." ". xprofile_get_field_data('last_name', get_current_user_id()));
+	
+	$chimp = new MY_AIA_MAILCHIMP_CONTROLLER();
+	$chimp->startup2($options['mailchimp_api_key']);
+	$result = $chimp->call('lists/subscribe', array(
+					'id'                => $options['mailchimp_list_id'],
+					'email'             => array('email'=>$current_user->user_email),
+					'merge_vars'        => array('FNAME'=>$first_name, 'LNAME'=>$last_name),
+					'double_optin'      => false,
+					'update_existing'   => true,
+					'replace_interests' => false,
+					'send_welcome'      => false));
+	
+	return true;
 }

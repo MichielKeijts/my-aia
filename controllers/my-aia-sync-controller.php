@@ -612,14 +612,14 @@ vrijwaring_ok	0
 		// loop over all registrations
 		$items_found = TRUE;
 		$num_items_per_query = 50;
-		$offset = $date_offset['offset'];
+		$start_offset = $date_offset['offset'];
 		$subset = "";//sprintf("AIA_ministry_deelnames.contact_id_c IN ('%s') AND ", implode("','", $this->ids));
-		while ($items_found && $date_offset['offset']-$offset<=100 ) { //TEMP !! FOR DEBUG!!
+		while ($items_found && $date_offset['offset']-$start_offset<=100 ) { //TEMP !! FOR DEBUG!!
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)
 			$items = $this->sugar->searchCommon(
 					
-					$subset . "AIA_ministry_deelnames.contact_id_c <>'' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($date_offset['date'])),
+					$subset . "AIA_ministry_deelnames.contact_id_c <>'' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) >= ". strtotime($date_offset['date']),
 					//$subset . "AIA_ministry_deelnames.contact_id_c = 'a4910c38-455c-a5dc-63bb-4f07190c038a' AND UNIX_TIMESTAMP(AIA_ministry_deelnames.date_modified) > ".  (strtotime($date_offset['date'])),
 					"AIA_ministry_deelnames",
 					$num_items_per_query,
@@ -636,7 +636,7 @@ vrijwaring_ok	0
 					continue;
 				}
 				
-				var_export($sugar_registration);
+				//var_export($sugar_registration);
 
 				// popuplate fields with user_data
 				$contacts = $this->sugar->searchContact("contacts.id = '{$sugar_registration['contact_id_c']}'"); 
@@ -664,7 +664,7 @@ vrijwaring_ok	0
 
 				// event exist in Wordpress?
 				if (!$events) {
-					echo "no event found for Sugar ID >> {$sugar_registration['aia_ministry_project_id_c']} << \r\n";
+					echo "<span style='background-color: red'>no event found for Sugar ID >> {$sugar_registration['aia_ministry_project_id_c']} << </span>\r\n";
 					continue;	 //STOP!
 				}
 
@@ -703,18 +703,19 @@ vrijwaring_ok	0
 							
 							// other metadata (and sugarID normally..)
 							// saving is also done in update function !
-							$this->update_wordpress_registration_data($booking, $sugar_registration,$ticketID);	
+							$e = $this->update_wordpress_registration_data($booking, $sugar_registration,$ticketID);	
+							//echo "<span style='background-color: green'>SAVED {$e->booking_id} </span>\r\n";
 						}
 					} else {
-						echo "no ticket found for Event ID {$eventID} \r\n";
+						echo "<span style='background-color: red'>no ticket found for Event ID {$eventID} </span>\r\n";
 					}
 				} else {
 					//@TODO error: no event found.. or could not create new one..
-					echo "no event found for Sugar ID {$sugar_registration['aia_ministry_project_id_c']} \r\n";
+					echo "<span style='background-color: red'>no event found for Sugar ID {$sugar_registration['aia_ministry_project_id_c']} </span>\r\n";
 				}
 				
 				// check for script execution time
-				$this->get_elapsed_time_and_break(__FUNCTION__, $sugar_registration['date_modified']);
+				//$this->get_elapsed_time_and_break(__FUNCTION__, $sugar_registration['date_modified']);
 			}
 			
 			$items_found = !empty($items) && count($items[0])>1; // not empty! returns empty array if empty
@@ -730,7 +731,7 @@ vrijwaring_ok	0
 				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
 			}
 		}		
-		return $date_offset['offset']-$offset;
+		return $date_offset['offset']-$start_offset;
 	}
 	
 	/**

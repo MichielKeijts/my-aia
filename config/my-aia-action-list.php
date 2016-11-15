@@ -41,8 +41,13 @@ add_action( 'em_booking_delete',		'my_aia_events_manager_registration_sugar_sync
 add_action( 'em_event_save',			'my_aia_events_post_to_sugarcrm', 10, 2);						// update and save event to SUGARCRM
 add_action( 'em_event_save',			'my_aia_events_manager_remove_hook_bp_em_group_event_save',1,1);// remove post save hook
 
+add_action( 'nf_email_notification_attachments',			'my_aia_nf_add_pdf_attachment', 10, 2);		// hook to attach PDF to conformation email, using current booking
+add_action( 'em_booking_email_notification_attachments',	'my_aia_nf_add_pdf_attachment', 10, 3);		// hook to attach PDF to conformation email, using current booking
+add_action( 'nf_email_notification_attachment_types',		'my_aia_nf_add_attachment_types', 10, 1);	// hook to register other attachment options
+add_action( 'ninja_forms_pre_process',						'my_aia_nf_add_mailchimp', 10, 1);			// preprocess and check for mailchimp field
 add_action( 'ninja_forms_before_form_display', 'my_aia_show_default_profile_values_for_user_add_to_registration_form', 10,1);
-add_action( 'nf_email_notification_process_setting', 'my_aia_ninja_forms_email_to_address_group_leader', 10, 3);
+
+//add_action( 'nf_email_notification_process_setting', 'my_aia_ninja_forms_email_to_address_group_leader', 10, 3);
 add_action( 'init', 'my_aia_ninja_forms_upload_field_register' );
 add_action( 'init', 'my_aia_ninja_forms_term_field_register' );
 

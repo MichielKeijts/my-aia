@@ -41,6 +41,9 @@ function my_aia_install() {
 	
 	echo "<br>Taxonomies written";
 	
+	my_aia_copy_overrides();
+	echo "<br>events manager updated.";
+	
 	my_aia_update_event_manager_defaults();
 	
 	echo "Updated Event Manager Defaults";
@@ -144,6 +147,20 @@ function my_aia_create_roles_table() {
 		  COMMENT = 'Roles table for linking posts to buddypress groups/users';
 		  ");
 
+	
+	return true;
+}
+
+function my_aia_copy_overrides() {
+	$files = array(
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-booking.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-booking.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-mailer.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-mailer.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-object.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-object.php')
+	);
+	
+	foreach ($files as $f) {
+		echo copy($f['from'], $f['to'])?'file copied to '. $f['to']:'FAIL copying';
+	}
 	
 	return true;
 }

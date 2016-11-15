@@ -28,6 +28,7 @@ define('MY_AIA_POST_TYPE_PAYMENT', 'payment');				// invoice has a payment
 define('MY_AIA_POST_TYPE_TEMPLATE', 'template');				// invoice has a payment
 define('MY_AIA_POST_TYPE_DOCUMENT', 'wpdmpro');			// documents (library)
 define('MY_AIA_POST_TYPE_DOCUMENT_SLUG', 'download');
+define('MY_AIA_POST_TYPE_BOOKING', 'booking');
 
 
 

@@ -1011,7 +1011,7 @@ class EM_Booking extends EM_Object{
 		 * @Since 1.0
 		 * Add the attachment 
 		 */
-		$attachments = do_action('em_booking_email_notification_attachments', array(), $this->booking_id, $this);
+		$attachments = apply_filters('em_booking_email_notification_attachments', array(), $this->booking_id, $this);
 		
 		//Make sure event matches booking, and that booking used to be approved.
 		if( $this->booking_status !== $this->previous_status || $force_resend ){

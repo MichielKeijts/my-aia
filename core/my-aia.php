@@ -485,11 +485,19 @@ class MY_AIA {
 			'tag' => $tags
 		));
 		
+		// get featured event
+		$option = get_option('my-aia-options');
+		if (is_numeric($option['featured_event_post_id'])) {
+			$ft_events = new EM_Event((int)$option['featured_event_post_id']);
+			if ($ft_events) $events = array_merge(array($ft_events), $events);
+		}
+
 		// if not enough events, get more, until max (3)
 		if (!$events || count($events) < $nrposts ){
 			$nr  = !$events ? $nrposts : $nrposts - count($events);
 			$events = array_merge($events, EM_Events::get(array('orderby' => 'DESC','limit'=> $nr)));
 		}
+		
 		
 		return $events;
 	}
@@ -689,9 +697,15 @@ class MY_AIA {
 	 * @param int $user_id (default get_current_user_id()
 	 * @return array of WP_Posts
 	 */
-	static function get_my_documents($user_id=0, $group_id = NULL) {
+	static function get_my_documents($user_id=0, $group_id = NULL, $documents = array()) {
 		global $wpdb ;
 		
+		if (is_array($documents)) {	// documents...
+			$selected_document_ids = array();
+			foreach ($documents as $d) {
+				$selected_document_ids[]  = $d->ID;
+			}
+		}
 		if ($user_id == 0 ) $user_id = get_current_user_id ();
 		
 		
@@ -730,7 +744,9 @@ class MY_AIA {
 				
 				
 		// get documents where ID in ..
-		$querystr = "SELECT * FROM {$wpdb->posts} WHERE id IN({$querystr1}) OR id IN({$querystr2})";
+		// not in already selected..
+		$selected_document_ids = count($selected_document_ids)>0 ? ("AND id NOT IN(".implode(',', $selected_document_ids).")") : "";
+		$querystr = "SELECT * FROM {$wpdb->posts} WHERE (id IN({$querystr1}) OR id IN({$querystr2})) {$selected_document_ids}";
 		
 		// retrieve all posts where product_id in PAID orders
 		$documents = $wpdb->get_results($querystr, OBJECT);
@@ -825,12 +841,16 @@ class MY_AIA {
 		// first get all my orders
 		//$querystr = "SELECT * FROM {$wpdb->posts} ap WHERE post_type=" . MY_AIA_POST_TYPE_PRODUCT . " AND ID IN(". implode(',',  array_keys($products)) . "))";
 		
-		if (isset($_GET['search'])) $search = filter_input(INPUT_GET, 'search');
+		/*if (isset($_GET['search'])) $search = filter_input(INPUT_GET, 'search');
 		
 		$documents = my_aia_wpdmpro()->get_model()->find(array(
 			's'=>$search,
-			'meta_query'=>array(array('key'=>'product_id', 'value'=>NULL))
-		));
+			'meta_query'=>array(array('key'=>'product_id', 'value'=>''))
+		));*/
+		
+		$search = "";
+		if (isset($_GET['search']) && !empty($_GET['search'])) $search = "and post_title LIKE('%".rawurlencode($_GET['search'])."%')";
+		$documents = $wpdb->get_results(sprintf("SELECT * FROM {$wpdb->prefix}posts INNER JOIN {$wpdb->prefix}postmeta pm on pm.post_id = aia_posts.ID where post_type='wpdmpro' and meta_key='product_id' and meta_value ='' %s", $search));
 		
 		// retrieve all posts where product_id in PAID orders
 		//$documents = $wpdb->get_results($querystr, OBJECT);
@@ -840,6 +860,6 @@ class MY_AIA {
 		
 		//include the personal documents
 		
-		return array_merge($documents, self::get_my_documents());
+		return array_merge($documents, self::get_my_documents($user_id, NULL, $documents));
 	}
 }

@@ -35,6 +35,8 @@ class MY_AIA_ADMIN {
 		//add_action( 'init', array($this,'request_render'), 999,1 );	// this calls the automatic render of the controller
 		// handle the request
 		$this->request_handler();		
+		
+		$this->em_request_handler();
 	}
 	
 	/** 
@@ -113,6 +115,81 @@ class MY_AIA_ADMIN {
 		//$this->request_render();
 	}
 	
+	/**
+	 * Deals with the EXPORT CSV function of the BOOKING
+	 * @global wpdb $wpdb
+	 */
+	private function em_request_handler() {
+		global $wpdb;
+	
+		if (filter_input(INPUT_POST,'action') == 'export_bookings_csv' && $_POST['action'] != 'my_aia_export_bookings_csv') {
+			$_REQUEST['action'] = 'my_aia_export_bookings_csv';
+			$_POST['action'] = 'my_aia_export_bookings_csv';
+		} elseif ($_POST['action'] == 'my_aia_export_bookings_csv') {
+			$filter='';
+			if (filter_input(INPUT_POST,'event_id')) $filter .= 'AND event_id = '.filter_input(INPUT_POST,'event_id');
+			if (filter_input(INPUT_POST,'status')) $filter .= 'AND booking_status = '.(filter_input(INPUT_POST,'event_id') == 'confirmed' ? 1 : 0);
+			if (filter_input(INPUT_POST,'scope')) {
+				switch (filter_input(INPUT_POST,'event_id')) {
+					case 'future':
+						$filter .= 'AND booking_data > NOW()';
+						break;
+					case 'past':
+						$filter .= 'AND booking_data < NOW()';
+						break;
+					default: //'all'
+				}
+			}
+				
+			
+			
+			
+			// get bookings
+			$bookings = $wpdb->get_results(sprintf("SELECT booking_id, event_id FROM {$wpdb->prefix}em_bookings WHERE 1 %s", $filter));
+			$csv = array();
+			foreach ($bookings as $booking_id) {
+				$booking = new MY_AIA_BOOKING();
+				$booking->get($booking_id->booking_id); //fill with results
+				
+				$event = new EM_Event($booking_id->event_id);	
+				$booking->event_name = $event->event_name;
+				$booking->event_code = $event->event_attributes['projectcode'];
+				$booking->fields['event_name'] = array('name'=>'Event');
+				$booking->fields['event_code'] = array('name'=>'Event Code');
+				
+				$_csv = array(); $cols = array();
+				foreach ($booking->fields as $key=>$val) {
+					if ($key == 'EM__BOOKING__booking_meta') continue;
+					if ($row == 0) {
+						$cols[] = $val['name'];
+					}
+					
+					$_csv[]=  isset($booking->{$key})?html_entity_decode($booking->{$key}):'';
+				}
+				
+				if ($row++==0) array_push($csv, $cols);
+				array_push($csv, $_csv);
+			}
+			
+			
+			
+			// output CSV
+			header("Content-Type: application/octet-stream; charset=utf-8");
+			$file_name = date('YmdHis'). '-' . (!empty($EM_Event->event_slug) ? $EM_Event->event_slug:get_bloginfo());
+			header("Content-Disposition: Attachment; filename=".sanitize_title($file_name)."-bookings-export.csv");
+			echo "\xEF\xBB\xBF"; // UTF-8 for MS Excel (a little hacky... but does the job)
+			
+			$delimiter = !defined('EM_CSV_DELIMITER') ? ',' : EM_CSV_DELIMITER;
+			$delimiter = apply_filters('em_csv_delimiter', $delimiter);
+			//Rows
+			$handle = fopen("php://output", "w");
+			foreach ($csv as $row) fputcsv($handle, $row, $delimiter);
+			fclose($handle);
+			// stop execution!
+			die();
+		}
+	}
+	
 	/** 
 	 * Filter the request. First parse the events
 	 * - before_filter
@@ -188,6 +265,8 @@ class MY_AIA_ADMIN {
 		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
 		remove_action( 'admin_notices', 'update_nag', 3 );
+		
+		$this->em_request_handler();
 	}
 
 	/**

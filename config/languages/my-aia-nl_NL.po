@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: my-aia\n"
 "POT-Creation-Date: 2016-09-19 11:43+0200\n"
-"PO-Revision-Date: 2016-10-07 15:12+0200\n"
+"PO-Revision-Date: 2016-11-16 13:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: Normit <michiel@normit.nl>\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.9\n"
+"X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __\n"
@@ -1181,7 +1181,7 @@ msgstr "Nieuw"
 #: controllers/my-aia-processflow-controller.php:59
 #: core/lib/my-aia-admin.php:177
 msgid "Hooks Overzicht"
-msgstr "haken Overzicht"
+msgstr "Webhooks Overzicht"
 
 #: controllers/my-aia-order-controller.php:256
 msgid "Order Items"
@@ -1205,11 +1205,11 @@ msgstr "Overzicht van alle geregistreede Hooks"
 
 #: controllers/my-aia-processflow-controller.php:123
 msgid "Hook Aanpassen"
-msgstr "haak Aanpassen"
+msgstr "Webhook Aanpassen"
 
 #: controllers/my-aia-processflow-controller.php:221
 msgid "Cannot find hooks under the supplied condition"
-msgstr "Kan niet haken onder de geleverde voorwaarde vinden"
+msgstr "Kan geen webhooks onder de geleverde voorwaarde vinden"
 
 #: controllers/my-aia-product-controller.php:48
 msgid "Download (Webshop)"
@@ -1378,11 +1378,11 @@ msgstr "Bevestigen & Betalen met iDeal"
 msgid "Overige gegevens"
 msgstr "Overige Gegevens"
 
-msgid "id\""
-msgstr "id \""
+msgid "id"
+msgstr "id"
 
-msgid "last_name\""
-msgstr "achternaam\""
+msgid "last_name"
+msgstr "achternaam"
 
 msgid "voorletters_c"
 msgstr "voorletters_c"
@@ -1396,11 +1396,17 @@ msgstr "Voornaam"
 msgid "primary_address_street"
 msgstr "Adres"
 
+msgid "primary_address_street_number"
+msgstr "Huisnr"
+
 msgid "primary_address_number_add_c"
 msgstr "Huisnummer Toev."
 
 msgid "primary_address_city"
 msgstr "Plaats"
+
+msgid "primary_address_postal_code"
+msgstr "Postcode"
 
 msgid "primary_address_postalcode"
 msgstr "Postcode"
@@ -1434,9 +1440,6 @@ msgstr "Debiteurnr"
 
 msgid "manyware_regnr_c"
 msgstr "Manyware RegNr."
-
-msgid "id"
-msgstr "id"
 
 msgid "aia_teamleden"
 msgstr "aia teamleden"

@@ -60,12 +60,25 @@ function my_aia_nf_add_pdf_attachment($attachments, $form_id, $em_booking_object
 	if ($em_booking_object || !empty($templates) && $templates != FALSE) {
 		//$templates = explode(',', $templates);
 		
-		// TEMP: $templates = array(all the posts where postmeta key 'partner_type' EVENT
-		$t = new MY_AIA_TEMPLATE();
-		$results = $t->find(array('meta_query' =>array(array('key'=>'parent_type', 'value' => MY_AIA_POST_TYPE_BOOKING))));
+		// get the #_ATT{pdf_post_id} from the EM_Event
+		if ($em_booking_object) {
+			$event = new EM_Event($em_booking_object->event_id);
+			$id = $event->event_attributes['pdf_post_id'];
+			if ($id) {
+				$templates = explode(',',$id);
+			} else {
+				return array();
+			}
+		}
 		
-		$templates = array($results[0]->ID);// TEMP!!
-		
+		if (!isset($templates) || !is_array($templates)) {
+			return array();
+			// TEMP: $templates = array(all the posts where postmeta key 'partner_type' EVENT
+			$t = new MY_AIA_TEMPLATE();
+			$results = $t->find(array('meta_query' =>array(array('key'=>'parent_type', 'value' => MY_AIA_POST_TYPE_BOOKING))));
+			$templates = array($results[0]->ID);// TEMP!!
+		}
+				
 		foreach ($templates as $template) {
 			$template_id = trim($template);
 			

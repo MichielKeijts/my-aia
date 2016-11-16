@@ -77,7 +77,7 @@ class EM_Mailer {
 		    $mail->SetLanguage('en', dirname(__FILE__).'/');
 			$mail->PluginDir = dirname(__FILE__).'/phpmailer/';
 			$mail->Host = get_option('dbem_smtp_host');
-			$mail->port = get_option('dbem_rsvp_mail_port');
+			$mail->Port = get_option('dbem_rsvp_mail_port');
 			$mail->Username = get_option('dbem_smtp_username');  
 			$mail->Password = get_option('dbem_smtp_password');  
 			$mail->From = get_option('dbem_mail_sender_address');			

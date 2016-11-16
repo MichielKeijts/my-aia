@@ -174,7 +174,8 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 		$pdf->SetKeywords('PDF');
 
 		// set default header data
-		$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
+		//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
+		$pdf->SetHeaderData('', '', 'Athletes in Action Sportkampen', '');
 
 		// set header and footer fonts
 		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));

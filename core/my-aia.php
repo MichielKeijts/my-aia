@@ -488,7 +488,7 @@ class MY_AIA {
 		// get featured event
 		$option = get_option('my-aia-options');
 		if (is_numeric($option['featured_event_post_id'])) {
-			$ft_events = new EM_Event((int)$option['featured_event_post_id']);
+			$ft_events = new EM_Event(array('post_id'=>$option['featured_event_post_id']));
 			if ($ft_events) $events = array_merge(array($ft_events), $events);
 		}
 

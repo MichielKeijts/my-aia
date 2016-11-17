@@ -35,7 +35,9 @@ function my_aia_bp_after_register_page() {
  * Add 'More information
  */
 function my_aia_bp_before_registration_submit_buttons() {
-	$ref = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:MY_AIA_BP_ROOT;
+	$ref = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:bloginfo('site_url').MY_AIA_BP_ROOT;
+	
+	if (isset($_REQUEST['redirect_to'])) $ref = $_REQUEST['redirect_to'];
 	?>
 	<div class="" style='float: left;margin-top: 25px;'><a href='<?= wp_login_url($ref); ?>'><?= __('Ik heb al een login','my-aia'); ?></a></div>
 	<div class="submit"><a href="#" class="button blauw" id="registration-profile-open-button">Verder &gt;&gt;</a></div>

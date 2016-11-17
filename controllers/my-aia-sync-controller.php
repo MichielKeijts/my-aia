@@ -59,14 +59,14 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * array
 	 */
 	private $ids = array(
-			"5ebdca15-a5a7-7b71-628c-5604faa86791", ///kath
+			/*"5ebdca15-a5a7-7b71-628c-5604faa86791", ///kath
 			"d2b794c3-be82-4f25-3753-4f0719f19583", // agien
-			"a6ddce37-0ff0-c229-66fe-4f070f503fac", // jouke
+			"a6ddce37-0ff0-c229-66fe-4f070f503fac", // jouke*/
 			"3d1ec996-64a2-b605-539d-4f070e094638", // michiel
-			"86d7815a-2abf-e51b-14e3-4f070e7a73ca", // marcel
+			/*"86d7815a-2abf-e51b-14e3-4f070e7a73ca", // marcel
 			"a4910c38-455c-a5dc-63bb-4f07190c038a", // christiaan
 			"d0039759-0e53-c0c8-b70b-5278f15f0604", // jonathan
-			"17d8443c-6ed8-929a-f493-53329b669f51", // wytze
+			"17d8443c-6ed8-929a-f493-53329b669f51", // wytze*/
 			);
 	
 	
@@ -310,7 +310,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		//-- FROM SUGAR TO WORDPRESS
 		// update Wordpress with Sugar profile Data
-		/*if (filter_input(INPUT_POST, 'user_sync')>0 && $items < 100) 
+		//*if (filter_input(INPUT_POST, 'user_sync')>0 && $items < 100) 
 			$items += $this->sync_profiles_sugar_to_wordpress($this->sync_dates['sync_profiles_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Event Data
@@ -318,7 +318,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 			$items += $this->sync_events_sugar_to_wordpress($this->sync_dates['sync_events_sugar_to_wordpress']);
 		
 		// update Wordpress with Sugar Registration Data
-		if (filter_input(INPUT_POST, 'registration_sync')>0 && $items < 100) */
+		if (filter_input(INPUT_POST, 'registration_sync')>0 && $items < 100) /**/
 			$items += $this->sync_registrations_sugar_to_wordpress($this->sync_dates['sync_registrations_sugar_to_wordpress']);
 		/**/
 		//-- END FROM SUGAR TO WORDPRESS
@@ -613,7 +613,8 @@ vrijwaring_ok	0
 		$items_found = TRUE;
 		$num_items_per_query = 50;
 		$start_offset = $date_offset['offset'];
-		$subset = "";//sprintf("AIA_ministry_deelnames.contact_id_c IN ('%s') AND ", implode("','", $this->ids));
+		$subset = "";
+		//$subset = sprintf("AIA_ministry_deelnames.contact_id_c IN ('%s') AND ", implode("','", $this->ids));
 		while ($items_found && $date_offset['offset']-$start_offset<=100 ) { //TEMP !! FOR DEBUG!!
 			// retrieve list of contacts from date (incremental)
 			// manyware_aiarelatie = 1 (!!)

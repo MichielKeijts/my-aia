@@ -58,3 +58,20 @@ define( 'MY_AIA_BP_MEMBERS', 'members');
 
 // --- CSV DELIMITER
 define( "EM_CSV_DELIMITER", ";");	// For Events Manager
+
+
+/**
+ * SQL to select the active taxonomies
+ * 
+ * 
+ * SELECT `name`,`slug` FROM aia_terms t
+INNER JOIN aia_term_taxonomy tt ON tt.term_id = t.term_id AND tt.taxonomy='sport'
+INNER JOIN aia_term_relationships tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+INNER JOIN aia_em_events e ON tr.object_id = e.post_id
+
+WHERE UNIX_TIMESTAMP(e.event_start_date) > (UNIX_TIMESTAMP(NOW())-86400) 
+GROUP BY tt.term_taxonomy_id
+
+
+
+ */

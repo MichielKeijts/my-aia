@@ -425,7 +425,7 @@ class MY_AIA {
 	 * @param int $user_id
 	 */
 	static function get_my_events($user_id = 0, $future_events = FALSE) {
-		em_get_my_bookings();
+		//em_get_my_bookings();
 		$bookings = EM_Bookings::get(array(
 			'owner' => false,
 			'person' => $user_id,
@@ -657,6 +657,7 @@ class MY_AIA {
 	
 	/**
 	 * Apply some register magic, so login without some variables is possible
+	 * Also: set the redirect URL
 	 */
 	static function apply_register_magic() {
 		$data = filter_input(INPUT_POST, '_wp_http_referer');
@@ -664,6 +665,21 @@ class MY_AIA {
 			if (empty($_POST['field_1'])) {
 				$_POST['field_1'] = $_POST['signup_username'];
 			}	
+		}
+		
+		// set redirect url
+		if (isset($_REQUEST['special_redirect'])) {
+			$redir = strtolower($_REQUEST['special_redirect']);
+			
+			//if (strstr($redir, 'mijn aia'))
+			
+			$_SESSION['redirect_to'] = $redir;
+		}
+		// actual set redirect
+		if (isset($_SESSION['redirect_to'])) {
+			$_REQUEST['redirect_to'] = $_SESSION['redirect_to'];
+			$_GET['redirect_to'] = $_REQUEST['redirect_to'];
+			$_POST['redirect_to'] = $_REQUEST['redirect_to'];
 		}
 	}
 	

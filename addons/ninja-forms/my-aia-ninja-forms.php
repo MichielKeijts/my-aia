@@ -33,21 +33,23 @@ function my_aia_nf_add_attachment_types($attachments) {
  * @return array (filenames)
  */
 function my_aia_nf_add_pdf_attachment($attachments, $form_id, $em_booking_object = NULL) {
-	/**
-	 * Get Template PDF and parse the template
-	 * 
-	 * @param int $template_id
-	 * @return \MY_AIA_TEMPLATE_CONTROLLER
-	 */
-	function get_pdf ($template_id) {
-		$booking_id = $_SESSION['last_booking_id'];
-		if (!$booking_id) return FALSE;
-		
-		$pdf = new MY_AIA_TEMPLATE_CONTROLLER();
-		$pdf->TEMPLATE->get($template_id);
-		$filename = $pdf->parse($template_id, $booking_id, MY_AIA_INVOICE_DIR);
-		
-		return $filename;
+	if (!function_exists(get_pdf)) {
+		/**
+		 * Get Template PDF and parse the template
+		 * 
+		 * @param int $template_id
+		 * @return \MY_AIA_TEMPLATE_CONTROLLER
+		 */
+		function get_pdf ($template_id) {
+			$booking_id = $_SESSION['last_booking_id'];
+			if (!$booking_id) return FALSE;
+
+			$pdf = new MY_AIA_TEMPLATE_CONTROLLER();
+			$pdf->TEMPLATE->get($template_id);
+			$filename = $pdf->parse($template_id, $booking_id, MY_AIA_INVOICE_DIR);
+
+			return $filename;
+		}
 	}
 	
 	// set booking_id

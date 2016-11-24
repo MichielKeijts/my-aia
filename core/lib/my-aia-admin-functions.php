@@ -61,7 +61,10 @@ function get_user_by_meta_data($meta_key, $meta_value, $return_all = FALSE) {
 	if (!is_array($users)) 
 		return false; // no users found
 	
-	return $return_all ? $users:$users[0];
+	/**
+	 * Bug solved: return $users[0] or: first element
+	 */
+	return $return_all ? $users:reset($users);
 }
 
 

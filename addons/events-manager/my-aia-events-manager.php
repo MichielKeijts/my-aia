@@ -323,7 +323,7 @@ function my_aia_events_manager_add_attributes_form() {
  */
 function my_aia_events_manager_group_recurrence($conditions, $args=NULL) {
 	global $wpdb;
-	if (is_admin() && !defined( 'DOING_AJAX' ) && DOING_AJAX)	return $conditions;	// no modifications (yet) for admin interface
+	if (is_admin() && !defined( 'DOING_AJAX' ))	return $conditions;	// no modifications (yet) for admin interface
 	
 	/*
 	 *  @Todo: find a solution for this:

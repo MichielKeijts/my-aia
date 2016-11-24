@@ -125,7 +125,7 @@ class MY_AIA_ADMIN {
 		if (filter_input(INPUT_POST,'action') == 'export_bookings_csv' && $_POST['action'] != 'my_aia_export_bookings_csv') {
 			$_REQUEST['action'] = 'my_aia_export_bookings_csv';
 			$_POST['action'] = 'my_aia_export_bookings_csv';
-		} elseif ($_POST['action'] == 'my_aia_export_bookings_csv') {
+		} elseif (filter_input(INPUT_POST,'action') == 'my_aia_export_bookings_csv') {
 			$filter='';
 			if (filter_input(INPUT_POST,'event_id')) $filter .= 'AND event_id = '.filter_input(INPUT_POST,'event_id');
 			if (filter_input(INPUT_POST,'status')) $filter .= 'AND booking_status = '.(filter_input(INPUT_POST,'event_id') == 'confirmed' ? 1 : 0);

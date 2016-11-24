@@ -1522,6 +1522,7 @@ vrijwaring_ok	0
 		$sugar_data = $this->parse_crm_and_wordpress_data($dataset, $sugar_data, 'registration', FROM_WORDPRESS_TO_CRM);
 		// user full name in buddypress
 		$sugar_data['AIA_ministry_deelnames']['contact_name'] = xprofile_get_field_data(1, $booking->person_id);
+		$sugar_data['AIA_ministry_deelnames']['aia_ministry_project_id_c'] = $event_id; // make sure event is set
 		$sugar_data['AIA_ministry_deelnames']['aia_ministry_project_name'] = $booking->event->post_title;
 		
 		

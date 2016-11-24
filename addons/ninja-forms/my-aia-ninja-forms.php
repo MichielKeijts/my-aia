@@ -33,7 +33,7 @@ function my_aia_nf_add_attachment_types($attachments) {
  * @return array (filenames)
  */
 function my_aia_nf_add_pdf_attachment($attachments, $form_id, $em_booking_object = NULL) {
-	if (!function_exists(get_pdf)) {
+	if (!function_exists("get_pdf")) {
 		/**
 		 * Get Template PDF and parse the template
 		 * 

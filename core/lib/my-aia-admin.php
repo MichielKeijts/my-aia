@@ -125,17 +125,17 @@ class MY_AIA_ADMIN {
 		if (filter_input(INPUT_POST,'action') == 'export_bookings_csv' && $_POST['action'] != 'my_aia_export_bookings_csv') {
 			$_REQUEST['action'] = 'my_aia_export_bookings_csv';
 			$_POST['action'] = 'my_aia_export_bookings_csv';
-		} elseif (filter_input(INPUT_POST,'action') == 'my_aia_export_bookings_csv') {
+		} elseif (isset($_POST['action']) && $_POST['action'] == 'my_aia_export_bookings_csv') {
 			$filter='';
 			if (filter_input(INPUT_POST,'event_id')) $filter .= 'AND event_id = '.filter_input(INPUT_POST,'event_id');
 			if (filter_input(INPUT_POST,'status')) $filter .= 'AND booking_status = '.(filter_input(INPUT_POST,'event_id') == 'confirmed' ? 1 : 0);
 			if (filter_input(INPUT_POST,'scope')) {
 				switch (filter_input(INPUT_POST,'event_id')) {
 					case 'future':
-						$filter .= 'AND booking_data > NOW()';
+						$filter .= 'AND booking_date > NOW()';
 						break;
 					case 'past':
-						$filter .= 'AND booking_data < NOW()';
+						$filter .= 'AND booking_date < NOW()';
 						break;
 					default: //'all'
 				}
@@ -145,7 +145,7 @@ class MY_AIA_ADMIN {
 			
 			
 			// get bookings
-			$bookings = $wpdb->get_results(sprintf("SELECT booking_id, event_id FROM {$wpdb->prefix}em_bookings WHERE 1 %s", $filter));
+			$bookings = $wpdb->get_results(sprintf("SELECT booking_id, event_id FROM {$wpdb->prefix}em_bookings WHERE 1=1 %s", $filter));
 			$csv = array();
 			foreach ($bookings as $booking_id) {
 				$booking = new MY_AIA_BOOKING();

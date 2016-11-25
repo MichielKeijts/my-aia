@@ -45,7 +45,7 @@ add_action( 'nf_email_notification_attachments',			'my_aia_nf_add_pdf_attachment
 add_action( 'em_booking_email_notification_attachments',	'my_aia_nf_add_pdf_attachment', 10, 3);		// hook to attach PDF to conformation email, using current booking
 add_action( 'nf_email_notification_attachment_types',		'my_aia_nf_add_attachment_types', 10, 1);	// hook to register other attachment options
 add_action( 'ninja_forms_pre_process',						'my_aia_nf_add_mailchimp', 10, 1);			// preprocess and check for mailchimp field
-add_action( 'ninja_forms_before_form_display', 'my_aia_show_default_profile_values_for_user_add_to_registration_form', 10,1);
+add_action( 'ninja_forms_before_form_display',				'my_aia_show_default_profile_values_for_user_add_to_registration_form', 10,1);
 
 //add_action( 'nf_email_notification_process_setting', 'my_aia_ninja_forms_email_to_address_group_leader', 10, 3);
 add_action( 'init', 'my_aia_ninja_forms_upload_field_register' );

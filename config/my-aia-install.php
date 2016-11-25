@@ -155,7 +155,10 @@ function my_aia_copy_overrides() {
 	$files = array(
 		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-booking.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-booking.php'),
 		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-mailer.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-mailer.php'),
-		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-object.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-object.php')
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-object.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-object.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-actions.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/em-actions.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/ninja-forms/overrides/display-form.php', 'to'=>MY_AIA_PLUGIN_DIR . '../../' . 'mu-plugins/ninja-forms-2.9.55.2/deprecated/includes/display/form/display-form.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/ninja-forms/overrides/post-process.php', 'to'=>MY_AIA_PLUGIN_DIR . '../../' . 'mu-plugins/ninja-forms-2.9.55.2/deprecated/includes/display/processing/post-process.php')
 	);
 	
 	foreach ($files as $f) {

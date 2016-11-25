@@ -33,6 +33,7 @@ function my_aia_nf_add_attachment_types($attachments) {
  * @return array (filenames)
  */
 function my_aia_nf_add_pdf_attachment($attachments, $form_id, $em_booking_object = NULL) {
+	global $em_booking;
 	if (!function_exists("get_pdf")) {
 		/**
 		 * Get Template PDF and parse the template
@@ -58,12 +59,18 @@ function my_aia_nf_add_pdf_attachment($attachments, $form_id, $em_booking_object
 	}
 	
 	// get the templates
-	$templates = Ninja_Forms()->notification( $form_id )->get_setting( 'pdf_attachment' );
+	$templates = Ninja_Forms()->notification( $form_id )->get_setting( 'attach_pdf' );
 	if ($em_booking_object || !empty($templates) && $templates != FALSE) {
 		//$templates = explode(',', $templates);
 		
 		// get the #_ATT{pdf_post_id} from the EM_Event
-		if ($em_booking_object) {
+		//if ($em_booking_object) {
+		if ($templates) {
+			// get booking
+			if (!$em_booking_object) {
+				$em_booking_object = new EM_Booking($_SESSION['last_booking_id']);
+			}
+			// get event
 			$event = new EM_Event($em_booking_object->event_id);
 			$id = $event->event_attributes['pdf_post_id'];
 			if ($id) {
@@ -74,11 +81,12 @@ function my_aia_nf_add_pdf_attachment($attachments, $form_id, $em_booking_object
 		}
 		
 		if (!isset($templates) || !is_array($templates)) {
-			return array();
+			return array();	// not found
 			// TEMP: $templates = array(all the posts where postmeta key 'partner_type' EVENT
+			/*
 			$t = new MY_AIA_TEMPLATE();
 			$results = $t->find(array('meta_query' =>array(array('key'=>'parent_type', 'value' => MY_AIA_POST_TYPE_BOOKING))));
-			$templates = array($results[0]->ID);// TEMP!!
+			$templates = array($results[0]->ID);// TEMP!!*/
 		}
 				
 		foreach ($templates as $template) {

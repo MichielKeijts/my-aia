@@ -127,8 +127,8 @@ class MY_AIA_ADMIN {
 			$_POST['action'] = 'my_aia_export_bookings_csv';
 		} elseif (isset($_POST['action']) && $_POST['action'] == 'my_aia_export_bookings_csv') {
 			$filter='';
-			if (filter_input(INPUT_POST,'event_id')) $filter .= 'AND event_id = '.filter_input(INPUT_POST,'event_id');
-			if (filter_input(INPUT_POST,'status')) $filter .= 'AND booking_status = '.(filter_input(INPUT_POST,'event_id') == 'confirmed' ? 1 : 0);
+			if (filter_input(INPUT_GET,'event_id')) $filter .= 'AND event_id = '.filter_input(INPUT_GET,'event_id');
+			if (filter_input(INPUT_POST,'status') && filter_input(INPUT_POST,'status') != 'all') $filter .= 'AND booking_status = '.(filter_input(INPUT_POST,'status') == 'confirmed' ? 1 : 0);
 			if (filter_input(INPUT_POST,'scope')) {
 				switch (filter_input(INPUT_POST,'event_id')) {
 					case 'future':

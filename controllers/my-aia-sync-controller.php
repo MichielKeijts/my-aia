@@ -347,6 +347,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	private function sync_profiles_sugar_to_wordpress($date_offset, $create=TRUE) {
 		global $wpdb;
 		
+		$this->write_log('--> STARTING WITH sync_profiles_sugar_to_wordpress', $date_offset);
+		
 		// seleect only a small number of ID, namely AIA employees
 		
 		$subset = "";//sprintf("contacts.id IN ('%s') AND ", implode("','", $this->ids));
@@ -367,7 +369,10 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 				);
 
 			foreach ($items as $contact) {
-				if (empty($contact['email1']) || empty($contact['first_name']) || empty($contact['last_name'])) continue;
+				if (empty($contact['email1']) || empty($contact['first_name']) || empty($contact['last_name'])) {
+					$this->write_log('No email/name present', $contact['id']);
+					continue;
+				}
 
 				// try and find user by sugar_id
 				$user = get_user_by_meta_data('sugar_id', $contact['id']);
@@ -378,12 +383,16 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 					if (!$user) {
 						// no user found, create into wordpress
 						$id = $this->wordpress_create_user($contact['email1'],$contact['first_name'],$contact['middle_name'],$contact['last_name']);
-						if (!$id) 
+						if (!$id) {
+							$this->write_log('Could not insert this user into wordpress', $contact);
 							continue; // FAIL @Todo add log
+						}
 
 						$user = get_user_by('id', $id);				
 					}
 				}
+				
+				$this->write_log('Selected User ID', $user->ID);
 
 				// -- update meta data
 				
@@ -392,7 +401,9 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 				update_user_meta($user->ID, 'sugar_date_modified', $contact['date_modified']);
 				
 				// other metadata (and sugarID normally..)
-				$this->update_wordpress_user_data($user->ID, $contact);
+				if (!$this->update_wordpress_user_data($user->ID, $contact)) {
+					$this->write_log("Updating USER {$user->ID} failed.", $contact);
+				}
 				
 				// check for script execution time
 				$this->get_elapsed_time_and_break(__FUNCTION__, $contact['date_modified']);
@@ -409,6 +420,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
 			}
 		}
+		
+		$this->write_log('--> ENDING  WITH ' . __FUNCTION__, $date_offset['offset']-$offset);
 	
 		return $date_offset['offset']-$offset;
 	}
@@ -421,6 +434,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	private function sync_events_sugar_to_wordpress($date_offset = NULL, $create=TRUE) {
 		global $wpdb;		
+		
+		$this->write_log('--> STARTING WITH sync_events_sugar_to_wordpress', $date_offset);
 		
 		/* DEBUG 
 [aia_ministry_projecten_project_name]	string	"JN03 Outreaches Brazilië 2016"	
@@ -548,6 +563,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 			}
 		}
 	
+		$this->write_log('--> ENDING  WITH ' . __FUNCTION__, $date_offset['offset']-$offset);
+		
 		return $date_offset['offset'] - $start_offset;
 	}
 	
@@ -559,6 +576,8 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * @return boolean
 	 */
 	private function sync_registrations_sugar_to_wordpress($date_offset=NULL, $create=TRUE) {
+		$this->write_log('--> STARTING WITH sync_registrations_sugar_to_wordpress', $date_offset);
+		
 /* -- EXAMPLE DATA
 aia_ministry_project_id_c	7fc114e2-c080-9ff5-11d6-560e735be09f
 aia_ministry_project_name	2016_SK016-T_Sportkampen 2016 Tieners
@@ -635,7 +654,8 @@ vrijwaring_ok	0
 			// step through Sugar Events
 			foreach ($items as $sugar_registration) {
 				if (empty($sugar_registration['aia_ministry_project_id_c']) || empty($sugar_registration['contact_id_c'])) {
-					echo "no project or contact set\r\n";
+					$this->write_log('--> no project or contact set', $sugar_registration);
+					
 					continue;
 				}
 				
@@ -646,8 +666,9 @@ vrijwaring_ok	0
 				if (count($contacts) > 0) {
 					$contact = reset($contacts);
 				} else {
-					echo "could not find contact" . $sugar_registration['contact_id_c'];
-					debug($sugar_registration);
+					$this->write_log('--> could not find in SUGAR', $sugar_registration);
+					//echo "could not find contact" . $sugar_registration['contact_id_c'];
+					//debug($sugar_registration);
 					continue; // no valid data found
 				}
 				
@@ -667,7 +688,8 @@ vrijwaring_ok	0
 
 				// event exist in Wordpress?
 				if (!$events) {
-					echo "<span style='background-color: red'>no event found for Sugar ID >> {$sugar_registration['aia_ministry_project_id_c']} << </span>\r\n";
+					$this->write_log('Trying to get a event but no one found in Wordpress. Sugar Event ID below.', $sugar_registration['aia_ministry_project_id_c']);
+					//echo "<span style='background-color: red'>no event found for Sugar ID >> {$sugar_registration['aia_ministry_project_id_c']} << </span>\r\n";
 					continue;	 //STOP!
 				}
 
@@ -693,11 +715,13 @@ vrijwaring_ok	0
 							$bookingID = $this->get_meta_object_id('booking-crm', $sugar_registration['id']);
 
 							if ($bookingID === FALSE) {
+								$this->write_log("Booking found... updating {$sugar_registration['id']}");
 								$booking = new EM_Booking();
 								$booking->event_id = $eventID;
 								$booking->person_id = $userID;
 								$booking->save();
 							} else {
+								$this->write_log("No Booking found... {$sugar_registration['id']}");
 								$booking = new EM_Booking($bookingID);
 							}
 							// set $event and $user data
@@ -707,14 +731,17 @@ vrijwaring_ok	0
 							// other metadata (and sugarID normally..)
 							// saving is also done in update function !
 							$e = $this->update_wordpress_registration_data($booking, $sugar_registration,$ticketID);	
+							if (!$e) $this->write_log("Failed updating registration data for Booking {$booking->booking_id}", $sugar_registration);
 							//echo "<span style='background-color: green'>SAVED {$e->booking_id} </span>\r\n";
 						}
 					} else {
-						echo "<span style='background-color: red'>no ticket found for Event ID {$eventID} </span>\r\n";
+						$this->write_log("Trying to get a TICKET for EVENT{$eventID} but no one found in Wordpress.", $event->event_name);
+						//echo "<span style='background-color: red'>no ticket found for Event ID {$eventID} </span>\r\n";
 					}
 				} else {
 					//@TODO error: no event found.. or could not create new one..
-					echo "<span style='background-color: red'>no event found for Sugar ID {$sugar_registration['aia_ministry_project_id_c']} </span>\r\n";
+					$this->write_log('Trying to get a event but no one found in Wordpress. Sugar Event ID below.', $sugar_registration['aia_ministry_project_id_c']);
+					//echo "<span style='background-color: red'>no event found for Sugar ID {$sugar_registration['aia_ministry_project_id_c']} </span>\r\n";
 				}
 				
 				// check for script execution time
@@ -734,6 +761,9 @@ vrijwaring_ok	0
 				$this->set_sync_dates(__FUNCTION__, $date_offset['date'], $date_offset['offset'] );
 			}
 		}		
+		
+		$this->write_log('--> ENDING  WITH ' . __FUNCTION__, $date_offset['offset']-$offset);
+		
 		return $date_offset['offset']-$start_offset;
 	}
 	
@@ -830,6 +860,7 @@ vrijwaring_ok	0
 		
 		$this->set_sync_dates('sync_events_wordpress_to_sugar', date('Y-m-d H:i:s'));
 		
+		
 		// return number of events
 		return (int) $offset;
 	}
@@ -849,6 +880,8 @@ vrijwaring_ok	0
 	 */
 	private function sync_profiles_wordpress_to_sugar($date_offset, $create=TRUE) {
 		global $wpdb;
+		
+		$this->write_log('--> STARTING WITH sync_profiles_wordpress_to_sugar', $date_offset);
 		
 		// Set Queyry and go on
 		$items_found = TRUE;
@@ -1735,6 +1768,29 @@ vrijwaring_ok	0
 		
 				
 		return $_code;
+	}
+	
+	
+	
+	
+	/**
+	 * Dump Log 
+	 * @param type $message
+	 * @param type $var_to_export
+	 */
+	private function write_log($message, $var_to_export=NULL) {
+		$fname = WP_CONTENT_DIR . '/synclog.txt';
+		
+		$log = fopen($fname,'a');
+		fwrite($log,  sprintf("%s: %s\n", date('Y-m-d H:i:s'), $message)); 
+		
+		if (!empty($var_to_export)) {
+			fwrite($log,  sprintf("---- DEBUG: --- \n")); 
+			fwrite($log, var_export($var_to_export, true)); 
+			fwrite($log,  sprintf("----        --- \n")); 
+		}
+		
+		fclose($fname);
 	}
 	
 }

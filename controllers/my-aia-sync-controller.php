@@ -369,7 +369,7 @@ class MY_AIA_SYNC_CONTROLLER extends MY_AIA_CONTROLLER {
 				);
 
 			foreach ($items as $contact) {
-				if (empty($contact['email1']) || empty($contact['first_name']) || empty($contact['last_name'])) {
+				if (empty($contact['email1']) || (empty($contact['first_name']) && empty($contact['last_name']))) {
 					$this->write_log('No email/name present', $contact['id']);
 					continue;
 				}

@@ -1517,9 +1517,14 @@ vrijwaring_ok	0
 	/**
 	 * Create OR Update a AIA_Ministry_deelname entity in SugarCRM
 	 * @param \EM_Booking $booking
+	 * @param bool $create (default TRUE)
+	 * @param bool $force (default FALSE) Force insert a contact into sugar if not existing
+	 * @global wpdb $wpdb
 	 * @return \EM_Booking Or False on Failure
 	 */
-	public function sugar_update_aia_ministry_deelname ($booking, $create = TRUE) {
+	public function sugar_update_aia_ministry_deelname ($booking, $create = TRUE, $force = FALSE) {
+		global $wpdb;
+		
 		if (!isset($booking->booking_meta['sugar_id']) || strlen($booking->booking_meta['sugar_id']) < 10 ) {
 			// create..
 			$create = TRUE;
@@ -1545,6 +1550,19 @@ vrijwaring_ok	0
 		$event_id = $booking->event->event_attributes['sugar_id'];
 		$user_id = get_user_meta($booking->person_id,'sugar_id', TRUE);	// single value
 		
+		$this->create_sugar_client();
+		// Modification: if user_id not existing, but forced to insert (this method is default called when accepting a reservation
+		if (!$user_id && $force) {
+			// inserting user first
+			$user = get_user_by('id', $booking->person_id);
+			$user_id = $this->sugar_create_contact($user);
+			
+			// if succesful insert, update the crm_insert table
+			if ($user_id) {
+				$wpdb->query(sprintf('UPDATE %smy_aia_crm_sync SET crm_id = "%s" WHERE wp_id=%s', $wpdb->prefix, $user_id, $user->ID));
+			}
+		}
+		
 		if (!$event_id || !$user_id || strlen($event_id) < 10 || strlen($user_id) < 10) 
 			return FALSE;
 		
@@ -1565,7 +1583,7 @@ vrijwaring_ok	0
 		);
 	
 		// finally try and insert to sugar
-		$this->create_sugar_client();
+		//$this->create_sugar_client();
 		if ($id = $this->sugar->updateDeelname($formated_sugar_data)) {
 			// update sugar id and save booking
 			$booking->booking_meta['sugar_id'] = $id;

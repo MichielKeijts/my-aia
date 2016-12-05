@@ -525,7 +525,7 @@ function my_aia_events_manager_registration_sugar_sync($result, $booking) {
 	
 	// previos not approved, now approved: SUGAR INSERT
 	if ($booking->previous_status != 1 && $booking->booking_status==1) {
-		$current_result = $sync->sugar_update_aia_ministry_deelname($booking, TRUE);
+		$current_result = $sync->sugar_update_aia_ministry_deelname($booking, TRUE, TRUE);
 		$booking->feedback_message .= sprintf(__('Booking created to SugarCRM.','mya-aia'));
 	} 
 	// Booking from approved to pending (0) rejected  / cancelled (4/5 is not implemented) -> Remove from SUGAR

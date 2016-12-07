@@ -25,6 +25,8 @@ function my_aia_em_bookings_show_ninja_form(\EM_Event $EM_Event) {
 		if (isset ($EM_Event->attributes['ninja_forms_form'])) {
 			// Ok, now ready to display form, but check if person is not already attending
 			//if ($EM_Event->get_bookings()->has_booking() === FALSE) {
+				add_action('ninja_forms_field', 'my_aia_em_set_ninja_forms_field_default_value', 10, 2); 
+				
 				// remove the nonce, as it will overwrite the EM Event nonce. Not desirable
 				remove_action("ninja_forms_display_after_open_form_tag", "nf_form_nonce");
 				
@@ -97,7 +99,7 @@ function my_aia_em_set_ninja_forms_field_default_value($data, $field_id) {
 	global $EM_Booking, $current_user;
 	
 	// EM booking meta is always saved as $key = $data['admin_label']
-	if (array_key_exists($data['admin_label'], $EM_Booking->booking_meta)) {
+	if ($EM_Booking && array_key_exists($data['admin_label'], $EM_Booking->booking_meta)) {
 		$data[ 'default_value' ] = $EM_Booking->booking_meta[	$data[ 'admin_label' ]	];
 	} elseif (!empty($data['admin_label']) && empty($data[ 'default_value' ])) {
 		// check if admin_label is part of user, if so: set
@@ -125,6 +127,7 @@ function my_aia_em_set_ninja_forms_field_default_value($data, $field_id) {
  * - the name of the key in the metadata of the Form is the admin_label property
  * of the ninja_forms_field. In other way of saying: the name of the field is 
  * looked up in the database with all the ninja form fields
+ * - save also to the XPROFILE, if xprofile field with name exists
  * 
  * @param bool						$error current error state in processing the booking
  * @param \EM_Booking				$caller the \EM_Booking object
@@ -160,6 +163,10 @@ function my_aia_em_booking_add_from_post ($error,\EM_Booking $caller) {
 				// save user to mailchimp
 				my_aia_save_to_mailchimp();
 			}
+			
+			// save to xprofile if field exists
+			if (xprofile_get_field_id_from_name($field_name))
+				xprofile_set_field_data($field_name, get_current_user_id(), $val);
 		}
 	}
 	

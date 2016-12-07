@@ -58,6 +58,9 @@ add_action( 'init', 'my_aia_ninja_forms_term_field_register' );
 add_action( 'wp_ajax_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);					// AJAX hook to get Events 	
 add_action( 'wp_ajax_nopriv_my_aia_call', "MY_AIA::my_aia_ajax_call", 10, 1	);				// AJAX hook to get Events, no login
 
+// Filter function for BLOG
+add_action( 'pre_get_posts', "MY_AIA::get_my_blog_items_query", 10, 1	);				// AJAX hook to get Events, no login
+
 //add_action( 'edit_user_profile', 'my_aia_edit_user' );
 
 // Main init function, before anything else

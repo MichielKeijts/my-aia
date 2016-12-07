@@ -23,7 +23,7 @@ $data = array_merge(
 		<nav class="buddypress_nav">
 			<div class="columns-wrapper">
 				<div class="text column-4-2 hidden-md">
-					<?= $data['current_title']; ?>
+					<div class="padding-left-20px"><?= $data['current_title']; ?></div>
 				</div>
 
 				<div class='bp-menu column-4-2  column-sm-1'>

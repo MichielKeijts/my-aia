@@ -840,6 +840,43 @@ class MY_AIA {
 	}
 	
 	/**
+	 * Get the blogs for the user, effectively a filter function, using WP QUERY
+	 * only used when REQUEST['me']  isset
+	 * @param WP_Query $query Current Query
+	 * @return BP_Groups_Group
+	 */
+	static function get_my_blog_items_query($query) {
+		if (!isset($_REQUEST['me']) || $query->query['pagename'] != 'blog') return;
+		
+		//if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		//$posts = wp_cache_get('my_aia_get_my_blog_items_'.$user_id);
+		
+		//if ($posts) return $posts;
+		
+		// first get groups
+		$groups = self::get_my_groups($user_id);
+		
+		// groups names correspond with tag
+		$tags = array();
+		foreach ($groups as $group) {
+			$tag = get_term_by('name', $group->name, 'post_tag'); //try and find tag id 
+			if ($tag) {
+				$tags[] = $tag->term_id;
+			}
+		}
+		$tags[]=2;
+		
+		// get posts
+		//$_query = wp_parse_args( array('tag__in'=>$tags,'numberposts'=>$nrposts) );
+		$query->parse_query(array('tag__in'=>$tags));
+		
+		//wp_cache_set('my_aia_get_my_blog_items_'.$user_id, $posts, NULL, 300); // save for 5 minutes
+		
+		//return $posts;
+	}
+	
+	/**
 	 * Get products (downloads/Documents), where no product id isset
 	 * @global wpdb $wpdb
 	 * @param int $user_id (default get_current_user_id()

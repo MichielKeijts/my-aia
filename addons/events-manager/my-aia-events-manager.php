@@ -90,6 +90,7 @@ function my_aia_em_bookings_remove_ninja_form(\EM_Tickets $ticket, \EM_Bookings 
  * @param array $data
  * @param int $field_id
  * @global \EM_Booking $EM_Booking
+ * @global WP_User $current_user
  * @return array modified $data
  */
 function my_aia_em_set_ninja_forms_field_default_value($data, $field_id) {
@@ -98,6 +99,12 @@ function my_aia_em_set_ninja_forms_field_default_value($data, $field_id) {
 	// EM booking meta is always saved as $key = $data['admin_label']
 	if (array_key_exists($data['admin_label'], $EM_Booking->booking_meta)) {
 		$data[ 'default_value' ] = $EM_Booking->booking_meta[	$data[ 'admin_label' ]	];
+	} elseif (!empty($data['admin_label']) && empty($data[ 'default_value' ])) {
+		// check if admin_label is part of user, if so: set
+		$prof_data = xprofile_get_field_data($data['admin_label'], $current_user->ID);
+		if ($prof_data && !empty($prof_data)) {
+			$data[ 'default_value' ] = $prof_data;
+		}
 	}
 	
 	return $data;

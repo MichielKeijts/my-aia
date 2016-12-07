@@ -475,6 +475,7 @@ class MY_AIA {
 				$tags[] = $tag->term_id;
 			}
 		}
+		//@Todo: toevoegen in alle tags van de events
 
 		$events = EM_Events::get(array(
 			'limit' => $nrposts,

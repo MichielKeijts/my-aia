@@ -36,6 +36,7 @@ class MY_AIA {
 		MY_AIA_POST_TYPE_TEMPLATE,
 		MY_AIA_POST_TYPE_BOOKING,
 		//MY_AIA_POST_TYPE_DOCUMENT,
+		
 		'wpdmpro'
 	);
 	

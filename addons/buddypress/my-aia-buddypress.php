@@ -41,11 +41,13 @@ function bp_my_aia_load_core_components() {
 	if (!isset($bp->documents)) {
 		include_once 'classes/my-aia-bp-group-extension-location.php';
 		include_once 'classes/my-aia-bp-group-extension-group-type.php';
-		include_once 'classes/my-aia-bp-group-extension-documents.php';
+		include_once 'classes/my-aia-bp-group-extension-sportlevel.php';
+		//include_once 'classes/my-aia-bp-group-extension-documents.php';
 		$bp->documents = new BP_MY_AIA_DOCUMENT_Component();
 		bp_register_group_extension('MY_AIA_BP_Group_Extension_Location');
 		bp_register_group_extension('MY_AIA_BP_Group_Extension_Group_Type');
-		bp_register_group_extension('MY_AIA_BP_Group_Extension_Documents');
+		bp_register_group_extension('MY_AIA_BP_Group_Extension_SportLevel');
+		//bp_register_group_extension('MY_AIA_BP_Group_Extension_Documents');
 	}
 	
 	if (!isset($bp->orders)) {

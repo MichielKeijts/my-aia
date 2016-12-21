@@ -210,6 +210,8 @@ add_action( 'bp_before_group_admin_content', 'my_aia_bp_before_profile_content')
 //add_action( 'bp_before_groups_loop', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_group_members_content', 'my_aia_bp_before_groups_members_content');
 add_action( 'bp_groups_between_groups_content_directory', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_create_group_form_fields', 'my_aia_bp_before_profile_content');
+
 
 
 /**
@@ -227,3 +229,5 @@ add_action( 'bp_before_group_body', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_group_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_groups_index_before_content', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_groups_content', 'my_aia_bp_after_member_body_default');
+add_action( 'bp_before_create_group', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_create_group', 'my_aia_bp_after_member_body_default');

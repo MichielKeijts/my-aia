@@ -40,7 +40,7 @@ class MY_AIA_BP_Group_Extension_Documents extends BP_Group_Extension {
 			<select name="location">
 				<option value="temp">Amersfoort</option>
 				<?php foreach ($locations as $loc): ?>
-				<option value="<?= $loc->location_id; ?>"><?= $loc->location_name; ?></option>
+				<option value="<?= $loc->location_id; ?>" <?= $loc->location_id == $setting ? 'selected':''; ?>><?= $loc->location_name; ?></option>
 				<?php endforeach; ?>
 			</select>
 		<?php

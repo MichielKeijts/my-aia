@@ -35,6 +35,12 @@ class MY_AIA_BOOKING extends MY_AIA_MODEL {
 		
 	}
 	
+	/**
+	 * Set the fields as part of this object, which are loaded to be used in
+	 * the template function.
+	 * 
+	 * For example: $this->em__booking__booking_price is now set as value.
+	 */
 	public function set_fields() {
 		$buddypress_fields=my_aia_get_buddy_press_xprofile_fields(FALSE);
 		
@@ -84,6 +90,13 @@ class MY_AIA_BOOKING extends MY_AIA_MODEL {
 		}
 		
 		return TRUE;
+	}
+	
+	/**
+	 * Template field EM__BOOKING__BOOKING_PRICE parser
+	 */
+	public function template_em__booking__booking_price($value) {
+		return em_get_currency_formatted($value);
 	}
 	
 	/**

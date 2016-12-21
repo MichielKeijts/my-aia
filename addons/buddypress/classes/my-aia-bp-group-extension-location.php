@@ -36,12 +36,14 @@ class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	
 		$location = new EM_Locations;
 		$locations = $location->get();
+		
+		// get group meta settings
+		$setting = groups_update_groupmeta( $group_id, 'location', true );
 		?>
 			<p>Selecteer een locatie:</p>
 			<select name="location">
-				<option value="temp">Amersfoort</option>
 				<?php foreach ($locations as $loc): ?>
-				<option value="<?= $loc->location_id; ?>"><?= $loc->location_name; ?></option>
+				<option value="<?= $loc->location_id; ?>" <?= $loc->location_id == $setting ? 'selected':''; ?>><?= $loc->location_name; ?></option>
 				<?php endforeach; ?>
 			</select>
 		<?php
@@ -54,8 +56,8 @@ class MY_AIA_BP_Group_Extension_Location extends BP_Group_Extension {
 	public function settings_screen_save($group_id = null) {
 		parent::settings_screen_save($group_id);
 		
-		$setting = isset( $_POST['group_extension_example_2_setting'] ) ? $_POST['group_extension_example_2_setting'] : '';
-        groups_update_groupmeta( $group_id, 'group_extension_example_2_setting', $setting );
+		$setting = isset( $_POST['location'] ) ? $_POST['location'] : '';
+        groups_update_groupmeta( $group_id, 'location', $setting );
     }
 
 }

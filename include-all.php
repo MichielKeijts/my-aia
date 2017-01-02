@@ -37,7 +37,7 @@ include_once ( 'core/my-aia.php' );
 include_once ( 'addons/buddypress/my-aia-buddypress.php' );
 include_once ( 'addons/events-manager/my-aia-events-manager.php' );
 include_once ( 'addons/ninja-forms/my-aia-ninja-forms.php' );
-include_once ( 'addons/members-page-only-for-logged-in-users/members_page_only_for_logged_in_users.php' );
+//include_once ( 'addons/members-page-only-for-logged-in-users/members_page_only_for_logged_in_users.php' );
 
 // All other necessary files
 include_once ( 'core/crmsync/iso3166.php');	// conversion for country names to 2-char or 3-char abbreviations

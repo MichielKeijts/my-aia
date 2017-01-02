@@ -8,7 +8,6 @@
  * Enque the scripts necessary for the upload field
  */
 function my_aia_ninja_forms_upload_field_enque_scripts() {
-	my_aia_ninja_forms_upload_field_enque_styles();
 	wp_enqueue_script('jquery-ui-widget', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/vendor/jquery.ui.widget.js', array('jquery','jquery-ui-core'));
 	
 	wp_enqueue_script('blueimp-load-image', 'http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js',array('jquery','jquery-ui-core'));
@@ -108,8 +107,10 @@ function ninja_forms_field_upload_req_validation($field_id, $user_value) {
  * @param int $form_id
  */
 function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '' ) {
-	add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
-	add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
+	my_aia_ninja_forms_upload_field_enque_scripts();
+	my_aia_ninja_forms_upload_field_enque_styles();
+	//add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
+	//add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
 	
 	if ( isset( $data['default_value'] ) ) {
 		$default_value = $data['default_value'];

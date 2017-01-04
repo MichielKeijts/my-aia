@@ -185,6 +185,7 @@ class MY_AIA {
 		add_option('my-aia-registered-hooks', array('save_post'));
 		add_option('my-aia-hook-save_post');
 		add_feed( 'my-aia-download', "MY_AIA::get_my_download" );
+		add_feed( 'my-aia-download-attachment', "MY_AIA::get_secure_download" );
 		
 		update_option('my-aia-hook-save_post', 
 				
@@ -702,7 +703,28 @@ class MY_AIA {
 				|| current_user_can('moderate',$post_id)) {
 			
 			// get download link
-			WPFB_Download::SendFile($post->attachment);
+			MY_AIA_WPFB_Download::SendFile($post->attachment);
+		}
+		
+		return throw_404();
+	}
+	
+	/**
+	 * Function redirects to download file, if user has acces
+	 * @global WP_User $current_user
+	 */
+	static function get_secure_download($link = NULL) {
+		global $current_user;
+		$link = $link ? $link : $_REQUEST['link'];
+		if (!$link) throw_404();
+		
+		$link = MY_AIA_PLUGIN_DIR . "../../uploads/my_aia/form_uploads/" . $link;
+		
+		if (current_user_can('administrator') || is_admin()) {
+			if (!file_exists($link)) throw_404();
+			
+			// get download link
+			MY_AIA_WPFB_Download::SendFile($link);
 		}
 		
 		return throw_404();

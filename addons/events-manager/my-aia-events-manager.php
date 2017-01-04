@@ -402,7 +402,16 @@ function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) 
 									<tr>
 										<td style="padding-left:10px; vertical-align: top;">
 											<table>
-												<?php foreach ($EM_Booking->booking_meta as $key=>$value): ?>
+												<?php 
+													foreach ($EM_Booking->booking_meta as $key=>$value): 
+														/**
+														 *  if name of the field is related to value with: 20170104_<nameoffield> 
+														 *  we have upload field
+														 */
+														if ($key === substr($value, 9, strlen($key))) {
+															$value = sprintf('<a href="/my-aia-download-attachment/?link=%s" title="Download file">%s</a>', $value, $value);
+														}
+													?>
 												<tr><th><?php _e($key,'my-aia'); ?> : </th><td><?php echo $value; ?></td></tr>
 												<?php endforeach; ?>
 											</table>
@@ -584,6 +593,8 @@ function my_aia_events_manager_registration_sugar_sync($result, $booking) {
  * @return bool	resultaat
  */
 function my_aia_events_post_to_sugarcrm($result, $event) {
+	$options = get_option('my-aia-options');
+	if (!isset($options['event_sugar_sync']) || $options['event_sugar_sync']!=1) return FALSE;
 	if (defined('DOING_SYNC')) return TRUE; // stop if syncing 
 	if (!$event) return FALSE;
 	

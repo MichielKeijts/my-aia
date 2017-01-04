@@ -10,7 +10,7 @@
 function my_aia_ninja_forms_upload_field_enque_scripts() {
 	wp_enqueue_script('jquery-ui-widget', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/vendor/jquery.ui.widget.js', array('jquery','jquery-ui-core'));
 	
-	wp_enqueue_script('blueimp-load-image', 'http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js',array('jquery','jquery-ui-core'));
+	wp_enqueue_script('blueimp-load-image', MY_AIA_PLUGIN_URL.'assets/js/load-image.all.min.js',array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery-iframe-transport', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.iframe-transport.js', array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery.fileupload', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload.js', array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery-fileupload-process', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload-process.js', array('jquery','jquery-ui-core'));
@@ -142,7 +142,7 @@ function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '
 	$new_name = sprintf('%s_%s_%s_%s', date('Ymd'), !empty($data['admin_label'])?$data['admin_label']:$data['label'], $field_id, md5(microtime()));
 	
 	if (!empty ($default_value)) {
-		$deleteUrl = "/wp-content/plugins/my-aia/vendor/jQuery-File-Upload/server/php/index.php?file=".$default_value;
+		$deleteUrl = "/wp-content/plugins/my-aia/upload.php?file=".$default_value;
 	} else {
 		$deleteUrl = "";
 	}
@@ -154,7 +154,7 @@ function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '
 jQuery(function ($) {
     'use strict';
 
-	var url = '/wp-content/plugins/my-aia/vendor/jQuery-File-Upload/server/php/';
+	var url = '/wp-content/plugins/my-aia/upload.php';
 		
 	
     jQuery('#fileupload_<?= $field_id; ?>').fileupload({

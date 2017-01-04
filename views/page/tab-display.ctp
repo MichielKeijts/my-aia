@@ -32,11 +32,11 @@
 				<th>Event Sugar Sync</th>
 				<td>
 					<fieldset>
-						<span class="rtm-field-wrap"><span class="rtm-form-checkbox"><label for="rtm-form-checkbox-124" class="switch"><input data-toggle="switch" id="rtm-form-checkbox-124" name="my_aia_options[event_sugar_sync]" value="1" type="checkbox" <?= $my_aia_options['event_sugar_sync']>0 ? 'checked' :''; ?>><span class="switch-label" data-on="On" data-off="Off"></span><span class="switch-handle"></span> </label></span></span>
+						<span class="rtm-field-wrap"><span class="rtm-form-checkbox"><label for="rtm-form-checkbox-124" class="switch"><input data-toggle="switch" id="rtm-form-checkbox-124" name="my_aia_options[event_sugar_sync]" value="1" type="checkbox" <?= isset($my_aia_options['event_sugar_sync']) && $my_aia_options['event_sugar_sync']>0 ? 'checked' :''; ?>><span class="switch-label" data-on="On" data-off="Off"></span><span class="switch-handle"></span> </label></span></span>
 						<span class="rtm-tooltip">
 							<i class="dashicons dashicons-info rtmicon"></i>
 							<span class="rtm-tip">
-								Activeer de test parameter. Dit betekent niet dat de shop in test mode staat
+								Activeer de sugar sync voor events (bij opslaan)
 							</span>
 						</span>
 					</fieldset>

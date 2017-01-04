@@ -155,9 +155,10 @@ class MY_AIA_VIEW {
 		extract($this->_viewVars);
 		
 		// garbage collection of HTML and header output
-		if (ob_get_length())
+		if (ob_get_length()) {
 			$_current_output=ob_get_clean();
-		else {
+			ob_start();
+		} else {
 			//init the outputbuffer
 			$done = ob_start();
 			$_current_output = "";

@@ -165,7 +165,7 @@ class MY_AIA_ADMIN {
 					}
 					
 					$value = isset($booking->{$key})?html_entity_decode($booking->{$key}):'';
-					$value = my_aia_get_download_link_for_em_booking_meta_value($key, html_entity_decode($booking->{$key}));
+					$value = my_aia_get_download_link_for_em_booking_meta_value($key, html_entity_decode($booking->{$key}), FALSE);
 					$_csv[]=  $value;;
 				}
 				

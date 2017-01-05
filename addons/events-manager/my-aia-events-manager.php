@@ -429,11 +429,12 @@ function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) 
  * @param string $value
  * @return string $value|link
  */
-function my_aia_get_download_link_for_em_booking_meta_value($field_name, $value) {
+function my_aia_get_download_link_for_em_booking_meta_value($field_name, $value, $wrap_link=TRUE) {
 	$output_array=[];
 	if ($field_name === substr($value, 9, strlen($field_name)) ||
 		preg_match("/20[0-9]{6}_.*_[0-9a-z]{32}\./", $value, $output_array) > 0) {
-		$value = sprintf('<a href="/my-aia-download-attachment/?link=%s" title="Download file">%s</a>', $value, $value);
+		if($wrap_link) $value = sprintf('<a href="/my-aia-download-attachment/?link=%s" title="Download file">%s</a>', $value, $value);
+		else $value = sprintf('https://www.athletesinaction.nl/my-aia-download-attachment/?link=%s', $value);
 	}
 	
 	return $value;

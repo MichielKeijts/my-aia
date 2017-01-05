@@ -17,9 +17,9 @@ include_once ("vendor/jQuery-File-Upload/server/php/UploadHandler.php");
 class MY_AIA_UploadHandler extends UploadHandler {
 	protected function get_unique_filename($file_path, $name, $size, $type, $error,
             $index, $content_range) {
-		if (isset($_REQUEST['_new_name'])) { 
+		if (isset($_REQUEST['newName'])) { 
 			list($name, $ext) = explode('.',$name);
-			$new_file_path = str_replace ('/', '', $_REQUEST['_new_name']). '.' .$ext;
+			$new_file_path = str_replace ('/', '', $_REQUEST['newName']). '.' .$ext;
 			return $new_file_path;
 		}
 		

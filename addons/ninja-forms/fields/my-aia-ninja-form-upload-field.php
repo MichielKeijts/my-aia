@@ -170,6 +170,7 @@ jQuery(function ($) {
         disableImageResize: true,
         previewMaxWidth: 100,
         previewMaxHeight: 100,
+		formData: {newName: '<?= $new_name; ?>'},
         previewCrop: true,
 		dropZone: jQuery('#ninja_forms_field_<?= $field_id; ?>_div_wrap'),
     }).on('fileuploadadd', function (e, data) {
@@ -296,7 +297,7 @@ jQuery(function ($) {
 			<?php endif;?>
 		</div>
 		
-		<input type="hidden" name="_new_name" value="<?= $new_name; ?>">
+		<input type="hidden" name="_new_name_<?= $field_id; ?>" value="<?= $new_name; ?>">
 		<input type="hidden"<?php echo $min . $max . $step; ?> name="ninja_forms_field_<?php echo esc_attr( $field_id ); ?>" id="ninja_forms_field_<?php echo esc_attr( $field_id ); ?>" class="<?php echo esc_attr( $field_class ); ?>" rel="<?php echo esc_attr( $field_id ); ?>" value="<?php echo esc_attr( $default_value ); ?>"/>
 <?php
 }

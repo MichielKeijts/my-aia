@@ -408,9 +408,7 @@ function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) 
 														 *  if name of the field is related to value with: 20170104_<nameoffield> 
 														 *  we have upload field
 														 */
-														if ($key === substr($value, 9, strlen($key))) {
-															$value = sprintf('<a href="/my-aia-download-attachment/?link=%s" title="Download file">%s</a>', $value, $value);
-														}
+														$value = my_aia_get_download_link_for_em_booking_meta_value($key, $value);
 													?>
 												<tr><th><?php _e($key,'my-aia'); ?> : </th><td><?php echo $value; ?></td></tr>
 												<?php endforeach; ?>
@@ -422,6 +420,24 @@ function my_aia_events_manager_add_booking_meta_single(\EM_Booking $EM_Booking) 
 	<?php	// LEAVE the </div> (2x), as whe are hooked inside the <div class="stuffbox"> !	
 }
 
+/**
+ * Returns the value for this field. Ads an attachment link if the name of the 
+ * field is in the value or if the fieldname looks like:
+ * - 20170105_vrijwaring_upload_81_87dd85ba096c068ac1a1f5862da76a25.docx
+ * - 20170101_<nameoffield>_<nr>_[a-z0-9]{32}
+ * @param string $field_name
+ * @param string $value
+ * @return string $value|link
+ */
+function my_aia_get_download_link_for_em_booking_meta_value($field_name, $value) {
+	$output_array=[];
+	if ($field_name === substr($value, 9, strlen($field_name)) ||
+		preg_match("/20[0-9]{6}_.*_[0-9a-z]{32}\./", $value, $output_array) > 0) {
+		$value = sprintf('<a href="/my-aia-download-attachment/?link=%s" title="Download file">%s</a>', $value, $value);
+	}
+	
+	return $value;
+}
 
 /**
  * Override the display function for the User Profile in the Events Manager booking info page.

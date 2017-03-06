@@ -8,7 +8,11 @@
 /*
 Plugin Name: MyAIA
 Plugin URI:  http://michielkeijts.nl/my-aia
+<<<<<<< HEAD
+Description: My AIA is a plugin which combines functionality of Buddypress, Events-Manager and more... 
+=======
 Description: My AIA is a plugin which combines functionality of Buddypress, Events-Manager and more. 
+>>>>>>> MichielKeijts/master
 Version:     0.1
 Author:      Michiel Keijts
 Author URI:  http://www.mchielkeijts.nl/
@@ -16,7 +20,10 @@ License:     GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Domain Path: /languages/
 Text Domain: my-aia
+<<<<<<< HEAD
+=======
 Contributor: Bernard Bos
+>>>>>>> MichielKeijts/master
 */
 
 // Some definitions

@@ -35,6 +35,8 @@ class MY_AIA_ADMIN {
 		//add_action( 'init', array($this,'request_render'), 999,1 );	// this calls the automatic render of the controller
 		// handle the request
 		$this->request_handler();		
+		
+		$this->em_request_handler();
 	}
 	
 	/** 
@@ -113,6 +115,83 @@ class MY_AIA_ADMIN {
 		//$this->request_render();
 	}
 	
+	/**
+	 * Deals with the EXPORT CSV function of the BOOKING
+	 * @global wpdb $wpdb
+	 */
+	private function em_request_handler() {
+		global $wpdb;
+	
+		if (filter_input(INPUT_POST,'action') == 'export_bookings_csv' && $_POST['action'] != 'my_aia_export_bookings_csv') {
+			$_REQUEST['action'] = 'my_aia_export_bookings_csv';
+			$_POST['action'] = 'my_aia_export_bookings_csv';
+		} elseif (isset($_POST['action']) && $_POST['action'] == 'my_aia_export_bookings_csv') {
+			$filter='';
+			if (filter_input(INPUT_GET,'event_id')) $filter .= 'AND event_id = '.filter_input(INPUT_GET,'event_id');
+			if (filter_input(INPUT_POST,'status') && filter_input(INPUT_POST,'status') != 'all') $filter .= 'AND booking_status = '.(filter_input(INPUT_POST,'status') == 'confirmed' ? 1 : 0);
+			if (filter_input(INPUT_POST,'scope')) {
+				switch (filter_input(INPUT_POST,'event_id')) {
+					case 'future':
+						$filter .= 'AND booking_date > NOW()';
+						break;
+					case 'past':
+						$filter .= 'AND booking_date < NOW()';
+						break;
+					default: //'all'
+				}
+			}
+				
+			
+			
+			
+			// get bookings
+			$bookings = $wpdb->get_results(sprintf("SELECT booking_id, event_id FROM {$wpdb->prefix}em_bookings WHERE 1=1 %s", $filter));
+			$csv = array();
+			foreach ($bookings as $booking_id) {
+				$booking = new MY_AIA_BOOKING();
+				$booking->get($booking_id->booking_id); //fill with results
+				
+				$event = new EM_Event($booking_id->event_id);	
+				$booking->event_name = $event->event_name;
+				$booking->event_code = $event->event_attributes['projectcode'];
+				$booking->fields['event_name'] = array('name'=>'Event');
+				$booking->fields['event_code'] = array('name'=>'Event Code');
+				
+				$_csv = array(); $cols = array();
+				foreach ($booking->fields as $key=>$val) {
+					if ($key == 'EM__BOOKING__booking_meta') continue;
+					if ($row == 0) {
+						$cols[] = $val['name'];
+					}
+					
+					$value = isset($booking->{$key})?html_entity_decode($booking->{$key}):'';
+					$value = my_aia_get_download_link_for_em_booking_meta_value($key, html_entity_decode($booking->{$key}), FALSE);
+					$_csv[]=  $value;;
+				}
+				
+				if ($row++==0) array_push($csv, $cols);
+				array_push($csv, $_csv);
+			}
+			
+			
+			
+			// output CSV
+			header("Content-Type: application/octet-stream; charset=utf-8");
+			$file_name = date('YmdHis'). '-' . (!empty($EM_Event->event_slug) ? $EM_Event->event_slug:get_bloginfo());
+			header("Content-Disposition: Attachment; filename=".sanitize_title($file_name)."-bookings-export.csv");
+			echo "\xEF\xBB\xBF"; // UTF-8 for MS Excel (a little hacky... but does the job)
+			
+			$delimiter = !defined('EM_CSV_DELIMITER') ? ',' : EM_CSV_DELIMITER;
+			$delimiter = apply_filters('em_csv_delimiter', $delimiter);
+			//Rows
+			$handle = fopen("php://output", "w");
+			foreach ($csv as $row) fputcsv($handle, $row, $delimiter);
+			fclose($handle);
+			// stop execution!
+			die();
+		}
+	}
+	
 	/** 
 	 * Filter the request. First parse the events
 	 * - before_filter
@@ -184,17 +263,19 @@ class MY_AIA_ADMIN {
 		// enqueue scripts
 		//wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 			
-		$this->add_metaboxes_to_post_types();
+		//$this->add_metaboxes_to_post_types();
 		
 		add_action('em_bookings_admin_booking_person', "my_aia_events_manager_add_booking_meta_single");
 		remove_action( 'admin_notices', 'update_nag', 3 );
+		
+		$this->em_request_handler();
 	}
 
 	/**
 	 * Adds metaboxes to the various admin interface pages
 	 * Metabox is described in the custom post type library, found in the classes directory
 	 */
-	private function add_metaboxes_to_post_types() {
+	public function add_metaboxes_to_post_types() {
 		my_aia_events_manager_add_form_widget();		// Enable Events Manager Addons
 		my_aia_post_type_partner_add_metaboxes();
 		

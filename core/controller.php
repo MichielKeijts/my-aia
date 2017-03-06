@@ -27,7 +27,7 @@
 class MY_AIA_CONTROLLER {
 	/**
 	 * View class
-	 * @var \MY_AIA_ADMIN_VIEW
+	 * @var MY_AIA_ADMIN_VIEW
 	 */
 	public $view;
 	

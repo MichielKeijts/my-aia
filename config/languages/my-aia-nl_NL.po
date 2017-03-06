@@ -1,92 +1,81 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: my-aia\n"
-"POT-Creation-Date: 2016-09-19 11:43+0200\n"
-"PO-Revision-Date: 2016-10-06 11:34+0200\n"
+"POT-Creation-Date: 2016-12-07 12:51+0100\n"
+"PO-Revision-Date: 2016-12-29 16:00+0100\n"
 "Last-Translator: \n"
 "Language-Team: Normit <michiel@normit.nl>\n"
 "Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.9\n"
-"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-KeywordsList: __\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: config/languages\n"
-"X-Poedit-SearchPathExcluded-1: vendor\n"
-"X-Poedit-SearchPathExcluded-2: assets\n"
-"X-Poedit-SearchPathExcluded-3: .\n"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:11
-#: addons/buddypress/classes/my-aia-bp-core.php:52
-#: addons/buddypress/classes/my-aia-bp-core.php:80
-#: addons/buddypress/classes/my-aia-bp-core.php:148
-#: addons/buddypress/classes/my-aia-bp-core.php:264
+#: addons/buddypress/classes/my-aia-bp-documents.php:11
+#: addons/buddypress/classes/my-aia-bp-documents.php:49
+#: addons/buddypress/classes/my-aia-bp-group-extension-documents.php:25
 msgid "Documents"
-msgstr "documenten"
+msgstr "Documenten"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:52
+#: addons/buddypress/classes/my-aia-bp-documents.php:49
 #: addons/buddypress/classes/my-aia-bp-orders.php:49
 #, php-format
 msgid "Search %s..."
 msgstr "Zoeken %s"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:91
-#: addons/buddypress/classes/my-aia-bp-core.php:199
+#: addons/buddypress/classes/my-aia-bp-documents.php:78
+msgid "Mijn Documents"
+msgstr "Mijn documenten"
+
+#: addons/buddypress/classes/my-aia-bp-documents.php:178
+#: addons/buddypress/classes/my-aia-bp-documents.php:229
+#: addons/buddypress/classes/my-aia-bp-orders.php:178
+#: addons/buddypress/classes/my-aia-bp-orders.php:229
+#: addons/events-manager/overrides/em-actions.php:107
+msgid "Events"
+msgstr "Evenementen"
+
+#: addons/buddypress/classes/my-aia-bp-documents.php:186
 #: addons/buddypress/classes/my-aia-bp-orders.php:186
 msgid "My Profile"
 msgstr "Mijn profiel"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:191
-#: addons/buddypress/classes/my-aia-bp-core.php:242
-#: addons/buddypress/classes/my-aia-bp-orders.php:178
-#: addons/buddypress/classes/my-aia-bp-orders.php:229
-msgid "Events"
-msgstr "Evenementen"
-
-#: addons/buddypress/classes/my-aia-bp-core.php:206
+#: addons/buddypress/classes/my-aia-bp-documents.php:193
 #: addons/buddypress/classes/my-aia-bp-orders.php:193
 msgid "Events I'm Attending"
-msgstr "Evenementen Ik Bijwonen"
+msgstr "Evenementen die ik bijwoon"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:214
+#: addons/buddypress/classes/my-aia-bp-documents.php:201
 #: addons/buddypress/classes/my-aia-bp-orders.php:201
 msgid "My Events"
-msgstr "mijn Events"
+msgstr "Mijn evenementen"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:223
+#: addons/buddypress/classes/my-aia-bp-documents.php:210
 #: addons/buddypress/classes/my-aia-bp-orders.php:210
 msgid "My Locations"
-msgstr "mijn locaties"
+msgstr "Mijn locaties"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:232
+#: addons/buddypress/classes/my-aia-bp-documents.php:219
 #: addons/buddypress/classes/my-aia-bp-orders.php:219
 msgid "My Event Bookings"
-msgstr "Mijn Event Boekingen"
+msgstr "Mijn evenement boekingen"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:354
-msgid "There was an error updating group settings. Please try again."
-msgstr "Er is een fout opgetreden bijwerking van groep instellingen. Probeer het opnieuw."
-
-#: addons/buddypress/classes/my-aia-bp-core.php:356
-msgid "Group settings were successfully updated."
-msgstr "Groep instellingen zijn bijgewerkt."
-
-#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:19
-msgid "Type"
-msgstr "Type"
-
-#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:32
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:33
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:34
 msgid "Huddle"
 msgstr "Huddle"
 
-#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:33
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:35
 msgid "Sportcommunity"
 msgstr "Sportcommunity"
 
-#: addons/buddypress/classes/my-aia-bp-group-extension-location.php:25
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:36
+msgid "Sport Specifiek"
+msgstr "Sport specifiek"
+
+#: addons/buddypress/classes/my-aia-bp-group-extension-sportlevel.php:25
 msgid "Locatie"
 msgstr "Locatie"
 
@@ -97,7 +86,7 @@ msgstr "Locatie"
 #: addons/buddypress/classes/my-aia-bp-notifications.php:42
 #: addons/buddypress/classes/my-aia-bp-notifications.php:44
 msgid "My Bookings"
-msgstr "mijn Boekingen"
+msgstr "Mijn boekingen"
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:25
 msgid "You have a pending booking"
@@ -106,11 +95,11 @@ msgstr "Je hebt een openstaande boeking"
 #: addons/buddypress/classes/my-aia-bp-notifications.php:27
 #, php-format
 msgid "You have %s pending bookings"
-msgstr "Je hebt %s in afwachting van boekingen"
+msgstr "Je hebt %s openstaande boekingen"
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:34
 msgid "You have a confirmed booking"
-msgstr "Je hebt een bevestigde reservering"
+msgstr "Je hebt een bevestigde boeking"
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:36
 #, php-format
@@ -119,29 +108,29 @@ msgstr "Je hebt %s bevestigde boekingen"
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:42
 msgid "A user cancelled a booking"
-msgstr "Een gebruiker van een boeking geannuleerd"
+msgstr "Een gebruiker heeft een boeking geannuleerd"
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:44
 #, php-format
 msgid "%s users cancelled bookings."
-msgstr "%s gebruikers geannuleerd boekingen."
+msgstr "%s geannuleerde boekingen van gebruikers."
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:11
 #: addons/buddypress/classes/my-aia-bp-orders.php:49
 #: config/custom-post-types/my-aia-order.php:25
 #: config/custom-post-types/my-aia-order.php:28
-#: config/custom-post-types/my-aia-order.php:30 core/lib/my-aia-admin.php:179
+#: config/custom-post-types/my-aia-order.php:30 core/lib/my-aia-admin.php:256
 msgid "Orders"
-msgstr "orders"
+msgstr "Orders"
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:78
 #: addons/buddypress/screens/orders.php:27
 msgid "Mijn Orders"
-msgstr "Mijn Orders"
+msgstr "Mijn orders"
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:90
 msgid "Mijn Order Aanpassen"
-msgstr "Mijn Order Aanpassen"
+msgstr "Mijn order aanpassen"
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:100
 msgid "Bestelling Status"
@@ -151,38 +140,274 @@ msgstr "Bestelling Status"
 msgid "Registreer voor Athletes in Action"
 msgstr "Registreer for Athletes in Action"
 
-#: addons/buddypress/classes/my-aia-bp-template-parser.php:39
+#: addons/buddypress/classes/my-aia-bp-template-parser.php:42
 msgid "Ik heb al een login"
 msgstr "Ik heb al een login"
 
-#: addons/buddypress/screens/my-documents.php:48
-msgid "Reschedule Events"
-msgstr "Opnieuw plannen Events"
-
-#: addons/buddypress/screens/my-documents.php:50
-msgid "Edit Event"
-msgstr "bewerken Event"
+#: addons/buddypress/screens/my-documents.php:27
+msgid "Mijn Documenten"
+msgstr "Mijn documenten"
 
 #: addons/buddypress/screens/my-order-edit.php:33
 #: addons/buddypress/screens/my-order-edit.php:45
-#: controllers/my-aia-order-controller.php:417
-#: controllers/my-aia-order-controller.php:429
+#: controllers/my-aia-order-controller.php:386
+#: controllers/my-aia-order-controller.php:398
 msgid "Mijn Bestelling"
-msgstr "Mijn Bestelling"
+msgstr "Mijn bestelling"
 
 #: addons/buddypress/screens/order-status.php:38
-#: controllers/my-aia-order-controller.php:480
+#: controllers/my-aia-order-controller.php:449
 msgid "Mijn Order Status"
-msgstr "Mijn Order Status"
+msgstr "Mijn orderstatus"
 
-#: addons/events-manager/my-aia-events-manager.php:237
+#: addons/events-manager/my-aia-events-manager.php:285
 msgid "Aanmeldformulier"
-msgstr "aanmeldformulier"
+msgstr "Aanmeldformulier"
 
-#: addons/events-manager/my-aia-events-manager.php:242
-#: core/lib/my-aia-admin.php:206
+#: addons/events-manager/my-aia-events-manager.php:290
+#: core/lib/my-aia-admin.php:285
 msgid "Attributes"
-msgstr "attributen"
+msgstr "Attributen"
+
+#: addons/events-manager/my-aia-events-manager.php:536
+msgid "Booking created to SugarCRM."
+msgstr "Boeking aangemaakt in SugarCRM."
+
+#: addons/events-manager/my-aia-events-manager.php:543
+msgid "Booking removed from SugarCRM."
+msgstr "Boeking verwijderd uit SugarCRM."
+
+#: addons/events-manager/my-aia-events-manager.php:549
+msgid "Booking updated to SugarCRM."
+msgstr "Boeking bijgewerkt in SugarCRM."
+
+#: addons/events-manager/my-aia-events-manager.php:561
+msgid "Booking could not be inserted to SugarCRM."
+msgstr "Boeking kon niet worden toegevoegd aan SugarCRM."
+
+#: addons/events-manager/my-aia-events-manager.php:562
+msgid "Booking could not be updated to SugarCRM."
+msgstr "Boeking kon niet worden bijgewerkt in SugarCRM."
+
+#: addons/events-manager/overrides/em-actions.php:31
+msgid "No ticket id provided"
+msgstr "Geen ticket id aangegeven"
+
+#: addons/events-manager/overrides/em-actions.php:107
+#: addons/events-manager/overrides/em-actions.php:626
+msgid "Event"
+msgstr "Event"
+
+#: addons/events-manager/overrides/em-actions.php:109
+#, php-format
+msgid "%s successfully deleted."
+msgstr "%s succesvol verwijderd."
+
+#: addons/events-manager/overrides/em-actions.php:112
+#, php-format
+msgid "%s could not be deleted."
+msgstr "%s kon niet verwijderd worden."
+
+#: addons/events-manager/overrides/em-actions.php:185
+msgid "Locations"
+msgstr "Locaties"
+
+#: addons/events-manager/overrides/em-actions.php:185
+msgid "Location"
+msgstr "Locatie"
+
+#: addons/events-manager/overrides/em-actions.php:186
+#, php-format
+msgid "%s successfully deleted"
+msgstr "%s succesvol verwijderd"
+
+#: addons/events-manager/overrides/em-actions.php:337
+msgid "You must log in to cancel your booking."
+msgstr "Je moet ingelogd zijn om je boeking te annuleren."
+
+#: addons/events-manager/overrides/em-actions.php:397
+#: addons/events-manager/overrides/em-actions.php:420
+#: addons/events-manager/overrides/em-booking.php:825
+msgid "Email Sent."
+msgstr "Email verzonden."
+
+#: addons/events-manager/overrides/em-actions.php:402
+#: addons/events-manager/overrides/em-actions.php:429
+#: addons/events-manager/overrides/em-booking.php:829
+#: addons/events-manager/overrides/em-booking.php:830
+msgid "ERROR : Email Not Sent."
+msgstr "FOUT: Email niet verzonden."
+
+#: addons/events-manager/overrides/em-actions.php:627
+msgid "Where"
+msgstr "Waar"
+
+#: addons/events-manager/overrides/em-actions.php:628
+msgid "When"
+msgstr "Wanneer"
+
+#: addons/events-manager/overrides/em-actions.php:630
+#, php-format
+msgid "Exported booking on %s"
+msgstr "Exported booking on %s"
+
+#: addons/events-manager/overrides/em-booking.php:132
+msgid "Pending"
+msgstr "Openstaand"
+
+#: addons/events-manager/overrides/em-booking.php:133
+msgid "Approved"
+msgstr "Goedgekeurd"
+
+#: addons/events-manager/overrides/em-booking.php:134
+msgid "Rejected"
+msgstr "Afgewezen"
+
+#: addons/events-manager/overrides/em-booking.php:135
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#: addons/events-manager/overrides/em-booking.php:136
+msgid "Awaiting Online Payment"
+msgstr "Wachten op online betaling"
+
+#: addons/events-manager/overrides/em-booking.php:137
+msgid "Awaiting Payment"
+msgstr "Wachten op betaling"
+
+#: addons/events-manager/overrides/em-booking.php:186
+msgid "Changes saved"
+msgstr "Wijzigingen opgeslagen"
+
+#: addons/events-manager/overrides/em-booking.php:194
+msgid "Your booking has been recorded"
+msgstr "Je boeking is geregistreerd"
+
+#: addons/events-manager/overrides/em-booking.php:198
+#: addons/events-manager/overrides/em-booking.php:199
+#: addons/events-manager/overrides/em-booking.php:207
+#: addons/events-manager/overrides/em-booking.php:218
+msgid "There was a problem saving the booking."
+msgstr "Er was een probleem bij het opslaan van de boeking."
+
+#: addons/events-manager/overrides/em-booking.php:220
+#, php-format
+msgid "You cannot manage this %s."
+msgstr "Je kunt dit %s niet beheren."
+
+#: addons/events-manager/overrides/em-booking.php:220
+#: addons/events-manager/overrides/em-booking.php:762
+#: addons/events-manager/overrides/em-booking.php:765
+msgid "Booking"
+msgstr "Boeking"
+
+#: addons/events-manager/overrides/em-booking.php:273
+msgid "You are trying to book a non-existent ticket for this event."
+msgstr "Je probeert een niet-bestaand ticket te boeken voor dit evenement."
+
+#: addons/events-manager/overrides/em-booking.php:642
+#: addons/events-manager/overrides/em-booking.php:650
+msgid "Guest User"
+msgstr "Gastgebruiker"
+
+#: addons/events-manager/overrides/em-booking.php:646
+#: addons/events-manager/overrides/em-booking.php:722
+msgid "Not Supplied"
+msgstr "Niet geleverd."
+
+#: addons/events-manager/overrides/em-booking.php:669
+msgid "<strong>ERROR</strong>: Please type your e-mail address."
+msgstr "<strong>FOUT</strong>: Typ s.v.p. je mailadres."
+
+#: addons/events-manager/overrides/em-booking.php:672
+msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+msgstr "<strong>FOUT</strong>: Het mailadres is niet correct."
+
+#: addons/events-manager/overrides/em-booking.php:709
+msgid "Personal details have successfully been modified."
+msgstr "Persoonlijke gegevens zijn succesvol aangepast."
+
+#: addons/events-manager/overrides/em-booking.php:762
+#, php-format
+msgid "%s deleted"
+msgstr "%s verwijderd"
+
+#: addons/events-manager/overrides/em-booking.php:765
+#, php-format
+msgid "%s could not be deleted"
+msgstr "%s kon niet verwijderd worden"
+
+#: addons/events-manager/overrides/em-booking.php:812
+msgid "Not approved, spaces full."
+msgstr "Niet goedgekeurd, geen plaatsen meer vrij."
+
+#: addons/events-manager/overrides/em-booking.php:821
+#, php-format
+msgid "Booking %s."
+msgstr "Boeking %s."
+
+#: addons/events-manager/overrides/em-booking.php:835
+#: addons/events-manager/overrides/em-booking.php:836
+#, php-format
+msgid "Booking could not be %s."
+msgstr "De boeking kon niet worden %s."
+
+#: addons/events-manager/overrides/em-booking.php:876
+msgid "Booking note successfully added."
+msgstr "Notitie bij boeking succesvol toegevoegd."
+
+#: addons/events-manager/overrides/em-booking.php:1051
+msgid "Confirmation email could not be sent to admin. Registrant should have gotten their email (only admin see this warning)."
+msgstr "De bevestigingsmail kon niet worden verzonden naar de beheerder. De registrant zou een mail gehad moeten hebben (alleen beheerders zien deze melding)."
+
+#: addons/events-manager/overrides/em-mailer.php:63
+msgid "Could not send email."
+msgstr "De mail kon niet worden verzonden."
+
+#: addons/events-manager/overrides/em-mailer.php:124
+msgid "Please supply a valid email format."
+msgstr "Vul s.v.p. een mailadres in een correct formaat in."
+
+#: addons/events-manager/overrides/em-object.php:1474
+msgid "There was an error uploading the image."
+msgstr "Er heeft zich een fout voorgedaan bij het uploaden van de afbeelding."
+
+#: addons/events-manager/overrides/em-object.php:1495
+msgid "The image file is too big! Maximum size:"
+msgstr "Het afbeeldingsbestand is te groot! Maximale grootte:"
+
+#: addons/events-manager/overrides/em-object.php:1502
+msgid "The image is too big! Maximum size allowed:"
+msgstr "De afbeelding is te groot! Maximaal toegestane grootte:"
+
+#: addons/events-manager/overrides/em-object.php:1505
+msgid "The image is too small! Minimum size allowed:"
+msgstr "De afbeelding is te klein! Minimale toegestane grootte:"
+
+#: addons/events-manager/overrides/em-object.php:1508
+msgid "The image is in a wrong format!"
+msgstr "Het afbeeldingsbestand heeft een verkeerd bestandstype."
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:20
+msgid "Email Group Leader"
+msgstr "Mail groepsleider"
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:95
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:98
+msgid "Submission CSV"
+msgstr "Submission CSV"
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:135
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:138
+msgid "One email address or field"
+msgstr "One email address or field"
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:141
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:147
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:144
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:150
+msgid "Email addresses or search for a field"
+msgstr "Email addresses or search for a field"
 
 #: addons/ninja-forms/custom-notifications/custom-post-notification.php:23
 msgid "Save to Custom Post"
@@ -196,50 +421,58 @@ msgstr "voordat Form"
 msgid "After Form"
 msgstr "na Form"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:33
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:20
+msgid "PDF Email Notification"
+msgstr "PDF Email Notificatie"
+
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:36
 msgid "Show This"
 msgstr "Laat dit"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:38
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:41
 msgid "Hide This"
 msgstr "Hide Deze"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:43
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:46
 msgid "Selected Value"
 msgstr "geselecteerde Waarde"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:48
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:51
 msgid "Add Value"
 msgstr "Waarde toevoegen"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:53
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:56
 msgid "Remove Value"
 msgstr "Verwijder Value"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:80
-#: addons/ninja-forms/fields/my-aia-ninja-form-upload-field.php:76
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:83
+#: addons/ninja-forms/fields/my-aia-ninja-form-upload-field.php:80
 msgid "Er is geen bestand toegevoegd"
 msgstr "Er is Geen bestand toegevoegd"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:146
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:149
 msgid "Dropdown"
 msgstr "Laten vallen"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:147
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:150
 msgid "Radio"
 msgstr "Radio"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:148
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:151
 msgid "Checkboxes"
 msgstr "checkboxes"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:149
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:152
 msgid "Multi-Select"
 msgstr "Meerkeuze selectie"
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:152
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:155
 msgid "List Type"
 msgstr "lijst Type"
+
+#: addons/ninja-forms/my-aia-ninja-forms.php:23
+msgid "Add PDF to Confirmation Email"
+msgstr "Voeg PDF toe aan bevestigings Email"
 
 #: config/custom-post-types/my-aia-contract.php:25
 #: config/custom-post-types/my-aia-contract.php:28
@@ -413,7 +646,7 @@ msgstr "Bestelstatus"
 #: config/custom-post-types/my-aia-order.php:79
 #: config/custom-post-types/my-aia-payment.php:73
 #: controllers/my-aia-invoice-controller.php:174
-#: controllers/my-aia-order-controller.php:259
+#: controllers/my-aia-order-controller.php:227
 msgid "Factuur"
 msgstr "Factuur"
 
@@ -429,7 +662,7 @@ msgstr "Niet Aanwezig"
 
 #: config/custom-post-types/my-aia-partner.php:24
 #: config/custom-post-types/my-aia-partner.php:27
-#: config/custom-post-types/my-aia-partner.php:29 core/lib/my-aia-admin.php:180
+#: config/custom-post-types/my-aia-partner.php:29 core/lib/my-aia-admin.php:257
 msgid "Partners"
 msgstr "partners"
 
@@ -533,7 +766,7 @@ msgstr "Bewerk Factuur"
 
 #: config/custom-post-types/my-aia-product.php:25
 #: config/custom-post-types/my-aia-product.php:28
-#: config/custom-post-types/my-aia-product.php:30 core/lib/my-aia-admin.php:178
+#: config/custom-post-types/my-aia-product.php:30 core/lib/my-aia-admin.php:255
 msgid "Products"
 msgstr "producten"
 
@@ -584,7 +817,7 @@ msgstr "Parent Product"
 #: config/custom-post-types/my-aia-template.php:25
 #: config/custom-post-types/my-aia-template.php:28
 #: config/custom-post-types/my-aia-template.php:30
-#: core/lib/my-aia-admin.php:181
+#: core/lib/my-aia-admin.php:258
 msgid "Templates"
 msgstr "templates"
 
@@ -1114,59 +1347,51 @@ msgstr "Taal"
 
 #: config/custom-taxonomies/my-aia-taal.php:25
 msgid "Search Taal"
-msgstr "zoeken Taal"
+msgstr "Zoek taal"
 
 #: config/custom-taxonomies/my-aia-taal.php:26
 msgid "Popular Taal"
-msgstr "populaire Taal"
+msgstr "Populaire taal"
 
 #: config/custom-taxonomies/my-aia-taal.php:27
 msgid "All Taal"
-msgstr "alle Taal"
+msgstr "Alle talen"
 
 #: config/custom-taxonomies/my-aia-taal.php:28
 msgid "Parent Taal"
-msgstr "Parent Taal"
+msgstr "Hoofdtaal"
 
 #: config/custom-taxonomies/my-aia-taal.php:29
 msgid "Parent Taal:"
-msgstr "Parent Taal:"
+msgstr "Hoofdtaal:"
 
 #: config/custom-taxonomies/my-aia-taal.php:30
 msgid "Edit Taal"
-msgstr "Wijzig Taal"
+msgstr "Wijzig taal"
 
 #: config/custom-taxonomies/my-aia-taal.php:31
 msgid "Update Taal"
-msgstr "update Taal"
+msgstr "Taal bijwerken"
 
 #: config/custom-taxonomies/my-aia-taal.php:32
 msgid "Add New Taal"
-msgstr "Nieuwe toevoegen Taal"
+msgstr "Nieuwe taal toevoegen"
 
 #: config/custom-taxonomies/my-aia-taal.php:33
 msgid "New Taal"
-msgstr "nieuwe Taal"
+msgstr "Nieuwe taal"
 
 #: config/custom-taxonomies/my-aia-taal.php:34
 msgid "Seperate Taal with commas"
-msgstr "Aparte Taal met komma's"
+msgstr "Scheid verschillende talen met komma's"
 
 #: config/custom-taxonomies/my-aia-taal.php:35
 msgid "Add or remove Taal"
-msgstr "Toevoegen of verwijderen Taal"
+msgstr "Taal toevoegen of verwijderen"
 
 #: config/custom-taxonomies/my-aia-taal.php:36
 msgid "Choose from most used Taal"
-msgstr "U kunt kiezen uit de meest gebruikte Taal"
-
-#: config/my-aia-functions.php:181
-msgid "Attribute Name"
-msgstr "attribuut naam"
-
-#: config/my-aia-functions.php:182
-msgid "Attribute Value"
-msgstr "attribuut Waarde"
+msgstr "Kies uit de meest gebruikte talen"
 
 #: controllers/my-aia-invoice-controller.php:62
 #: controllers/my-aia-order-controller.php:66
@@ -1179,23 +1404,24 @@ msgstr "Nieuw"
 #: controllers/my-aia-order-controller.php:67
 #: controllers/my-aia-payment-controller.php:64
 #: controllers/my-aia-processflow-controller.php:59
-#: core/lib/my-aia-admin.php:177
+#: core/lib/my-aia-admin.php:254
 msgid "Hooks Overzicht"
-msgstr "haken Overzicht"
+msgstr "Webhooks overzicht"
 
-#: controllers/my-aia-order-controller.php:256
+#: controllers/my-aia-order-controller.php:224
 msgid "Order Items"
 msgstr "Bestel items"
 
-#: controllers/my-aia-order-controller.php:257
+#: controllers/my-aia-order-controller.php:225
 msgid "Order Items Toevoegen"
 msgstr "Bestel Items Toevoegen"
 
-#: controllers/my-aia-order-controller.php:333
+#: controllers/my-aia-order-controller.php:301
 msgid "Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder kunt."
 msgstr "Nog Niet alle velden Zijn Juist Ingevoerd, pas aan this for DAT je verder Kunt."
 
 #: controllers/my-aia-processflow-controller.php:69
+#: controllers/my-aia-profile-controller.php:69
 msgid "Hook Toevoegen"
 msgstr "Hook Toevoegen"
 
@@ -1204,40 +1430,60 @@ msgid "Overzicht van alle geregistreede Hooks"
 msgstr "Overzicht van alle geregistreede Hooks"
 
 #: controllers/my-aia-processflow-controller.php:123
+#: controllers/my-aia-profile-controller.php:223
 msgid "Hook Aanpassen"
-msgstr "haak Aanpassen"
+msgstr "Webhook Aanpassen"
 
 #: controllers/my-aia-processflow-controller.php:221
+#: controllers/my-aia-profile-controller.php:321
 msgid "Cannot find hooks under the supplied condition"
-msgstr "Kan niet haken onder de geleverde voorwaarde vinden"
+msgstr "Kan geen webhooks onder de aangegeven voorwaarde vinden"
 
 #: controllers/my-aia-product-controller.php:48
 msgid "Download (Webshop)"
 msgstr "Download (Webshop)"
 
-#: controllers/my-aia-sync-controller.php:71
+#: controllers/my-aia-profile-controller.php:58
+#: controllers/my-aia-role-controller.php:192
+msgid "Profiel Wijzigingen"
+msgstr "Profielwijzigingen"
+
+#: controllers/my-aia-profile-controller.php:59
+#: controllers/my-aia-role-controller.php:193
+msgid "Reserveringen"
+msgstr "Reserveringen"
+
+#: controllers/my-aia-profile-controller.php:93
+msgid "Overzicht van alle wijzigingen m.b.t profielen"
+msgstr "Overzicht van alle wijzigingen m.b.t profielen"
+
+#: controllers/my-aia-sync-controller.php:87
 msgid "Sync Instellingen Profiel"
-msgstr "Sync INSTELLINGEN Profiel"
+msgstr "Synchroniseer INSTELLINGEN profiel"
 
-#: controllers/my-aia-sync-controller.php:72
+#: controllers/my-aia-sync-controller.php:88
 msgid "Sync Instellingen Events"
-msgstr "Sync INSTELLINGEN Events"
+msgstr "Synchroniseer INSTELLINGEN evenementen"
 
-#: controllers/my-aia-sync-controller.php:73
+#: controllers/my-aia-sync-controller.php:89
 msgid "Sync Instellingen Registraties"
-msgstr "Sync INSTELLINGEN Registraties"
+msgstr "Synchroniseer INSTELLINGEN registraties"
 
-#: controllers/my-aia-sync-controller.php:74
+#: controllers/my-aia-sync-controller.php:90
 msgid "Handmatige Synchronisatie"
-msgstr "handmatige Synchronisatie"
+msgstr "Handmatige synchronisatie"
 
-#: controllers/my-aia-template-controller.php:257
+#: controllers/my-aia-template-controller.php:227
 msgid "Applies to Post Type"
-msgstr "Geldt voor post type"
+msgstr "Geldt voor berichttype"
 
-#: controllers/my-aia-wpdmpro-controller.php:49
+#: controllers/my-aia-wpdmpro-controller.php:56
 msgid "Product (Webshop)"
 msgstr "Product (Webshop)"
+
+#: controllers/my-aia-wpdmpro-controller.php:57
+msgid "Toegangsregels"
+msgstr "Toegangsregels"
 
 #: core/admin/model/_Processflow_List.php:19
 msgid "Proces Flow"
@@ -1247,93 +1493,97 @@ msgstr "proces Flow"
 msgid "Proces Flows"
 msgstr "proces Flows"
 
-#: core/lib/Download.php:417
-msgid "Could not read file!"
-msgstr "Kon bestand niet lezen!"
-
 #: core/lib/my-aia-admin-class-meta-columns.php:155
 msgid "All SEO Scores"
 msgstr "Alle SEO Scores"
 
 #: core/lib/my-aia-admin-class-meta-columns.php:352
 msgid "Post is set to noindex."
-msgstr "Post is ingesteld op noindex."
+msgstr "Post is ingesteld op no-index."
 
 #: core/lib/my-aia-admin-class-meta-columns.php:357
 msgid "Focus keyword not set."
 msgstr "Focus zoekwoord niet ingesteld."
 
-#: core/lib/my-aia-admin-functions.php:86
+#: core/lib/my-aia-admin-functions.php:89
 msgid "Groep"
 msgstr "Groep"
 
-#: core/lib/my-aia-admin-functions.php:87
+#: core/lib/my-aia-admin-functions.php:90
 msgid "Contactpersoon"
 msgstr "Contactpersoon"
 
-#: core/lib/my-aia-admin-functions.php:102
+#: core/lib/my-aia-admin-functions.php:105
 msgid "Selecteer de group waar de partner bij hoort of maak een nieuwe aan"
-msgstr "Select de groep Waar de partner bij hoort of Maak Een nieuwe aan"
+msgstr "Select de groep waar de partner bij hoort of maak een nieuwe aan"
 
-#: core/lib/my-aia-admin-functions.php:138
+#: core/lib/my-aia-admin-functions.php:141
 msgid "ID"
 msgstr "ID"
 
-#: core/lib/my-aia-admin-functions.php:139
+#: core/lib/my-aia-admin-functions.php:142
 msgid "Name"
 msgstr "Naam"
 
-#: core/lib/my-aia-admin-functions.php:140
+#: core/lib/my-aia-admin-functions.php:143
 msgid "Aantal"
 msgstr "Aantal"
 
-#: core/lib/my-aia-admin-functions.php:141
+#: core/lib/my-aia-admin-functions.php:144
 msgid "Prijs"
 msgstr "Prijs"
 
-#: core/lib/my-aia-admin-functions.php:142
+#: core/lib/my-aia-admin-functions.php:145
 msgid "Totaal"
 msgstr "TOTAAL"
 
-#: core/lib/my-aia-admin-functions.php:222
+#: core/lib/my-aia-admin-functions.php:225
 msgid "Edit This"
-msgstr "bewerken Deze"
+msgstr "Bewerken"
 
-#: core/lib/my-aia-admin.php:165 core/lib/my-aia-admin.php:166
+#: core/lib/my-aia-admin.php:242 core/lib/my-aia-admin.php:243
 msgid "My AIA"
-msgstr "mijn AIA"
+msgstr "Mijn AIA"
 
-#: core/lib/my-aia-admin.php:175
+#: core/lib/my-aia-admin.php:252
 msgid "Settings"
-msgstr "instellingen"
+msgstr "Instellingen"
 
-#: core/lib/my-aia-admin.php:176
+#: core/lib/my-aia-admin.php:253
 msgid "Reset"
-msgstr "Reset"
+msgstr "Opnieuw instellen"
 
-#: core/my-aia.php:566
+#: core/lib/my-aia-functions.php:182
+msgid "Attribute Name"
+msgstr "Naam van het attribuut"
+
+#: core/lib/my-aia-functions.php:183
+msgid "Attribute Value"
+msgstr "Waarde van het attribuut"
+
+#: core/lib/my-aia-wpfb_download.php:417
+msgid "Could not read file!"
+msgstr "Kon het bestand niet lezen!"
+
+#: core/my-aia.php:611
 msgid "Uitloggen"
-msgstr "Word lid van onze"
+msgstr "Uitloggen"
 
-#: core/my-aia.php:570
+#: core/my-aia.php:615
 msgid "Members"
-msgstr "leden"
+msgstr "Leden"
 
-#: core/my-aia.php:577
+#: core/my-aia.php:622
 msgid "Inloggen"
 msgstr "Inloggen"
 
-#: core/my-aia.php:581
+#: core/my-aia.php:626
 msgid "Join Us"
 msgstr "Doe met ons mee"
 
 #: models/my-aia-contract.php:121
 msgid "Partner Contract"
-msgstr "partner Contract"
-
-#: views/default/buddypress/group-documents.php:39
-msgid "No Documents found"
-msgstr "Geen documenten gevonden"
+msgstr "Partner contract"
 
 #: views/default/buddypress/my-order-edit.php:38
 #: views/default/buddypress/my-order-status.php:35
@@ -1378,11 +1628,29 @@ msgstr "Bevestigen & Betalen met iDeal"
 msgid "Overige gegevens"
 msgstr "Overige Gegevens"
 
-msgid "id\""
-msgstr "id \""
+msgid "There was an error updating group settings. Please try again."
+msgstr "Er is een fout opgetreden bijwerking van groep instellingen. Probeer het opnieuw."
 
-msgid "last_name\""
-msgstr "achternaam\""
+msgid "Group settings were successfully updated."
+msgstr "Groep instellingen zijn bijgewerkt."
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Reschedule Events"
+msgstr "Opnieuw plannen Events"
+
+msgid "Edit Event"
+msgstr "bewerken Event"
+
+msgid "No Documents found"
+msgstr "Geen documenten gevonden"
+
+msgid "id"
+msgstr "id"
+
+msgid "last_name"
+msgstr "achternaam"
 
 msgid "voorletters_c"
 msgstr "voorletters_c"
@@ -1396,11 +1664,17 @@ msgstr "Voornaam"
 msgid "primary_address_street"
 msgstr "Adres"
 
+msgid "primary_address_street_number"
+msgstr "Huisnr"
+
 msgid "primary_address_number_add_c"
 msgstr "Huisnummer Toev."
 
 msgid "primary_address_city"
 msgstr "Plaats"
+
+msgid "primary_address_postal_code"
+msgstr "Postcode"
 
 msgid "primary_address_postalcode"
 msgstr "Postcode"
@@ -1434,9 +1708,6 @@ msgstr "Debiteurnr"
 
 msgid "manyware_regnr_c"
 msgstr "Manyware RegNr."
-
-msgid "id"
-msgstr "id"
 
 msgid "aia_teamleden"
 msgstr "aia teamleden"
@@ -1668,6 +1939,3 @@ msgstr "tiener_korting"
 
 msgid "uitschrijf_datum"
 msgstr "uitschrijf_datum"
-
-msgid "vrijwaring_ok"
-msgstr ""

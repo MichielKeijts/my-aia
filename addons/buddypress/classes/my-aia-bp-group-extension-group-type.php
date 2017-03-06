@@ -15,8 +15,9 @@ class MY_AIA_BP_Group_Extension_Group_Type extends BP_Group_Extension {
 	public function __construct($args=NULL) {
 		parent::init(array(
 			'slug' => 'group-type',
-			'name' => 'group-type',
-			'nav_item_name' => __('Type'),
+			'name' => __('Group Type','my-aia'),
+			'enable_nav_item' => FALSE,
+			//'nav_item_name' => __('Type'),
 		));
 	}
 
@@ -26,13 +27,14 @@ class MY_AIA_BP_Group_Extension_Group_Type extends BP_Group_Extension {
 	 */
 	public function settings_screen($group_id = null) {
 		parent::edit_screen($group_id);
+		$setting = groups_get_groupmeta($group_id, 'type', true);
 		?>
 			<p>Selecteer een type:</p>
 			<select name="group_setting_group_type">
-				<option value="default"><?= __('Huddle','my-aia'); ?></option>
-				<option value="huddle"><?= __('Huddle','my-aia'); ?></option>
-				<option value="sportcommunity"><?= __('Sportcommunity','my-aia'); ?></option>
-				<option value="sport_specifiek"><?= __('Sport Specifiek','my-aia'); ?></option>
+				<option value="default" <?= 'default'==$setting ? 'selected':''; ?>><?= __('Default','my-aia'); ?></option>
+				<option value="huddle" <?= 'huddle'==$setting ? 'selected':''; ?>><?= __('Huddle','my-aia'); ?></option>
+				<option value="sportcommunity" <?= 'sportcommunity'==$setting ? 'selected':''; ?>><?= __('Sportcommunity','my-aia'); ?></option>
+				<option value="sport_specifiek" <?= 'sport_specifiek'==$setting ? 'selected':''; ?>><?= __('Sport Specifiek','my-aia'); ?></option>
 			</select>
 		<?php
 	}
@@ -49,7 +51,7 @@ class MY_AIA_BP_Group_Extension_Group_Type extends BP_Group_Extension {
 		if (!$setting) $setting = $this->default_group_type;
         
 		// update meta
-		groups_update_groupmeta( $group_id, 'group_extension_example_2_setting', $setting );
+		groups_update_groupmeta( $group_id, 'type', $setting );
     }
 
 }

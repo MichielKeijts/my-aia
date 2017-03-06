@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Aangepast alpine skiën
 Aangepast atletiek
 Aangepast bankdrukken
@@ -169,3 +170,67 @@ Zeilvliegen
 Zitvolleybal
 Zweefvliegen
 Zwemmen
+=======
+Voetbal
+Futsal
+Volleybal
+Basketball
+Beachvolleball
+Hockey
+Handbal
+Wielrennen
+Tennis
+Korfbal
+Atletiek
+Archery
+Baanwielrennen
+Badminton
+Baseball
+Beachsoccer
+Bodybuilding
+Boksen
+Body fit
+Streetdance
+Dansen
+Dressuur
+Duatlon
+Freestyle skiën
+Funboard
+Gewichtheffen
+Fintness
+Gymnastiek
+Handboogschieten
+Inline-skaten
+Judo
+Kanoën
+Karate
+Kitesurfen
+Klimmen
+Langebaanschaatsen
+Langlaufen
+Mountainbiken
+Motorcross
+Motorsport
+Paardrijden
+Redden zwemmen
+Roeien
+Rolstoeltennis
+Rolstoelbasketball
+Rugby
+Skiën
+Softball
+Snowboarden
+Squash
+Taekwondo
+Tafeltennis
+Triathlon
+Turnen
+Waterskiën
+Wakeboarden
+Waterpolo
+Windsurfen
+Worstelen
+Zeilen
+Zwemmen
+Zitvolleybal
+>>>>>>> MichielKeijts/master

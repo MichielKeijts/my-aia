@@ -29,6 +29,7 @@ function my_aia_install() {
 	if ($fail) return false;
 
 	my_aia_create_crm_sync_table();
+	my_aia_create_roles_table();
 	my_aia_init_db();
 	echo "<br>Database Updated";
 	
@@ -39,6 +40,9 @@ function my_aia_install() {
 	my_aia_insert_taxonomies();
 	
 	echo "<br>Taxonomies written";
+	
+	my_aia_copy_overrides();
+	echo "<br>events manager updated.";
 	
 	my_aia_update_event_manager_defaults();
 	
@@ -96,19 +100,19 @@ function my_aia_create_crm_sync_table() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 	// execute;
-	dbDelta("CREATE TABLE ".$wpdb->prefix."_my_aia_crm_sync` (
+	dbDelta("CREATE TABLE ".$wpdb->prefix."my_aia_crm_sync (
 			`id` BIGINT NOT NULL AUTO_INCREMENT,
 			`wp_id` BIGINT NOT NULL DEFAULT 0,
 			`crm_id` VARCHAR(36) NOT NULL DEFAULT 0 COMMENT 'ID of the CRM Object (or 0 if not existing, thus creating)',
 			`approved` TINYINT(1) NULL DEFAULT 0,
 			`approved_by` BIGINT NULL,
 			`done` TINYINT NOT NULL DEFAULT 0,
-			`from_object` VARCHAR(255) NULL COMMENT 'from table (',
+			`from_object` VARCHAR(255) NULL COMMENT 'from table',
 			`to_object` VARCHAR(255) NULL,
 			`fields` MEDIUMTEXT NULL COMMENT 'serialized set of fields (array, names)',
-			`old_values` LONGTEXT NULL COMMENT 'serialized set of values (array, values) (for verification)\n',
+			`old_values` LONGTEXT NULL COMMENT 'serialized set of values (array, values) (for verification)',
 			`new_values` LONGTEXT NULL COMMENT 'serialized set of fields (array, values)',
-			`modifed` DATETIME NULL,
+			`modified` DATETIME NULL,
 			`created` DATETIME NULL,
 			PRIMARY KEY (`id`))
 		  ENGINE = InnoDB
@@ -116,6 +120,50 @@ function my_aia_create_crm_sync_table() {
 		  COMMENT = 'Sync Table for My_AIA and CRM software';
 		  ");
 	
+	
+	return true;
+}
+
+/**
+ * Create the Roles Table for CRM (Sugar in this case)
+ * @global wpdb $wpdb
+ */
+function my_aia_create_roles_table() {
+	global $wpdb;
+	
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+	// execute;
+	dbDelta("CREATE TABLE ".$wpdb->prefix.MY_AIA_TABLE_ROLES." (
+			`post_id` BIGINT NOT NULL,
+			`type` VARCHAR(36) NOT NULL COMMENT 'member or group',
+			`id` BIGINT NOT NULL,
+
+	UNIQUE INDEX `unique` (`id` ASC, `type` ASC, `post_id` ASC),
+	INDEX `id` (`id` ASC),
+	INDEX `post_id` (`post_id` ASC))
+		  ENGINE = InnoDB
+		  DEFAULT CHARACTER SET = utf8
+		  COMMENT = 'Roles table for linking posts to buddypress groups/users';
+		  ");
+
+	
+	return true;
+}
+
+function my_aia_copy_overrides() {
+	$files = array(
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-booking.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-booking.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-mailer.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-mailer.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-object.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/classes/em-object.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/events-manager/overrides/em-actions.php', 'to'=>MY_AIA_PLUGIN_DIR . '../' . 'events-manager/em-actions.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/ninja-forms/overrides/display-form.php', 'to'=>MY_AIA_PLUGIN_DIR . '../../' . 'mu-plugins/ninja-forms-2.9.55.2/deprecated/includes/display/form/display-form.php'),
+		array('from'=>MY_AIA_PLUGIN_DIR.'addons/ninja-forms/overrides/post-process.php', 'to'=>MY_AIA_PLUGIN_DIR . '../../' . 'mu-plugins/ninja-forms-2.9.55.2/deprecated/includes/display/processing/post-process.php')
+	);
+	
+	foreach ($files as $f) {
+		echo copy($f['from'], $f['to'])?'file copied to '. $f['to']:'FAIL copying';
+	}
 	
 	return true;
 }
@@ -315,6 +363,13 @@ function my_aia_update_event_manager_defaults() {
 		'dbem_bp_events_list_format_header'		=> get_option("dbem_event_list_item_format_header"),
 		'dbem_bp_events_list_format'			=> get_option("dbem_event_list_item_format"),
 		'dbem_bp_events_list_format_footer'		=> get_option("dbem_event_list_item_format_footer"),
+		'dbem_single_event_format'				=> '#_EVENTNOTES
+								{has_bookings}
+								<div class="stuffbox">
+								<h3>Reserveringspagina<div class=\'my_aia_form_opener dropdown_menu down\'></div></h3>
+								#_BOOKINGFORM
+								</div>
+								{/has_bookings}'
 	);
 	
 	//add new options, overwrite

@@ -34,7 +34,9 @@ class MY_AIA {
 		MY_AIA_POST_TYPE_INVOICE,
 		MY_AIA_POST_TYPE_PAYMENT,
 		MY_AIA_POST_TYPE_TEMPLATE,
+		MY_AIA_POST_TYPE_BOOKING,
 		//MY_AIA_POST_TYPE_DOCUMENT,
+		
 		'wpdmpro'
 	);
 	
@@ -64,6 +66,7 @@ class MY_AIA {
 		'mollie_key' => '',
 		'mollie_test_mode' => '',
 		'webshop_verzendkosten' => 4.95,
+		'event_sugar_sync' => 0,
 		//'' => '',		
 	);
 	
@@ -84,6 +87,12 @@ class MY_AIA {
 	 * @var array
 	 */
 	static $_viewVars;
+	
+	/**
+	 * holder for the admin
+	 * @var \MY_AIA_ADMIN 
+	 */
+	static $my_aia_admin;
 	
 	/**
 	 * $controllers (Custom Post Types) holders
@@ -117,7 +126,7 @@ class MY_AIA {
 	 */
 	static function init() {
 		global $wp_rewrite, $wp_roles, $wp_query;
-		$_GET['wpdmdl'] = -1;
+		//$_GET['wpdmdl'] = -1; // no access for this document, no download
 		
 		//Upgrade/Install Routine
 		if( is_admin() && current_user_can('list_users') ){
@@ -145,11 +154,17 @@ class MY_AIA {
 		self::enque_scripts();	
 		
 		
-		
-		
 		// INIT ADMIN
 		self::hide_admin_bar_for_users(FALSE); // also hide for admin
-		if (is_admin()) $my_aia_admin = new MY_AIA_ADMIN();
+		if (is_admin()) self::$my_aia_admin = new MY_AIA_ADMIN();
+	}
+	
+	/**
+	 * add the metaboxes to the post types
+	 */
+	static function admin_add_metaboxes() {
+		if (is_admin()) 
+			self::$my_aia_admin->add_metaboxes_to_post_types();
 	}
 	
 	/**
@@ -171,6 +186,7 @@ class MY_AIA {
 		add_option('my-aia-registered-hooks', array('save_post'));
 		add_option('my-aia-hook-save_post');
 		add_feed( 'my-aia-download', "MY_AIA::get_my_download" );
+		add_feed( 'my-aia-download-attachment', "MY_AIA::get_secure_download" );
 		
 		update_option('my-aia-hook-save_post', 
 				
@@ -412,7 +428,7 @@ class MY_AIA {
 	 * @param int $user_id
 	 */
 	static function get_my_events($user_id = 0, $future_events = FALSE) {
-		em_get_my_bookings();
+		//em_get_my_bookings();
 		$bookings = EM_Bookings::get(array(
 			'owner' => false,
 			'person' => $user_id,
@@ -445,17 +461,47 @@ class MY_AIA {
 	/**
 	 * Returns a list of events recommended for the user
 	 * @param int $user_id
+	 * @param int $nrposts (default 5)
 	 * @return EM_Event array()
 	 */
-	static function get_recommended_events($user_id = 0) {
+	static function get_recommended_events($user_id = 0,$nrposts=5) {
 		if ($user_id == 0) $user_id = get_current_user_id ();
 		
+		// first get groups
+		$groups = self::get_my_groups($user_id);
+		
+		// groups names correspond with tag
+		$tags = "";
+		foreach ($groups as $group) {
+			$tag = get_term_by('name', $group->name, 'event-tags'); //try and find tag id 
+			if ($tag) {
+				$tags[] = $tag->term_id;
+			}
+		}
+		//@Todo: toevoegen in alle tags van de events
+
 		$events = EM_Events::get(array(
-			'limit' => 5,
+			'limit' => $nrposts,
 			//'scope' => 'all', //@TODO only for testing purpose
 			//'order' => 'event_start_date',
-			'orderby' => 'DESC'
+			'orderby' => 'DESC',
+			
+			'tag' => $tags
 		));
+		
+		// get featured event
+		$option = get_option('my-aia-options');
+		if (is_numeric($option['featured_event_post_id'])) {
+			$ft_events = new EM_Event(array('post_id'=>$option['featured_event_post_id']));
+			if ($ft_events) $events = array_merge(array($ft_events), $events);
+		}
+
+		// if not enough events, get more, until max (3)
+		if (!$events || count($events) < $nrposts ){
+			$nr  = !$events ? $nrposts : $nrposts - count($events);
+			$events = array_merge($events, EM_Events::get(array('orderby' => 'DESC','limit'=> $nr)));
+		}
+		
 		
 		return $events;
 	}
@@ -615,6 +661,7 @@ class MY_AIA {
 	
 	/**
 	 * Apply some register magic, so login without some variables is possible
+	 * Also: set the redirect URL
 	 */
 	static function apply_register_magic() {
 		$data = filter_input(INPUT_POST, '_wp_http_referer');
@@ -622,6 +669,21 @@ class MY_AIA {
 			if (empty($_POST['field_1'])) {
 				$_POST['field_1'] = $_POST['signup_username'];
 			}	
+		}
+		
+		// set redirect url
+		if (isset($_REQUEST['special_redirect'])) {
+			$redir = strtolower($_REQUEST['special_redirect']);
+			
+			//if (strstr($redir, 'mijn aia'))
+			
+			$_SESSION['redirect_to'] = $redir;
+		}
+		// actual set redirect
+		if (isset($_SESSION['redirect_to'])) {
+			$_REQUEST['redirect_to'] = $_SESSION['redirect_to'];
+			$_GET['redirect_to'] = $_REQUEST['redirect_to'];
+			$_POST['redirect_to'] = $_REQUEST['redirect_to'];
 		}
 	}
 	
@@ -642,21 +704,49 @@ class MY_AIA {
 				|| current_user_can('moderate',$post_id)) {
 			
 			// get download link
-			WPFB_Download::SendFile($post->attachment);
+			MY_AIA_WPFB_Download::SendFile($post->attachment);
 		}
 		
 		return throw_404();
 	}
 	
 	/**
-	 * Get products (downloads/Documents
+	 * Function redirects to download file, if user has acces
+	 * @global WP_User $current_user
+	 */
+	static function get_secure_download($link = NULL) {
+		global $current_user;
+		$link = $link ? $link : $_REQUEST['link'];
+		if (!$link) throw_404();
+		
+		$link = MY_AIA_PLUGIN_DIR . "../../uploads/my_aia/form_uploads/" . $link;
+		
+		if (current_user_can('administrator') || is_admin()) {
+			if (!file_exists($link)) throw_404();
+			
+			// get download link
+			MY_AIA_WPFB_Download::SendFile($link);
+		}
+		
+		return throw_404();
+	}
+	
+	/**
+	 * Get products (downloads/Documents) and the other documents which are
+	 * attached to me via the roles database 
 	 * @global wpdb $wpdb
 	 * @param int $user_id (default get_current_user_id()
 	 * @return array of WP_Posts
 	 */
-	static function get_my_documents($user_id=0) {
+	static function get_my_documents($user_id=0, $group_id = NULL, $documents = array()) {
 		global $wpdb ;
 		
+		if (is_array($documents)) {	// documents...
+			$selected_document_ids = array();
+			foreach ($documents as $d) {
+				$selected_document_ids[]  = $d->ID;
+			}
+		}
 		if ($user_id == 0 ) $user_id = get_current_user_id ();
 		
 		
@@ -664,18 +754,40 @@ class MY_AIA {
 		
 		if ($documents) return $documents;
 		
-		// first get all my orders
-		$orders = self::get_my_orders($user_id, 1000);
-		$products = array();
-		foreach ($orders as $order) {
-			if ($order->order_status == MY_AIA_ORDER_STATUS_PAID)
-				foreach ($order->order_items as $item) $products[$item->product_id] = 1; // save in Key format
+		// check, if group_id set-> only show group
+		if ($group_id) {
+			// first get all my orders
+			$orders = self::get_my_orders($user_id, 1000);
+			$products = array();
+			foreach ($orders as $order) {
+				if ($order->order_status == MY_AIA_ORDER_STATUS_PAID)
+					foreach ($order->order_items as $item) $products[$item->product_id] = 1; // save in Key format
+			}
+
+			// if we have found products..
+			if (count($products) >0 ) {		
+				// first: bought documents
+				$querystr1 = "SELECT ID FROM {$wpdb->posts} ap INNER JOIN {$wpdb->postmeta} apm ON ap.ID = apm.post_id AND apm.meta_key='product_id' AND apm.meta_value IN (
+					SELECT ID FROM {$wpdb->posts} WHERE post_type='" . MY_AIA_POST_TYPE_PRODUCT . "' AND ID IN(". implode(',',  array_keys($products)) . "))";
+			} else {
+				$querystr1 = "0";
+			}
+		} else {
+			$querystr1="0";
 		}
 		
-		// if we have found products..
-		if (count($products) <=0 ) return array();
-		$querystr = "SELECT * FROM {$wpdb->posts} ap INNER JOIN {$wpdb->postmeta} apm ON ap.ID = apm.post_id AND apm.meta_key='product_id' AND apm.meta_value IN (
-			SELECT ID FROM {$wpdb->posts} WHERE post_type=" . MY_AIA_POST_TYPE_PRODUCT . " AND ID IN(". implode(',',  array_keys($products)) . "))";
+		// get documents which belong to me via personal or group inheritance
+		$querystr2 = "SELECT post_id  FROM {$wpdb->prefix}".MY_AIA_TABLE_ROLES." WHERE 
+			(type = 'member' AND id = '".  get_current_user_id()."') OR
+			(type = 'group' AND id IN (
+				SELECT group_id FROM {$wpdb->prefix}bp_groups_members WHERE user_id='" . get_current_user_id() . "' 
+			))";
+				
+				
+		// get documents where ID in ..
+		// not in already selected..
+		$selected_document_ids = count($selected_document_ids)>0 ? ("AND id NOT IN(".implode(',', $selected_document_ids).")") : "";
+		$querystr = "SELECT * FROM {$wpdb->posts} WHERE (id IN({$querystr1}) OR id IN({$querystr2})) {$selected_document_ids}";
 		
 		// retrieve all posts where product_id in PAID orders
 		$documents = $wpdb->get_results($querystr, OBJECT);
@@ -683,5 +795,149 @@ class MY_AIA {
 		wp_cache_set('my_aia_get_my_documents_'.$user_id, $documents, NULL, 300); // save for 5 minutes
 		
 		return $documents;
+	}
+	
+	/**
+	 * Get the groups from user
+	 * @param int $user_id (default current_user_id)
+	 * @global wpdb $wpdb
+	 * @return BP_Groups_Group
+	 */
+	static function get_my_groups($user_id = NULL) {
+		global $wpdb ;
+		
+		if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		$groups = wp_cache_get('my_aia_get_my_groups_'.$user_id);
+		
+		if ($groups) return $groups;
+		
+		$groups_template = new BP_Groups_Template(array('per_page' => 3,'user_id'=>  get_current_user_id()));
+		$groups = $groups_template->groups;
+		
+		wp_cache_set('my_aia_get_my_groups_'.$user_id, $groups, NULL, 300); // save for 5 minutes
+		
+		return $groups;
+	}
+	
+	/**
+	 * Get the blogs for the user, effectively a filter function
+	 * @param int $user_id (default current_user_id)
+	 * @param int $nrposts (nr of posts)
+	 * @global wpdb $wpdb
+	 * @return BP_Groups_Group
+	 */
+	static function get_my_blog_items($user_id = NULL, $nrposts = 3) {
+		global $wpdb ;
+		
+		if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		$posts = wp_cache_get('my_aia_get_my_blog_items_'.$user_id);
+		
+		if ($posts) return $posts;
+		
+		// first get groups
+		$groups = self::get_my_groups($user_id);
+		
+		// groups names correspond with tag
+		$tags = "";
+		foreach ($groups as $group) {
+			$tag = get_term_by('name', $group->name, 'post_tag'); //try and find tag id 
+			if ($tag) {
+				$tags[] = $tag->term_id;
+			}
+		}
+		
+		// get posts
+		$posts = get_posts(array('tag__in'=>$tags,'numberposts'=>$nrposts));
+
+		// if not enough posts, get more, until max (3)
+		if (!$posts || count($posts) < $nrposts ){
+			$nr  = !$posts ? $nrposts : $nrposts - count($posts);
+			$posts = array_merge($posts, get_posts(array('tag__not_in'=>$tags,'numberposts'=> $nr)));
+		}
+		
+		
+		wp_cache_set('my_aia_get_my_blog_items_'.$user_id, $posts, NULL, 300); // save for 5 minutes
+		
+		return $posts;
+	}
+	
+	/**
+	 * Get the blogs for the user, effectively a filter function, using WP QUERY
+	 * only used when REQUEST['me']  isset
+	 * @param WP_Query $query Current Query
+	 * @return BP_Groups_Group
+	 */
+	static function get_my_blog_items_query($query) {
+		if (!isset($_REQUEST['me']) || $query->query['pagename'] != 'blog') return;
+		
+		//if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		//$posts = wp_cache_get('my_aia_get_my_blog_items_'.$user_id);
+		
+		//if ($posts) return $posts;
+		
+		// first get groups
+		$groups = self::get_my_groups($user_id);
+		
+		// groups names correspond with tag
+		$tags = array();
+		foreach ($groups as $group) {
+			$tag = get_term_by('name', $group->name, 'post_tag'); //try and find tag id 
+			if ($tag) {
+				$tags[] = $tag->term_id;
+			}
+		}
+		$tags[]=2;
+		
+		// get posts
+		//$_query = wp_parse_args( array('tag__in'=>$tags,'numberposts'=>$nrposts) );
+		$query->parse_query(array('tag__in'=>$tags));
+		
+		//wp_cache_set('my_aia_get_my_blog_items_'.$user_id, $posts, NULL, 300); // save for 5 minutes
+		
+		//return $posts;
+	}
+	
+	/**
+	 * Get products (downloads/Documents), where no product id isset
+	 * @global wpdb $wpdb
+	 * @param int $user_id (default get_current_user_id()
+	 * @return array of WP_Posts
+	 */
+	static function get_documents($user_id=0) {
+		global $wpdb ;
+		
+		if ($user_id == 0 ) $user_id = get_current_user_id ();
+		
+		
+		$documents = wp_cache_get('my_aia_get_documents');
+		
+		if ($documents) return $documents;
+		
+		// first get all my orders
+		//$querystr = "SELECT * FROM {$wpdb->posts} ap WHERE post_type=" . MY_AIA_POST_TYPE_PRODUCT . " AND ID IN(". implode(',',  array_keys($products)) . "))";
+		
+		/*if (isset($_GET['search'])) $search = filter_input(INPUT_GET, 'search');
+		
+		$documents = my_aia_wpdmpro()->get_model()->find(array(
+			's'=>$search,
+			'meta_query'=>array(array('key'=>'product_id', 'value'=>''))
+		));*/
+		
+		$search = "";
+		if (isset($_GET['search']) && !empty($_GET['search'])) $search = "and post_title LIKE('%".rawurlencode($_GET['search'])."%')";
+		$documents = $wpdb->get_results(sprintf("SELECT * FROM {$wpdb->prefix}posts INNER JOIN {$wpdb->prefix}postmeta pm on pm.post_id = aia_posts.ID where post_type='wpdmpro' and meta_key='product_id' and meta_value ='' %s", $search));
+		
+		// retrieve all posts where product_id in PAID orders
+		//$documents = $wpdb->get_results($querystr, OBJECT);
+		
+		wp_cache_set('my_aia_get_documents', $documents, NULL, 300); // save for 5 minutes
+		
+		
+		//include the personal documents
+		
+		return array_merge($documents, self::get_my_documents($user_id, NULL, $documents));
 	}
 }

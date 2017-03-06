@@ -1,5 +1,5 @@
 <?php
-class WPFB_Download {
+class MY_AIA_WPFB_Download {
 static function RefererCheck()
 {
 	// fix (FF?): avoid caching of redirections so the file cannot be downloaded anymore
@@ -361,7 +361,7 @@ static function SendFile($file_path, $args=array())
 	
 	$size = filesize($file_path);
 	$time = filemtime($file_path);
-	$file_type = WPFB_Download::GetFileType($file_path);
+	$file_type = MY_AIA_WPFB_Download::GetFileType($file_path);
 	if(empty($etag))
 		$etag = md5("$size|$time|$file_type");
 	else $etag = trim($etag, '"');
@@ -438,7 +438,7 @@ static function SendFile($file_path, $args=array())
 		header('HTTP/1.0 200 OK');
 		
 	$length = ($end-$begin+1);
-	WPFB_Download::AddTraffic($length);
+	MY_AIA_WPFB_Download::AddTraffic($length);
 	
 	
 	if(self::ShouldSendRangeHeader($file_path, $file_type))

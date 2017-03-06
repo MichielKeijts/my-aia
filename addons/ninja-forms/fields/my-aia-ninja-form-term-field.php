@@ -4,6 +4,9 @@
  * @copyright (c) 2016, Michiel Keijts
  */
 
+/**
+ * Register the taxonomy edit field (term selection in NINJA_FORMS)
+ */
 function my_aia_ninja_forms_term_field_register(){
 	$args = array(
 		'name' => 'Taxonomy Term',
@@ -77,7 +80,7 @@ function ninja_forms_field_term_pre_process($field_id, $user_value) {
 	global $ninja_forms_processing;
 
 	if (!ninja_forms_field_term_req_validation($field_id, $user_value)) {
-		$ninja_forms_processing->add_error( $field_id, __('Er is geen bestand toegevoegd', 'my-aia') );
+		$ninja_forms_processing->add_error( $field_id, __('Maak een keuze uit de selectie', 'my-aia') );
 	}
 }
 
@@ -93,11 +96,11 @@ function ninja_forms_field_term_process() {
  * @return bool validation successfull
  */
 function ninja_forms_field_term_req_validation($field_id, $user_value) {
-	if( strpos($user_value, '.') !== FALSE && file_exists(MY_AIA_PLUGIN_DIR . '../../uploads/my_aia/form_uploads/'.$user_value)) {
-		return true;
-	} else {
+	if (empty($user_value)) {
 		return false;
 	}
+	
+	return true;
 }
 
 /**
@@ -157,10 +160,11 @@ function my_aia_ninja_forms_term_field_edit( $field_id, $data ) {
 		<?php _e( 'Multi-Select Box Size', 'ninja-forms' );?>: <input type="text" id="" name="ninja_forms_field_<?php echo $field_id;?>[multi_size]" value="<?php echo $multi_size;?>">
 	</p>
 	<span id="ninja_forms_field_<?php echo $field_id;?>_list_span" class="ninja-forms-list-span">
-		<div id="ninja_forms_field_<?php echo $field_id;?>_list_options" class="ninja-forms-field-list-options description description-wide">
+		<div id="ninja_forms_field_<?php echo $field_id;?>_list_options " class="ninja-forms-field-list-options description description-wide">
 			<input type="hidden" name="ninja_forms_field_<?php echo $field_id;?>[list][options]" value="">
+			<input id="ninja_forms_field_<?php echo $field_id;?>_list_type" value="dropdown" type="hidden">
 			<label for="ninja_forms_field_<?php echo $field_id;?>_my_aia_term"><?php _e( 'Taxonomy waaruit gekozen kan worden', 'my-aia' );?>:</label>
-			<select name="ninja_forms_field_<?php echo $field_id;?>[my_aia_term]" id="ninja_forms_field_<?php echo $field_id;?>_my_aia_term">
+			<select name="ninja_forms_field_<?php echo $field_id;?>[my_aia_term] ninja-forms-req" id="ninja_forms_field_<?php echo $field_id;?>_my_aia_term">
 				<?php 
 					$categories = get_taxonomies();
 					foreach ($categories as $category) {

@@ -35,9 +35,13 @@ function my_aia_bp_after_register_page() {
  * Add 'More information
  */
 function my_aia_bp_before_registration_submit_buttons() {
+	$ref = !empty($_SERVER['HTTP_REFERER'])?$_SERVER['HTTP_REFERER']:bloginfo('site_url').MY_AIA_BP_ROOT;
+	
+	if (isset($_REQUEST['redirect_to'])) $ref = $_REQUEST['redirect_to'];
 	?>
-	<div class="" style='float: left;margin-top: 25px;'><a href='<?= wp_login_url(MY_AIA_BP_ROOT); ?>'><?= __('Ik heb al een login','my-aia'); ?></a></div>
+	<div class="" style='float: left;margin-top: 25px;'><a href='<?= wp_login_url($ref); ?>'><?= __('Ik heb al een login','my-aia'); ?></a></div>
 	<div class="submit"><a href="#" class="button blauw" id="registration-profile-open-button">Verder &gt;&gt;</a></div>
+	<input type="hidden" name="redirect_to" value="<?= $ref; ?>">
 	<?php
 }
 add_filter( 'bp_before_register_page', 'my_aia_bp_before_register_page');
@@ -76,6 +80,24 @@ function my_aia_bp_before_template_content() {
 	return "";
 }
 
+/**
+ * Create div tiles in Buddypress
+ * @global WP $wp;
+ */
+function my_aia_bp_before_group_body_default() {
+	global $wp;
+	if (strpos($wp->request,'members') === FALSE) return my_aia_bp_before_member_body_default();
+	
+	?>
+		<section class="buddy-press buddypress-tiles">
+			<div class="column-wrapper">
+				<div class="column-sm-1">
+					<div class="raster events-filter-label">
+						<div class="column-inner">
+	<?php
+}
+
+
 
 /**
  * Create div tiles in Buddypress
@@ -96,6 +118,27 @@ function my_aia_bp_before_profile_content() {
 	// break column-4-1
 	// get new class
 	?>
+						</div>
+					</div>
+				</div>
+				<div class="column-4-3 column-md-3-2 column-sm-1">
+					<div class="raster buddypress-content">
+						<div class="column-inner">
+						
+	<?php
+}
+
+
+/**
+ *  Above groups members list
+ * @return string
+ */
+function my_aia_bp_before_groups_members_content() {
+	if (!do_template_modification()) return "";
+	// break column-4-1
+	// get new class
+	?>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -155,15 +198,20 @@ add_action( 'bp_before_member_messages_content', 'my_aia_bp_before_profile_conte
 add_action( 'bp_before_group_plugin_template', 'my_aia_bp_before_profile_content');
 add_action( 'bp_template_title', 'my_aia_bp_before_template_content', -1);
 add_action( 'bp_after_members_directory_order_options', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_member_friends_content', 'my_aia_bp_before_groups_content');
 add_action( 'bp_before_member_settings_template', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_member_friends_content', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_member_friends_content', 'my_aia_bp_before_groups_content');
 
 // groups
 add_action( 'bp_before_group_activity_post_form', 'my_aia_bp_before_profile_content');
 add_action( 'bp_before_group_admin_content', 'my_aia_bp_before_profile_content');
-add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+//add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
 //add_action( 'bp_before_groups_loop', 'my_aia_bp_before_profile_content');
-add_action( 'bp_before_group_members_content', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_group_members_content', 'my_aia_bp_before_groups_members_content');
 add_action( 'bp_groups_between_groups_content_directory', 'my_aia_bp_before_profile_content');
+add_action( 'bp_before_create_group_form_fields', 'my_aia_bp_before_profile_content');
+
 
 
 /**
@@ -178,5 +226,8 @@ add_action( 'bp_after_member_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_before_directory_members_tabs', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_members', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_before_group_body', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_group_body', 'my_aia_bp_after_member_body_default');
 add_action( 'bp_groups_index_before_content', 'my_aia_bp_before_member_body_default');
 add_action( 'bp_after_directory_groups_content', 'my_aia_bp_after_member_body_default');
+add_action( 'bp_before_create_group', 'my_aia_bp_before_member_body_default');
+add_action( 'bp_after_create_group', 'my_aia_bp_after_member_body_default');

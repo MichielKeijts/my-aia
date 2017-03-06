@@ -1,7 +1,8 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: my-aia\n"
-"POT-Creation-Date: 2016-09-19 11:43+0200\n"
+"POT-Creation-Date: 2016-12-07 13:04+0100\n"
 "PO-Revision-Date: 2016-09-19 11:44+0200\n"
 "Last-Translator: \n"
 "Language-Team: Normit <michiel@normit.nl>\n"
@@ -9,86 +10,83 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.9\n"
-"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: config/languages\n"
-"X-Poedit-SearchPathExcluded-1: vendor\n"
-"X-Poedit-SearchPathExcluded-2: assets\n"
-"X-Poedit-SearchPathExcluded-3: .\n"
+"X-Poedit-SearchPath-0: config/languages\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPathExcluded-0: config/languages/config/languages\n"
+"X-Poedit-SearchPathExcluded-1: config/languages/vendor\n"
+"X-Poedit-SearchPathExcluded-2: config/languages/assets\n"
+"X-Poedit-SearchPathExcluded-3: config/languages\n"
+"X-Poedit-SearchPathExcluded-4: assets\n"
 
-#: addons/buddypress/classes/my-aia-bp-core.php:11
-#: addons/buddypress/classes/my-aia-bp-core.php:52
-#: addons/buddypress/classes/my-aia-bp-core.php:80
-#: addons/buddypress/classes/my-aia-bp-core.php:148
-#: addons/buddypress/classes/my-aia-bp-core.php:264
+#: addons/buddypress/classes/my-aia-bp-documents.php:11
+#: addons/buddypress/classes/my-aia-bp-documents.php:49
+#: addons/buddypress/classes/my-aia-bp-group-extension-documents.php:25
 msgid "Documents"
-msgstr "documenten"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:52
+#: addons/buddypress/classes/my-aia-bp-documents.php:49
 #: addons/buddypress/classes/my-aia-bp-orders.php:49
 #, php-format
 msgid "Search %s..."
-msgstr "Zoeken %s"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:91
-#: addons/buddypress/classes/my-aia-bp-core.php:199
-#: addons/buddypress/classes/my-aia-bp-orders.php:186
-msgid "My Profile"
-msgstr "Mijn profiel"
+#: addons/buddypress/classes/my-aia-bp-documents.php:78
+msgid "Mijn Documents"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:191
-#: addons/buddypress/classes/my-aia-bp-core.php:242
+#: addons/buddypress/classes/my-aia-bp-documents.php:178
+#: addons/buddypress/classes/my-aia-bp-documents.php:229
 #: addons/buddypress/classes/my-aia-bp-orders.php:178
 #: addons/buddypress/classes/my-aia-bp-orders.php:229
+#: addons/events-manager/overrides/em-actions.php:107
 msgid "Events"
-msgstr "Evenementen"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:206
+#: addons/buddypress/classes/my-aia-bp-documents.php:186
+#: addons/buddypress/classes/my-aia-bp-orders.php:186
+msgid "My Profile"
+msgstr ""
+
+#: addons/buddypress/classes/my-aia-bp-documents.php:193
 #: addons/buddypress/classes/my-aia-bp-orders.php:193
 msgid "Events I'm Attending"
-msgstr "Evenementen Ik Bijwonen"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:214
+#: addons/buddypress/classes/my-aia-bp-documents.php:201
 #: addons/buddypress/classes/my-aia-bp-orders.php:201
 msgid "My Events"
-msgstr "mijn Events"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:223
+#: addons/buddypress/classes/my-aia-bp-documents.php:210
 #: addons/buddypress/classes/my-aia-bp-orders.php:210
 msgid "My Locations"
-msgstr "mijn locaties"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-core.php:232
+#: addons/buddypress/classes/my-aia-bp-documents.php:219
 #: addons/buddypress/classes/my-aia-bp-orders.php:219
 msgid "My Event Bookings"
-msgstr "Mijn Event Boekingen"
-
-#: addons/buddypress/classes/my-aia-bp-core.php:354
-msgid "There was an error updating group settings. Please try again."
-msgstr "Er is een fout opgetreden bijwerking van groep instellingen. Probeer het opnieuw."
-
-#: addons/buddypress/classes/my-aia-bp-core.php:356
-msgid "Group settings were successfully updated."
-msgstr "Groep instellingen zijn bijgewerkt."
-
-#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:19
-msgid "Type"
-msgstr "Type"
-
-#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:32
-msgid "Huddle"
-msgstr "Huddle"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:33
-msgid "Sportcommunity"
-msgstr "Sportcommunity"
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:34
+msgid "Huddle"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-group-extension-location.php:25
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:35
+msgid "Sportcommunity"
+msgstr ""
+
+#: addons/buddypress/classes/my-aia-bp-group-extension-group-type.php:36
+msgid "Sport Specifiek"
+msgstr ""
+
+#: addons/buddypress/classes/my-aia-bp-group-extension-sportlevel.php:25
 msgid "Locatie"
-msgstr "Locatie"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:25
 #: addons/buddypress/classes/my-aia-bp-notifications.php:27
@@ -97,171 +95,415 @@ msgstr "Locatie"
 #: addons/buddypress/classes/my-aia-bp-notifications.php:42
 #: addons/buddypress/classes/my-aia-bp-notifications.php:44
 msgid "My Bookings"
-msgstr "mijn Boekingen"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:25
 msgid "You have a pending booking"
-msgstr "Je hebt een openstaande boeking"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:27
 #, php-format
 msgid "You have %s pending bookings"
-msgstr "Je hebt %s in afwachting van boekingen"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:34
 msgid "You have a confirmed booking"
-msgstr "Je hebt een bevestigde reservering"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:36
 #, php-format
 msgid "You have %s confirmed bookings"
-msgstr "Je hebt %s bevestigde boekingen"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:42
 msgid "A user cancelled a booking"
-msgstr "Een gebruiker van een boeking geannuleerd"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-notifications.php:44
 #, php-format
 msgid "%s users cancelled bookings."
-msgstr "%s gebruikers geannuleerd boekingen."
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:11
 #: addons/buddypress/classes/my-aia-bp-orders.php:49
 #: config/custom-post-types/my-aia-order.php:25
 #: config/custom-post-types/my-aia-order.php:28
-#: config/custom-post-types/my-aia-order.php:30 core/lib/my-aia-admin.php:179
+#: config/custom-post-types/my-aia-order.php:30 core/lib/my-aia-admin.php:256
 msgid "Orders"
-msgstr "orders"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:78
 #: addons/buddypress/screens/orders.php:27
 msgid "Mijn Orders"
-msgstr "Mijn Orders"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:90
 msgid "Mijn Order Aanpassen"
-msgstr "Mijn Order Aanpassen"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-orders.php:100
 msgid "Bestelling Status"
-msgstr "Bestelling Status"
+msgstr ""
 
 #: addons/buddypress/classes/my-aia-bp-template-parser.php:22
 msgid "Registreer voor Athletes in Action"
-msgstr "Registreer for Athletes in Action"
+msgstr ""
 
-#: addons/buddypress/classes/my-aia-bp-template-parser.php:39
+#: addons/buddypress/classes/my-aia-bp-template-parser.php:42
 msgid "Ik heb al een login"
-msgstr "Ik heb al Een login"
+msgstr ""
 
-#: addons/buddypress/screens/my-documents.php:48
-msgid "Reschedule Events"
-msgstr "Opnieuw plannen Events"
-
-#: addons/buddypress/screens/my-documents.php:50
-msgid "Edit Event"
-msgstr "bewerken Event"
+#: addons/buddypress/screens/my-documents.php:27
+msgid "Mijn Documenten"
+msgstr ""
 
 #: addons/buddypress/screens/my-order-edit.php:33
 #: addons/buddypress/screens/my-order-edit.php:45
-#: controllers/my-aia-order-controller.php:417
-#: controllers/my-aia-order-controller.php:429
+#: controllers/my-aia-order-controller.php:386 controllers/my-aia-order-controller.php:398
 msgid "Mijn Bestelling"
-msgstr "Mijn Bestelling"
+msgstr ""
 
 #: addons/buddypress/screens/order-status.php:38
-#: controllers/my-aia-order-controller.php:480
+#: controllers/my-aia-order-controller.php:449
 msgid "Mijn Order Status"
-msgstr "Mijn Order Status"
+msgstr ""
 
-#: addons/events-manager/my-aia-events-manager.php:237
+#: addons/events-manager/my-aia-events-manager.php:285
 msgid "Aanmeldformulier"
-msgstr "aanmeldformulier"
+msgstr ""
 
-#: addons/events-manager/my-aia-events-manager.php:242
-#: core/lib/my-aia-admin.php:206
+#: addons/events-manager/my-aia-events-manager.php:290 core/lib/my-aia-admin.php:285
 msgid "Attributes"
-msgstr "attributen"
+msgstr ""
+
+#: addons/events-manager/my-aia-events-manager.php:536
+msgid "Booking created to SugarCRM."
+msgstr ""
+
+#: addons/events-manager/my-aia-events-manager.php:543
+msgid "Booking removed from SugarCRM."
+msgstr ""
+
+#: addons/events-manager/my-aia-events-manager.php:549
+msgid "Booking updated to SugarCRM."
+msgstr ""
+
+#: addons/events-manager/my-aia-events-manager.php:561
+msgid "Booking could not be inserted to SugarCRM."
+msgstr ""
+
+#: addons/events-manager/my-aia-events-manager.php:562
+msgid "Booking could not be updated to SugarCRM."
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:31
+msgid "No ticket id provided"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:107
+#: addons/events-manager/overrides/em-actions.php:626
+msgid "Event"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:109
+#, php-format
+msgid "%s successfully deleted."
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:112
+#, php-format
+msgid "%s could not be deleted."
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:185
+msgid "Locations"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:185
+msgid "Location"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:186
+#, php-format
+msgid "%s successfully deleted"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:337
+msgid "You must log in to cancel your booking."
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:397
+#: addons/events-manager/overrides/em-actions.php:420
+#: addons/events-manager/overrides/em-booking.php:825
+msgid "Email Sent."
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:402
+#: addons/events-manager/overrides/em-actions.php:429
+#: addons/events-manager/overrides/em-booking.php:829
+#: addons/events-manager/overrides/em-booking.php:830
+msgid "ERROR : Email Not Sent."
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:627
+msgid "Where"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:628
+msgid "When"
+msgstr ""
+
+#: addons/events-manager/overrides/em-actions.php:630
+#, php-format
+msgid "Exported booking on %s"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:132
+msgid "Pending"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:133
+msgid "Approved"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:134
+msgid "Rejected"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:135
+msgid "Cancelled"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:136
+msgid "Awaiting Online Payment"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:137
+msgid "Awaiting Payment"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:186
+msgid "Changes saved"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:194
+msgid "Your booking has been recorded"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:198
+#: addons/events-manager/overrides/em-booking.php:199
+#: addons/events-manager/overrides/em-booking.php:207
+#: addons/events-manager/overrides/em-booking.php:218
+msgid "There was a problem saving the booking."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:220
+#, php-format
+msgid "You cannot manage this %s."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:220
+#: addons/events-manager/overrides/em-booking.php:762
+#: addons/events-manager/overrides/em-booking.php:765
+msgid "Booking"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:273
+msgid "You are trying to book a non-existent ticket for this event."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:642
+#: addons/events-manager/overrides/em-booking.php:650
+msgid "Guest User"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:646
+#: addons/events-manager/overrides/em-booking.php:722
+msgid "Not Supplied"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:669
+msgid "<strong>ERROR</strong>: Please type your e-mail address."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:672
+msgid "<strong>ERROR</strong>: The email address isn&#8217;t correct."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:709
+msgid "Personal details have successfully been modified."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:762
+#, php-format
+msgid "%s deleted"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:765
+#, php-format
+msgid "%s could not be deleted"
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:812
+msgid "Not approved, spaces full."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:821
+#, php-format
+msgid "Booking %s."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:835
+#: addons/events-manager/overrides/em-booking.php:836
+#, php-format
+msgid "Booking could not be %s."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:876
+msgid "Booking note successfully added."
+msgstr ""
+
+#: addons/events-manager/overrides/em-booking.php:1051
+msgid ""
+"Confirmation email could not be sent to admin. Registrant should have gotten their "
+"email (only admin see this warning)."
+msgstr ""
+
+#: addons/events-manager/overrides/em-mailer.php:63
+msgid "Could not send email."
+msgstr ""
+
+#: addons/events-manager/overrides/em-mailer.php:124
+msgid "Please supply a valid email format."
+msgstr ""
+
+#: addons/events-manager/overrides/em-object.php:1474
+msgid "There was an error uploading the image."
+msgstr ""
+
+#: addons/events-manager/overrides/em-object.php:1495
+msgid "The image file is too big! Maximum size:"
+msgstr ""
+
+#: addons/events-manager/overrides/em-object.php:1502
+msgid "The image is too big! Maximum size allowed:"
+msgstr ""
+
+#: addons/events-manager/overrides/em-object.php:1505
+msgid "The image is too small! Minimum size allowed:"
+msgstr ""
+
+#: addons/events-manager/overrides/em-object.php:1508
+msgid "The image is in a wrong format!"
+msgstr ""
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:20
+msgid "Email Group Leader"
+msgstr ""
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:95
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:98
+msgid "Submission CSV"
+msgstr ""
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:135
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:138
+msgid "One email address or field"
+msgstr ""
+
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:141
+#: addons/ninja-forms/custom-notifications/custom-email-notification.php:147
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:144
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:150
+msgid "Email addresses or search for a field"
+msgstr ""
 
 #: addons/ninja-forms/custom-notifications/custom-post-notification.php:23
 msgid "Save to Custom Post"
-msgstr "Opslaan naar Custom Bericht"
+msgstr ""
 
 #: addons/ninja-forms/custom-notifications/custom-post-notification.php:64
 msgid "Before Form"
-msgstr "voordat Form"
+msgstr ""
 
 #: addons/ninja-forms/custom-notifications/custom-post-notification.php:65
 msgid "After Form"
-msgstr "na Form"
+msgstr ""
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:33
+#: addons/ninja-forms/custom-notifications/pdf-email-notification.php:20
+msgid "PDF Email Notification"
+msgstr ""
+
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:36
 msgid "Show This"
-msgstr "Laat dit"
+msgstr ""
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:38
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:41
 msgid "Hide This"
-msgstr "Hide Deze"
+msgstr ""
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:43
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:46
 msgid "Selected Value"
-msgstr "geselecteerde Waarde"
+msgstr ""
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:48
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:51
 msgid "Add Value"
-msgstr "Waarde toevoegen"
+msgstr ""
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:53
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:56
 msgid "Remove Value"
-msgstr "Verwijder Value"
+msgstr ""
 
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:80
-#: addons/ninja-forms/fields/my-aia-ninja-form-upload-field.php:76
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:83
+#: addons/ninja-forms/fields/my-aia-ninja-form-upload-field.php:80
 msgid "Er is geen bestand toegevoegd"
-msgstr "Er is Geen bestand toegevoegd"
-
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:146
-msgid "Dropdown"
-msgstr "Laten vallen"
-
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:147
-msgid "Radio"
-msgstr "Radio"
-
-#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:148
-msgid "Checkboxes"
-msgstr "checkboxes"
+msgstr ""
 
 #: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:149
-msgid "Multi-Select"
-msgstr "Meerkeuze selectie"
+msgid "Dropdown"
+msgstr ""
+
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:150
+msgid "Radio"
+msgstr ""
+
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:151
+msgid "Checkboxes"
+msgstr ""
 
 #: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:152
+msgid "Multi-Select"
+msgstr ""
+
+#: addons/ninja-forms/fields/my-aia-ninja-form-term-field.php:155
 msgid "List Type"
-msgstr "lijst Type"
+msgstr ""
+
+#: addons/ninja-forms/my-aia-ninja-forms.php:23
+msgid "Add PDF to Confirmation Email"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:25
 #: config/custom-post-types/my-aia-contract.php:28
 #: config/custom-post-types/my-aia-contract.php:30
 msgid "Contracts"
-msgstr "contracten"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:26
 msgid "Contracts are agreements with partners for AIA."
-msgstr "Contracten zijn overeenkomsten met partners voor AIA."
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:29
 msgid "Contract"
-msgstr "Contract"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:31
 msgid "Add Contract"
-msgstr "Contract toevoegen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:32
 msgid "Add New Contract"
-msgstr "Voeg nieuw contract"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:33
 #: config/custom-post-types/my-aia-invoice.php:33
@@ -271,15 +513,15 @@ msgstr "Voeg nieuw contract"
 #: config/custom-post-types/my-aia-product.php:33
 #: config/custom-post-types/my-aia-template.php:33
 msgid "Edit"
-msgstr "Bewerk"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:34
 msgid "Edit Contract"
-msgstr "Contract bewerken"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:35
 msgid "New Contract"
-msgstr "nieuw Contract"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:36
 #: config/custom-post-types/my-aia-invoice.php:36
@@ -289,1439 +531,1101 @@ msgstr "nieuw Contract"
 #: config/custom-post-types/my-aia-product.php:36
 #: config/custom-post-types/my-aia-template.php:36
 msgid "View"
-msgstr "Uitzicht"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:37
 msgid "View Contract"
-msgstr "Bekijk Contract"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:38
 msgid "Search Contracts"
-msgstr "zoeken Contracts"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:39
 msgid "No Contracts Found"
-msgstr "Geen contracten gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:40
 msgid "No Contracts Found in Trash"
-msgstr "Geen contracten Gevonden in Trash"
+msgstr ""
 
 #: config/custom-post-types/my-aia-contract.php:41
 msgid "Parent Contract"
-msgstr "Parent Contract"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:25
 #: config/custom-post-types/my-aia-invoice.php:28
 #: config/custom-post-types/my-aia-invoice.php:30
 msgid "Invoices"
-msgstr "facturen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:26
 msgid "Invoices are agreements with partners for AIA."
-msgstr "De facturen zijn overeenkomsten met partners voor AIA."
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:29
 msgid "Invoice"
-msgstr "Factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:31
 msgid "Add Invoice"
-msgstr "Voeg Invoice"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:32
 msgid "Add New Invoice"
-msgstr "Voeg Nieuwe factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:34
 msgid "Edit Invoice"
-msgstr "bewerken Factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:35
 msgid "New Invoice"
-msgstr "nieuwe factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:37
 msgid "View Invoice"
-msgstr "Bekijk Factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:38
 msgid "Search Invoices"
-msgstr "zoeken Facturen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:39
 msgid "No Invoices Found"
-msgstr "Geen facturen gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:40
 msgid "No Invoices Found in Trash"
-msgstr "Geen facturen Gevonden in Trash"
+msgstr ""
 
 #: config/custom-post-types/my-aia-invoice.php:41
 msgid "Parent Invoice"
-msgstr "Parent Invoice"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:26
 msgid "Orders are agreements with partners for AIA."
-msgstr "Bestellingen zijn overeenkomsten met partners voor AIA."
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:29
 msgid "Order"
-msgstr "Bestellen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:31
 msgid "Add Order"
-msgstr "Bestelling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:32
 msgid "Add New Order"
-msgstr "Voeg New Order"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:34
 msgid "Edit Order"
-msgstr "bewerken Bestel"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:35
 msgid "New Order"
-msgstr "Nieuwe bestelling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:37
 msgid "View Order"
-msgstr "Bestelling bekijken"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:38
 msgid "Search Orders"
-msgstr "zoeken bestellingen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:39
 msgid "No Orders Found"
-msgstr "Geen bestellingen gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:40
 msgid "No Orders Found in Trash"
-msgstr "Geen Orders Gevonden in Trash"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:41
 msgid "Parent Order"
-msgstr "Parent Bestel"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:78
 #: config/custom-post-types/my-aia-payment.php:72
 msgid "Order Status"
-msgstr "Bestelstatus"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:79
 #: config/custom-post-types/my-aia-payment.php:73
 #: controllers/my-aia-invoice-controller.php:174
-#: controllers/my-aia-order-controller.php:259
+#: controllers/my-aia-order-controller.php:227
 msgid "Factuur"
-msgstr "Factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:80
 #: config/custom-post-types/my-aia-payment.php:74
 msgid "Klant"
-msgstr "Klant"
+msgstr ""
 
 #: config/custom-post-types/my-aia-order.php:111
 #: config/custom-post-types/my-aia-payment.php:105
 msgid "Niet Aanwezig"
-msgstr "Niet Aanwezig"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:24
 #: config/custom-post-types/my-aia-partner.php:27
-#: config/custom-post-types/my-aia-partner.php:29 core/lib/my-aia-admin.php:180
+#: config/custom-post-types/my-aia-partner.php:29 core/lib/my-aia-admin.php:257
 msgid "Partners"
-msgstr "partners"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:25
 msgid "Display partners on your blog."
-msgstr "Weergave partners op uw blog."
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:28
 msgid "Partner"
-msgstr "Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:30
 msgid "Add Partner"
-msgstr "Voeg Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:31
 msgid "Add New Partner"
-msgstr "Add New Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:33
 msgid "Edit Partner"
-msgstr "bewerken Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:34
 msgid "New Partner"
-msgstr "nieuwe Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:36
 msgid "View Partner"
-msgstr "Bekijk Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:37
 msgid "Search Partners"
-msgstr "zoeken Partners"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:38
 msgid "No Partners Found"
-msgstr "Geen Partners gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:39
 msgid "No Partners Found in Trash"
-msgstr "Geen Partners Gevonden in Trash"
+msgstr ""
 
 #: config/custom-post-types/my-aia-partner.php:40
 msgid "Parent Partner"
-msgstr "Parent Partner"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:25
 #: config/custom-post-types/my-aia-payment.php:28
 #: config/custom-post-types/my-aia-payment.php:30
 msgid "Payments"
-msgstr "betalingen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:26
 msgid "Payments are agreements with partners for AIA."
-msgstr "Betalingen zijn overeenkomsten met partners voor AIA."
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:29
 msgid "Payment"
-msgstr "Betaling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:31
 msgid "Add Payment"
-msgstr "Betaling toevoegen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:32
 msgid "Add New Payment"
-msgstr "Add New Betaling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:34
 msgid "Edit Payment"
-msgstr "Betaling bewerken"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:35
 msgid "New Payment"
-msgstr "nieuw Betaling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:37
 msgid "View Payment"
-msgstr "Bekijk Betaling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:38
 msgid "Search Payments"
-msgstr "zoeken Payments"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:39
 msgid "No Payments Found"
-msgstr "Geen Betalingen gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:40
 msgid "No Payments Found in Trash"
-msgstr "Geen Betalingen Gevonden in Trash"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:41
 msgid "Parent Payment"
-msgstr "Parent Betaling"
+msgstr ""
 
 #: config/custom-post-types/my-aia-payment.php:103
 msgid "Bewerk Factuur"
-msgstr "Bewerk Factuur"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:25
 #: config/custom-post-types/my-aia-product.php:28
-#: config/custom-post-types/my-aia-product.php:30 core/lib/my-aia-admin.php:178
+#: config/custom-post-types/my-aia-product.php:30 core/lib/my-aia-admin.php:255
 msgid "Products"
-msgstr "producten"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:26
 msgid "Products are agreements with partners for AIA."
-msgstr "Producten zijn overeenkomsten met partners voor AIA."
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:29
 msgid "Product"
-msgstr "Artikel"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:31
 msgid "Add Product"
-msgstr "Product toevoegen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:32
 msgid "Add New Product"
-msgstr "Nieuw product toevoegen"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:34
 msgid "Edit Product"
-msgstr "Product bewerken"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:35
 msgid "New Product"
-msgstr "Nieuw product"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:37
 msgid "View Product"
-msgstr "Bekijk product"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:38
 msgid "Search Products"
-msgstr "Zoek producten"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:39
 msgid "No Products Found"
-msgstr "Geen producten gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:40
 msgid "No Products Found in Trash"
-msgstr "Geen producten gevonden in de prullenbak"
+msgstr ""
 
 #: config/custom-post-types/my-aia-product.php:41
 msgid "Parent Product"
-msgstr "Parent Product"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:25
 #: config/custom-post-types/my-aia-template.php:28
-#: config/custom-post-types/my-aia-template.php:30
-#: core/lib/my-aia-admin.php:181
+#: config/custom-post-types/my-aia-template.php:30 core/lib/my-aia-admin.php:258
 msgid "Templates"
-msgstr "templates"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:26
 msgid "Templates are templates for email or PDF creation for AIA."
-msgstr "Templates zijn templates voor e-mail of PDF-creatie voor AIA."
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:29
 msgid "Template"
-msgstr "Sjabloon"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:31
 msgid "Add Template"
-msgstr "Voeg Template"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:32
 msgid "Add New Template"
-msgstr "Add New Template"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:34
 msgid "Edit Template"
-msgstr "Template bewerken"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:35
 msgid "New Template"
-msgstr "nieuw Template"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:37
 msgid "View Template"
-msgstr "Template View"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:38
 msgid "Search Templates"
-msgstr "Zoek Templates"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:39
 msgid "No Templates Found"
-msgstr "Geen sjablonen gevonden"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:40
 msgid "No Templates Found in Trash"
-msgstr "Geen sjablonen gevonden in de prullenbak"
+msgstr ""
 
 #: config/custom-post-types/my-aia-template.php:41
 msgid "Parent Template"
-msgstr "Parent Template"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:20
 msgid "Doelgroepen"
-msgstr "Doelgroepen"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:21
 #: config/custom-taxonomies/my-aia-doelgroep.php:23
 #: config/custom-taxonomies/my-aia-doelgroep.php:24
 msgid "Doelgroep"
-msgstr "Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:25
 msgid "Search Doelgroep"
-msgstr "zoeken Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:26
 msgid "Popular Doelgroep"
-msgstr "populaire Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:27
 msgid "All Doelgroep"
-msgstr "alle Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:28
 msgid "Parent Doelgroep"
-msgstr "Parent Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:29
 msgid "Parent Doelgroep:"
-msgstr "Parent Doelgroep:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:30
 msgid "Edit Doelgroep"
-msgstr "bewerken Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:31
 msgid "Update Doelgroep"
-msgstr "update Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:32
 msgid "Add New Doelgroep"
-msgstr "Add New Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:33
 msgid "New Doelgroep"
-msgstr "New Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:34
 msgid "Seperate Doelgroep with commas"
-msgstr "Aparte Doelgroep met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:35
 msgid "Add or Doelgroep"
-msgstr "Toevoegen of Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-doelgroep.php:36
 msgid "Choose from most used Doelgroep"
-msgstr "U kunt kiezen uit de meest gebruikte Doelgroep"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:20
 msgid "Kerkstromingen"
-msgstr "Kerkstromingen"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:21
 #: config/custom-taxonomies/my-aia-kerkstroming.php:23
 #: config/custom-taxonomies/my-aia-kerkstroming.php:24
 msgid "Kerkstroming"
-msgstr "Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:25
 msgid "Search Kerkstroming"
-msgstr "zoeken Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:26
 msgid "Popular Kerkstroming"
-msgstr "populaire Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:27
 msgid "All Kerkstroming"
-msgstr "alle Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:28
 msgid "Parent Kerkstroming"
-msgstr "Parent Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:29
 msgid "Parent Kerkstroming:"
-msgstr "Parent Kerkstroming:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:30
 msgid "Edit Kerkstroming"
-msgstr "bewerken Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:31
 msgid "Update Kerkstroming"
-msgstr "update Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:32
 msgid "Add New Kerkstroming"
-msgstr "Add New Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:33
 msgid "New Kerkstroming"
-msgstr "nieuwe Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:34
 msgid "Seperate Kerkstroming with commas"
-msgstr "Aparte Kerkstroming met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:35
 msgid "Add or remove Kerkstroming"
-msgstr "Toevoegen of verwijderen Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-kerkstroming.php:36
 msgid "Choose from most used Kerkstroming"
-msgstr "U kunt kiezen uit de meest gebruikte Kerkstroming"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:20
 msgid "Overnachtingen"
-msgstr "optie Overnachtingen"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:21
 msgid "Overnachting Tag"
-msgstr "Overnachting Tag"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:23
 #: config/custom-taxonomies/my-aia-overnachting.php:24
 msgid "Overnachting"
-msgstr "Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:25
 msgid "Search Overnachting"
-msgstr "zoeken Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:26
 msgid "Popular Overnachting"
-msgstr "populaire Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:27
 msgid "All Overnachting"
-msgstr "alle Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:28
 msgid "Parent Overnachting"
-msgstr "Parent Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:29
 msgid "Parent Overnachting:"
-msgstr "Parent Overnachting:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:30
 msgid "Edit Overnachting"
-msgstr "bewerken Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:31
 msgid "Update Overnachting"
-msgstr "update Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:32
 msgid "Add New Overnachting"
-msgstr "Add New Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:33
 msgid "New Overnachting"
-msgstr "nieuwe Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:34
 msgid "Seperate Overnachting with commas"
-msgstr "Aparte Overnachting met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:35
 msgid "Add or remove Overnachting"
-msgstr "Toevoegen of verwijderen Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-overnachting.php:36
 msgid "Choose from most used Overnachting"
-msgstr "U kunt kiezen uit de meest gebruikte Overnachting"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:20
 msgid "Product Categories"
-msgstr "productcategorieën"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:21
 #: config/custom-taxonomies/my-aia-product-categorie.php:23
 #: config/custom-taxonomies/my-aia-product-categorie.php:24
 msgid "Product Categorie"
-msgstr "product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:25
 msgid "Search Product Categorie"
-msgstr "Zoek product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:26
 msgid "Popular Product Categorie"
-msgstr "Populaire Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:27
 msgid "All Product Categorie"
-msgstr "All Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:28
 msgid "Parent Product Categorie"
-msgstr "Parent Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:29
 msgid "Parent Product Categorie:"
-msgstr "Parent Product Categorie:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:30
 msgid "Edit Product Categorie"
-msgstr "Product bewerken Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:31
 msgid "Update Product Categorie"
-msgstr "Bijwerken Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:32
 msgid "Add New Product Categorie"
-msgstr "Nieuw product toevoegen Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:33
 msgid "New Product Categorie"
-msgstr "New Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:34
 msgid "Seperate Product Categorie with commas"
-msgstr "Aparte Product Categorie met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:35
 msgid "Add or remove Product Categorie"
-msgstr "Toevoegen of verwijderen Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-product-categorie.php:36
 msgid "Choose from most used Product Categorie"
-msgstr "U kunt kiezen uit de meest gebruikte Product Categorie"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:18
 msgid "Sport Levels"
-msgstr "Sport Levels"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:19
 #: config/custom-taxonomies/my-aia-sport-level.php:21
 #: config/custom-taxonomies/my-aia-sport-level.php:22
 msgid "Sport Level"
-msgstr "Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:23
 msgid "Search Sport Level"
-msgstr "Zoeken Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:24
 msgid "Popular Sport Level"
-msgstr "Populaire Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:25
 msgid "All Sport Levels"
-msgstr "Alle Sport Levels"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:26
 msgid "Parent Sport Level"
-msgstr "Parent Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:27
 msgid "Parent Sport Level:"
-msgstr "Parent Sport Level:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:28
 msgid "Edit Sport Level"
-msgstr "Bewerken Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:29
 msgid "Update Sport Level"
-msgstr "Update Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:30
 msgid "Add New SportLevel"
-msgstr "Add New SportLevel"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:31
 msgid "New Sport Level"
-msgstr "Nieuwe Sport Level"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:32
 msgid "Seperate Sport Level with commas"
-msgstr "Aparte Sport Level met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:33
 msgid "Add or remove Sport Levels"
-msgstr "Toevoegen of verwijderen Sport Levels"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport-level.php:34
 msgid "Choose from most used Sport Levels"
-msgstr "U kunt kiezen uit de meest gebruikte Sport Levels"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:20
 msgid "Sport Tags"
-msgstr "Sport Tags"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:21
 msgid "Sport Tag"
-msgstr "Sport Tag"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:23
 #: config/custom-taxonomies/my-aia-sport.php:24
 msgid "Sport"
-msgstr "Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:25
 msgid "Search Sport"
-msgstr "zoeken Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:26
 msgid "Popular Sport"
-msgstr "populaire Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:27
 msgid "All Sport"
-msgstr "alle Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:28
 msgid "Parent Sport"
-msgstr "Parent Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:29
 msgid "Parent Sport:"
-msgstr "Parent Sport:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:30
 msgid "Edit Sport"
-msgstr "Sport bewerken"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:31
 msgid "Update Sport"
-msgstr "update-Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:32
 msgid "Add New Sport"
-msgstr "Add New Sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:33
 msgid "New Sport Name"
-msgstr "Nieuwe Sport Naam"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:34
 msgid "Seperate Sport with commas"
-msgstr "Aparte Sport met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:35
 msgid "Add or remove sports"
-msgstr "Toevoegen of verwijderen sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sport.php:36
 msgid "Choose from most used sports"
-msgstr "U kunt kiezen uit de meest gebruikte sport"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:20
 #: config/custom-taxonomies/my-aia-taal.php:20
 msgid "Talen"
-msgstr "talen"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:21
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:23
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:24
 msgid "Sportbetrokkenheid"
-msgstr "Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:25
 msgid "Search Sportbetrokkenheid"
-msgstr "zoeken Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:26
 msgid "Popular Sportbetrokkenheid"
-msgstr "populaire Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:27
 msgid "All Sportbetrokkenheid"
-msgstr "alle Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:28
 msgid "Parent Sportbetrokkenheid"
-msgstr "Parent Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:29
 msgid "Parent Sportbetrokkenheid:"
-msgstr "Parent Sportbetrokkenheid:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:30
 msgid "Edit Sportbetrokkenheid"
-msgstr "bewerken Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:31
 msgid "Update Sportbetrokkenheid"
-msgstr "update Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:32
 msgid "Add New Sportbetrokkenheid"
-msgstr "Add New Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:33
 msgid "New Sportbetrokkenheid"
-msgstr "nieuwe Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:34
 msgid "Seperate Sportbetrokkenheid with commas"
-msgstr "Aparte Sportbetrokkenheid met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:35
 msgid "Add or remove Sportbetrokkenheid"
-msgstr "Toevoegen of verwijderen Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportbetrokkenheid.php:36
 msgid "Choose from most used Sportbetrokkenheid"
-msgstr "U kunt kiezen uit de meest gebruikte Sportbetrokkenheid"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:20
 msgid "Sportweek Eigenschap Tags"
-msgstr "Sportweek Eigenschap Tags"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:21
 msgid "Sportweek Eigenschap Tag"
-msgstr "Sportweek Eigenschap Tag"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:23
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:24
 msgid "Sportweek Eigenschap"
-msgstr "Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:25
 msgid "Search Sportweek Eigenschap"
-msgstr "Zoeken Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:26
 msgid "Popular Sportweek Eigenschap"
-msgstr "Populaire Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:27
 msgid "All Sportweek Eigenschap"
-msgstr "Alle Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:28
 msgid "Parent Sportweek Eigenschap"
-msgstr "Parent Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:29
 msgid "Parent Sportweek Eigenschap:"
-msgstr "Parent Sportweek Eigenschap:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:30
 msgid "Edit Sportweek Eigenschap"
-msgstr "Bewerken Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:31
 msgid "Update Sportweek Eigenschap"
-msgstr "Werk Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:32
 msgid "Add New Sportweek Eigenschap"
-msgstr "Add New Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:33
 msgid "New Sportweek Eigenschap Name"
-msgstr "Nieuwe Sportweek Eigenschap Naam"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:34
 msgid "Seperate Sportweek Eigenschap with commas"
-msgstr "Aparte Sportweek Eigenschap met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:35
 msgid "Add or remove Sportweek Eigenschap"
-msgstr "Toevoegen of verwijderen Sportweek Eigenschap"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-sportweek-eigenschap.php:36
 msgid "Choose from most used Sportweek Eigenschap"
-msgstr "U kunt kiezen uit de meest gebruikte Sportweek Eigenschap"
+msgstr ""
 
-#: config/custom-taxonomies/my-aia-taal.php:21
-#: config/custom-taxonomies/my-aia-taal.php:23
+#: config/custom-taxonomies/my-aia-taal.php:21 config/custom-taxonomies/my-aia-taal.php:23
 #: config/custom-taxonomies/my-aia-taal.php:24
 msgid "Taal"
-msgstr "Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:25
 msgid "Search Taal"
-msgstr "zoeken Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:26
 msgid "Popular Taal"
-msgstr "populaire Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:27
 msgid "All Taal"
-msgstr "alle Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:28
 msgid "Parent Taal"
-msgstr "Parent Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:29
 msgid "Parent Taal:"
-msgstr "Parent Taal:"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:30
 msgid "Edit Taal"
-msgstr "Wijzig Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:31
 msgid "Update Taal"
-msgstr "update Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:32
 msgid "Add New Taal"
-msgstr "Nieuwe toevoegen Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:33
 msgid "New Taal"
-msgstr "nieuwe Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:34
 msgid "Seperate Taal with commas"
-msgstr "Aparte Taal met komma's"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:35
 msgid "Add or remove Taal"
-msgstr "Toevoegen of verwijderen Taal"
+msgstr ""
 
 #: config/custom-taxonomies/my-aia-taal.php:36
 msgid "Choose from most used Taal"
-msgstr "U kunt kiezen uit de meest gebruikte Taal"
+msgstr ""
 
-#: config/my-aia-functions.php:181
-msgid "Attribute Name"
-msgstr "attribuut naam"
-
-#: config/my-aia-functions.php:182
-msgid "Attribute Value"
-msgstr "attribuut Waarde"
-
-#: controllers/my-aia-invoice-controller.php:62
-#: controllers/my-aia-order-controller.php:66
+#: controllers/my-aia-invoice-controller.php:62 controllers/my-aia-order-controller.php:66
 #: controllers/my-aia-payment-controller.php:63
 #: controllers/my-aia-processflow-controller.php:58
 msgid "Nieuw"
-msgstr "Nieuw"
+msgstr ""
 
-#: controllers/my-aia-invoice-controller.php:63
-#: controllers/my-aia-order-controller.php:67
+#: controllers/my-aia-invoice-controller.php:63 controllers/my-aia-order-controller.php:67
 #: controllers/my-aia-payment-controller.php:64
-#: controllers/my-aia-processflow-controller.php:59
-#: core/lib/my-aia-admin.php:177
+#: controllers/my-aia-processflow-controller.php:59 core/lib/my-aia-admin.php:254
 msgid "Hooks Overzicht"
-msgstr "haken Overzicht"
+msgstr ""
 
-#: controllers/my-aia-order-controller.php:256
+#: controllers/my-aia-order-controller.php:224
 msgid "Order Items"
-msgstr "Bestel items"
+msgstr ""
 
-#: controllers/my-aia-order-controller.php:257
+#: controllers/my-aia-order-controller.php:225
 msgid "Order Items Toevoegen"
-msgstr "Bestel Items Toevoegen"
+msgstr ""
 
-#: controllers/my-aia-order-controller.php:333
-msgid ""
-"Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder "
-"kunt."
-msgstr "Nog Niet alle velden Zijn Juist Ingevoerd, pas aan this for DAT je verder Kunt."
+#: controllers/my-aia-order-controller.php:301
+msgid "Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder kunt."
+msgstr ""
 
 #: controllers/my-aia-processflow-controller.php:69
+#: controllers/my-aia-profile-controller.php:69
 msgid "Hook Toevoegen"
-msgstr "Hook Toevoegen"
+msgstr ""
 
 #: controllers/my-aia-processflow-controller.php:93
 msgid "Overzicht van alle geregistreede Hooks"
-msgstr "Overzicht van alle geregistreede Hooks"
+msgstr ""
 
 #: controllers/my-aia-processflow-controller.php:123
+#: controllers/my-aia-profile-controller.php:223
 msgid "Hook Aanpassen"
-msgstr "haak Aanpassen"
+msgstr ""
 
 #: controllers/my-aia-processflow-controller.php:221
+#: controllers/my-aia-profile-controller.php:321
 msgid "Cannot find hooks under the supplied condition"
-msgstr "Kan niet haken onder de geleverde voorwaarde vinden"
+msgstr ""
 
 #: controllers/my-aia-product-controller.php:48
 msgid "Download (Webshop)"
-msgstr "Download (Webshop)"
+msgstr ""
 
-#: controllers/my-aia-sync-controller.php:71
+#: controllers/my-aia-profile-controller.php:58 controllers/my-aia-role-controller.php:192
+msgid "Profiel Wijzigingen"
+msgstr ""
+
+#: controllers/my-aia-profile-controller.php:59 controllers/my-aia-role-controller.php:193
+msgid "Reserveringen"
+msgstr ""
+
+#: controllers/my-aia-profile-controller.php:93
+msgid "Overzicht van alle wijzigingen m.b.t profielen"
+msgstr ""
+
+#: controllers/my-aia-sync-controller.php:87
 msgid "Sync Instellingen Profiel"
-msgstr "Sync INSTELLINGEN Profiel"
+msgstr ""
 
-#: controllers/my-aia-sync-controller.php:72
+#: controllers/my-aia-sync-controller.php:88
 msgid "Sync Instellingen Events"
-msgstr "Sync INSTELLINGEN Events"
+msgstr ""
 
-#: controllers/my-aia-sync-controller.php:73
+#: controllers/my-aia-sync-controller.php:89
 msgid "Sync Instellingen Registraties"
-msgstr "Sync INSTELLINGEN Registraties"
+msgstr ""
 
-#: controllers/my-aia-sync-controller.php:74
+#: controllers/my-aia-sync-controller.php:90
 msgid "Handmatige Synchronisatie"
-msgstr "handmatige Synchronisatie"
+msgstr ""
 
-#: controllers/my-aia-template-controller.php:257
+#: controllers/my-aia-template-controller.php:227
 msgid "Applies to Post Type"
-msgstr "Geldt voor post type"
+msgstr ""
 
-#: controllers/my-aia-wpdmpro-controller.php:49
+#: controllers/my-aia-wpdmpro-controller.php:56
 msgid "Product (Webshop)"
-msgstr "Product (Webshop)"
+msgstr ""
+
+#: controllers/my-aia-wpdmpro-controller.php:57
+msgid "Toegangsregels"
+msgstr ""
 
 #: core/admin/model/_Processflow_List.php:19
 msgid "Proces Flow"
-msgstr "proces Flow"
+msgstr ""
 
 #: core/admin/model/_Processflow_List.php:20
 msgid "Proces Flows"
-msgstr "proces Flows"
-
-#: core/lib/Download.php:417
-msgid "Could not read file!"
-msgstr "Kon bestand niet lezen!"
+msgstr ""
 
 #: core/lib/my-aia-admin-class-meta-columns.php:155
 msgid "All SEO Scores"
-msgstr "Alle SEO Scores"
+msgstr ""
 
 #: core/lib/my-aia-admin-class-meta-columns.php:352
 msgid "Post is set to noindex."
-msgstr "Post is ingesteld op noindex."
+msgstr ""
 
 #: core/lib/my-aia-admin-class-meta-columns.php:357
 msgid "Focus keyword not set."
-msgstr "Focus zoekwoord niet ingesteld."
+msgstr ""
 
-#: core/lib/my-aia-admin-functions.php:86
+#: core/lib/my-aia-admin-functions.php:89
 msgid "Groep"
-msgstr "Groep"
+msgstr ""
 
-#: core/lib/my-aia-admin-functions.php:87
+#: core/lib/my-aia-admin-functions.php:90
 msgid "Contactpersoon"
-msgstr "Contactpersoon"
+msgstr ""
 
-#: core/lib/my-aia-admin-functions.php:102
+#: core/lib/my-aia-admin-functions.php:105
 msgid "Selecteer de group waar de partner bij hoort of maak een nieuwe aan"
-msgstr "Select de groep Waar de partner bij hoort of Maak Een nieuwe aan"
-
-#: core/lib/my-aia-admin-functions.php:138
-msgid "ID"
-msgstr "ID"
-
-#: core/lib/my-aia-admin-functions.php:139
-msgid "Name"
-msgstr "Naam"
-
-#: core/lib/my-aia-admin-functions.php:140
-msgid "Aantal"
-msgstr "Aantal"
+msgstr ""
 
 #: core/lib/my-aia-admin-functions.php:141
-msgid "Prijs"
-msgstr "Prijs"
+msgid "ID"
+msgstr ""
 
 #: core/lib/my-aia-admin-functions.php:142
+msgid "Name"
+msgstr ""
+
+#: core/lib/my-aia-admin-functions.php:143
+msgid "Aantal"
+msgstr ""
+
+#: core/lib/my-aia-admin-functions.php:144
+msgid "Prijs"
+msgstr ""
+
+#: core/lib/my-aia-admin-functions.php:145
 msgid "Totaal"
-msgstr "TOTAAL"
+msgstr ""
 
-#: core/lib/my-aia-admin-functions.php:222
+#: core/lib/my-aia-admin-functions.php:225
 msgid "Edit This"
-msgstr "bewerken Deze"
+msgstr ""
 
-#: core/lib/my-aia-admin.php:165 core/lib/my-aia-admin.php:166
+#: core/lib/my-aia-admin.php:242 core/lib/my-aia-admin.php:243
 msgid "My AIA"
-msgstr "mijn AIA"
+msgstr ""
 
-#: core/lib/my-aia-admin.php:175
+#: core/lib/my-aia-admin.php:252
 msgid "Settings"
-msgstr "instellingen"
+msgstr ""
 
-#: core/lib/my-aia-admin.php:176
+#: core/lib/my-aia-admin.php:253
 msgid "Reset"
-msgstr "Reset"
+msgstr ""
 
-#: core/my-aia.php:566
+#: core/lib/my-aia-functions.php:182
+msgid "Attribute Name"
+msgstr ""
+
+#: core/lib/my-aia-functions.php:183
+msgid "Attribute Value"
+msgstr ""
+
+#: core/lib/my-aia-wpfb_download.php:417
+msgid "Could not read file!"
+msgstr ""
+
+#: core/my-aia.php:611
 msgid "Uitloggen"
-msgstr "Word lid van onze"
+msgstr ""
 
-#: core/my-aia.php:570
+#: core/my-aia.php:615
 msgid "Members"
-msgstr "leden"
+msgstr ""
 
-#: core/my-aia.php:577
+#: core/my-aia.php:622
 msgid "Inloggen"
-msgstr "Inloggen"
+msgstr ""
 
-#: core/my-aia.php:581
+#: core/my-aia.php:626
 msgid "Join Us"
-msgstr "Doe met ons mee"
+msgstr ""
 
 #: models/my-aia-contract.php:121
 msgid "Partner Contract"
-msgstr "partner Contract"
-
-#: views/default/buddypress/group-documents.php:39
-msgid "No Documents found"
-msgstr "Geen documenten gevonden"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:38
 #: views/default/buddypress/my-order-status.php:35
 msgid "TOTAAL"
-msgstr "TOTAAL"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:60
 #: views/default/buddypress/my-order-status.php:46
 msgid "Verzend Adres"
-msgstr "verzend Adres"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:78
 #: views/default/buddypress/my-order-status.php:59
 msgid "Factuur Adres"
-msgstr "Factuur Adres"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:101
 msgid "Aanvullende Afspraken"
-msgstr "Aanvullende Afspraken"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:114
 msgid "Terug naar de winkel"
-msgstr "Terug naar de winkel"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:116
 msgid "Plaats bestelling"
-msgstr "Plaats Bestelling"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:119
 msgid "Bestelling Annuleren"
-msgstr "Bestelling Annuleren Reactie"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:120
 msgid "Vorige Stap"
-msgstr "vorige Stap"
+msgstr ""
 
 #: views/default/buddypress/my-order-edit.php:123
 msgid "Bevestigen & Betalen met iDeal"
-msgstr "Bevestigen & Betalen met iDeal"
+msgstr ""
 
 #: views/default/buddypress/my-order-status.php:77
 msgid "Overige gegevens"
-msgstr "Overige Gegevens"
-
-msgid "id""
-msgstr "id ""
-
-msgid "last_name""
-msgstr "achternaam""
-
-msgid "voorletters_c"
-msgstr "voorletters_c"
-
-msgid "middle_name"
-msgstr "Midden-naam"
-
-msgid "first_name"
-msgstr "Voornaam"
-
-msgid "primary_address_street"
-msgstr "primary_address_street"
-
-msgid "primary_address_number_c"
-msgstr "primary_address_number_c"
-
-msgid "primary_address_number_add_c"
-msgstr "primary_address_number_add_c"
-
-msgid "primary_address_city"
-msgstr "primary_address_city"
-
-msgid "primary_address_postalcode"
-msgstr "primary_address_postalcode"
-
-msgid "primary_address_country"
-msgstr "primary_address_country"
-
-msgid "bankrekeningnummer_c"
-msgstr "bankrekeningnummer_c"
-
-msgid "birthdate"
-msgstr "geboortedatum"
-
-msgid "gender_c"
-msgstr "gender_c"
-
-msgid "email1"
-msgstr "email1"
-
-msgid "phone_home"
-msgstr "bel naar huis"
-
-msgid "phone_mobile"
-msgstr "phone_mobile"
-
-msgid "paspoortnr_c"
-msgstr "paspoortnr_c"
-
-msgid "debiteurnr_c"
-msgstr "debiteurnr_c"
-
-msgid "manyware_regnr_c"
-msgstr "manyware_regnr_c"
-
-msgid "id"
-msgstr "id"
-
-msgid "aia_teamleden"
-msgstr "aia_teamleden"
-
-msgid "aia_teamleiders"
-msgstr "aia_teamleiders"
-
-msgid "assigned_user_id"
-msgstr "assigned_user_id"
-
-msgid "assigned_user_name"
-msgstr "assigned_user_name"
-
-msgid "begindatum"
-msgstr "begindatum"
-
-msgid "contact_id_c"
-msgstr "contact_id_c"
-
-msgid "created_by"
-msgstr "gemaakt door"
-
-msgid "created_by_name"
-msgstr "created_by_name"
-
-msgid "currency_id"
-msgstr "currency_id"
-
-msgid "date_entered"
-msgstr "date_entered"
-
-msgid "date_modified"
-msgstr "DATE_MODIFIED"
-
-msgid "deleted"
-msgstr "Schrappen"
-
-msgid "description"
-msgstr "beschrijving"
-
-msgid "einddatum"
-msgstr "einddatum"
-
-msgid "gewenst_teamgrootte"
-msgstr "gewenst_teamgrootte"
-
-msgid "icb"
-msgstr "ICB"
-
-msgid "land"
-msgstr "land-"
-
-msgid "manyware_projectid"
-msgstr "manyware_projectid"
-
-msgid "modified_by_name"
-msgstr "modified_by_name"
-
-msgid "modified_user_id"
-msgstr "modified_user_id"
-
-msgid "name"
-msgstr "naam"
-
-msgid "partner_teamleden"
-msgstr "partner_teamleden"
-
-msgid "partner_teamleiders"
-msgstr "partner_teamleiders"
-
-msgid "penningmeester"
-msgstr "penningmeester"
-
-msgid "projectcode"
-msgstr "Projectcode"
-
-msgid "projectprijs"
-msgstr "projectprijs"
-
-msgid "projecttype"
-msgstr "projecttype"
-
-msgid "stad"
-msgstr "Stad"
-
-msgid "status_accomodatie"
-msgstr "status_accomodatie"
-
-msgid "status_icb"
-msgstr "status_icb"
-
-msgid "status_kerk_tl_koppeling"
-msgstr "status_kerk_tl_koppeling"
-
-msgid "status_kerkinfo"
-msgstr "status_kerkinfo"
-
-msgid "status_programma"
-msgstr "status_programma"
-
-msgid "status_teaminfo"
-msgstr "status_teaminfo"
-
-msgid "status_transport"
-msgstr "status_transport"
-
-msgid "status_vertaling"
-msgstr "status_vertaling"
-
-msgid "systeemnaam"
-msgstr "systeemnaam"
-
-msgid "termijn_1_datum"
-msgstr "termijn_1_datum"
-
-msgid "termijn_1_prijs"
-msgstr "termijn_1_prijs"
-
-msgid "termijn_2_datum"
-msgstr "termijn_2_datum"
-
-msgid "termijn_2_prijs"
-msgstr "termijn_2_prijs"
-
-msgid "termijn_3_datum"
-msgstr "termijn_3_datum"
-
-msgid "termijn_3_prijs"
-msgstr "termijn_3_prijs"
-
-msgid "titel"
-msgstr "titel"
-
-msgid "visible_website"
-msgstr "visible_website"
-
-msgid "aia_ministry_project_id_c"
-msgstr "aia_ministry_project_id_c"
-
-msgid "aia_ministry_project_name"
-msgstr "aia_ministry_project_name"
-
-msgid "assigned_user_id"
-msgstr "assigned_user_id"
-
-msgid "assigned_user_name"
-msgstr "assigned_user_name"
-
-msgid "bankrekeninghouder"
-msgstr "bankrekeninghouder"
-
-msgid "bankrekeningnummer"
-msgstr "bankrekeningnummer"
-
-msgid "betaling_compleet"
-msgstr "betaling_compleet"
-
-msgid "contact_id_c"
-msgstr "contact_id_c"
-
-msgid "contact_name"
-msgstr "contactnaam"
-
-msgid "created_by"
-msgstr "gemaakt door"
-
-msgid "created_by_name"
-msgstr "created_by_name"
-
-msgid "currency_id"
-msgstr "currency_id"
-
-msgid "date_entered"
-msgstr "date_entered"
-
-msgid "date_modified"
-msgstr "DATE_MODIFIED"
-
-msgid "deelnemertype"
-msgstr "deelnemertype"
-
-msgid "deleted"
-msgstr "Schrappen"
-
-msgid "description"
-msgstr "beschrijving"
-
-msgid "emergency_contact"
-msgstr "emergency_contact"
-
-msgid "emergency_phonenumber"
-msgstr "emergency_phonenumber"
-
-msgid "extra_optie_1_c"
-msgstr "extra_optie_1_c"
-
-msgid "extra_optie_2_c"
-msgstr "extra_optie_2_c"
-
-msgid "familie_korting"
-msgstr "familie_korting"
-
-msgid "formulieren_ok"
-msgstr "formulieren_ok"
-
-msgid "geen_conferentie"
-msgstr "geen_conferentie"
-
-msgid "gratis"
-msgstr "gratis"
-
-msgid "historie_sportkamp_team"
-msgstr "historie_sportkamp_team"
-
-msgid "id"
-msgstr "id"
-
-msgid "kamervoorkeur1"
-msgstr "kamervoorkeur1"
-
-msgid "kamervoorkeur2"
-msgstr "kamervoorkeur2"
-
-msgid "kamervoorkeur3"
-msgstr "kamervoorkeur3"
-
-msgid "kamervoorkeur4"
-msgstr "kamervoorkeur4"
-
-msgid "manyware_actnr"
-msgstr "manyware_actnr"
-
-msgid "manyware_herkomstdatumtijd"
-msgstr "manyware_herkomstdatumtijd"
-
-msgid "manyware_projectid"
-msgstr "manyware_projectid"
-
-msgid "medisch_ok"
-msgstr "medisch_ok"
-
-msgid "minderjarig_ok"
-msgstr "minderjarig_ok"
-
-msgid "modified_by_name"
-msgstr "modified_by_name"
-
-msgid "modified_user_id"
-msgstr "modified_user_id"
-
-msgid "motivatie_korting"
-msgstr "motivatie_korting"
-
-msgid "name"
-msgstr "naam"
-
-msgid "opmerkingen"
-msgstr "opmerkingen"
-
-msgid "passpoort_ok"
-msgstr "passpoort_ok"
-
-msgid "projectprijs"
-msgstr "projectprijs"
-
-msgid "termijn_1_ok"
-msgstr "termijn_1_ok"
-
-msgid "termijn_2_ok"
-msgstr "termijn_2_ok"
-
-msgid "termijn_3_ok"
-msgstr "termijn_3_ok"
-
-msgid "tiener_korting"
-msgstr "tiener_korting"
-
-msgid "uitschrijf_datum"
-msgstr "uitschrijf_datum"
-
-msgid "vrijwaring_ok"
 msgstr ""
-

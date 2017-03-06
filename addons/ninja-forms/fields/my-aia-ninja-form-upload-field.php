@@ -4,11 +4,13 @@
  * @copyright (c) 2016, Michiel Keijts
  */
 
+/**
+ * Enque the scripts necessary for the upload field
+ */
 function my_aia_ninja_forms_upload_field_enque_scripts() {
-	my_aia_ninja_forms_upload_field_enque_styles();
 	wp_enqueue_script('jquery-ui-widget', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/vendor/jquery.ui.widget.js', array('jquery','jquery-ui-core'));
 	
-	wp_enqueue_script('blueimp-load-image', 'http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js',array('jquery','jquery-ui-core'));
+	wp_enqueue_script('blueimp-load-image', MY_AIA_PLUGIN_URL.'assets/js/load-image.all.min.js',array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery-iframe-transport', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.iframe-transport.js', array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery.fileupload', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload.js', array('jquery','jquery-ui-core'));
 	wp_enqueue_script('jquery-fileupload-process', MY_AIA_PLUGIN_URL . 'vendor/jQuery-File-Upload/js/jquery.fileupload-process.js', array('jquery','jquery-ui-core'));
@@ -26,6 +28,9 @@ function my_aia_ninja_forms_upload_field_enque_styles() {
 	wp_enqueue_style('jquery-fileupload', MY_AIA_PLUGIN_URL .		'vendor/jQuery-File-Upload/css/jquery.fileupload.css', '', MY_AIA_VERSION );
 }
 
+/**
+ * Register the upload field in the NINJA_FORMS
+ */
 function my_aia_ninja_forms_upload_field_register(){
 	$args = array(
 		'name' => 'File Upload',
@@ -102,8 +107,10 @@ function ninja_forms_field_upload_req_validation($field_id, $user_value) {
  * @param int $form_id
  */
 function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '' ) {
-	add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
-	add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
+	my_aia_ninja_forms_upload_field_enque_scripts();
+	my_aia_ninja_forms_upload_field_enque_styles();
+	//add_action('wp_enqueue_scripts', 'my_aia_ninja_forms_upload_field_enque_scripts');
+	//add_action('wp_enqueue_styles', 'my_aia_ninja_forms_upload_field_enque_styles');
 	
 	if ( isset( $data['default_value'] ) ) {
 		$default_value = $data['default_value'];
@@ -135,7 +142,7 @@ function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '
 	$new_name = sprintf('%s_%s_%s_%s', date('Ymd'), !empty($data['admin_label'])?$data['admin_label']:$data['label'], $field_id, md5(microtime()));
 	
 	if (!empty ($default_value)) {
-		$deleteUrl = "/wp-content/plugins/my-aia/vendor/jQuery-File-Upload/server/php/index.php?file=".$default_value;
+		$deleteUrl = "/wp-content/plugins/my-aia/upload.php?file=".$default_value;
 	} else {
 		$deleteUrl = "";
 	}
@@ -147,7 +154,7 @@ function my_aia_ninja_forms_field_upload_display( $field_id, $data, $form_id = '
 jQuery(function ($) {
     'use strict';
 
-	var url = '/wp-content/plugins/my-aia/vendor/jQuery-File-Upload/server/php/';
+	var url = '/wp-content/plugins/my-aia/upload.php';
 		
 	
     jQuery('#fileupload_<?= $field_id; ?>').fileupload({
@@ -163,6 +170,7 @@ jQuery(function ($) {
         disableImageResize: true,
         previewMaxWidth: 100,
         previewMaxHeight: 100,
+		formData: {newName: '<?= $new_name; ?>'},
         previewCrop: true,
 		dropZone: jQuery('#ninja_forms_field_<?= $field_id; ?>_div_wrap'),
     }).on('fileuploadadd', function (e, data) {
@@ -289,7 +297,7 @@ jQuery(function ($) {
 			<?php endif;?>
 		</div>
 		
-		<input type="hidden" name="_new_name" value="<?= $new_name; ?>">
+		<input type="hidden" name="_new_name_<?= $field_id; ?>" value="<?= $new_name; ?>">
 		<input type="hidden"<?php echo $min . $max . $step; ?> name="ninja_forms_field_<?php echo esc_attr( $field_id ); ?>" id="ninja_forms_field_<?php echo esc_attr( $field_id ); ?>" class="<?php echo esc_attr( $field_class ); ?>" rel="<?php echo esc_attr( $field_id ); ?>" value="<?php echo esc_attr( $default_value ); ?>"/>
 <?php
 }

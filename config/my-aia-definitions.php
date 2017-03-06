@@ -26,8 +26,9 @@ define('MY_AIA_POST_TYPE_ORDER', 'order');				// order has products
 define('MY_AIA_POST_TYPE_INVOICE', 'invoice');				// order has invoice
 define('MY_AIA_POST_TYPE_PAYMENT', 'payment');				// invoice has a payment
 define('MY_AIA_POST_TYPE_TEMPLATE', 'template');				// invoice has a payment
-define('MY_AIA_POST_TYPE_DOCUMENT', 'document');			// documents (library)
-define('MY_AIA_POST_TYPE_DOCUMENT_SLUG', 'document');
+define('MY_AIA_POST_TYPE_DOCUMENT', 'wpdmpro');			// documents (library)
+define('MY_AIA_POST_TYPE_DOCUMENT_SLUG', 'download');
+define('MY_AIA_POST_TYPE_BOOKING', 'booking');
 
 
 
@@ -46,6 +47,7 @@ define( "MY_AIA_ORDER_STATUS_SENT", 'sent');
 define( "MY_AIA_ORDER_STATUS_PAID", 'paid');
 define( "MY_AIA_ORDER_STATUS_AWAITING_PAYMENT", 'awaiting_payment');
 define( "MY_AIA_DATE_FORMAT", 'm/d');	// date format for date() function
+define( "MY_AIA_TABLE_ROLES", 'my_aia_roles');
 
 // --- BUDDYPRESS 
 define( 'BUDDYPRESS_DIR', MY_AIA_PLUGIN_DIR.'../buddypress/'  );
@@ -56,3 +58,20 @@ define( 'MY_AIA_BP_MEMBERS', 'members');
 
 // --- CSV DELIMITER
 define( "EM_CSV_DELIMITER", ";");	// For Events Manager
+
+
+/**
+ * SQL to select the active taxonomies
+ * 
+ * 
+ * SELECT `name`,`slug` FROM aia_terms t
+INNER JOIN aia_term_taxonomy tt ON tt.term_id = t.term_id AND tt.taxonomy='sport'
+INNER JOIN aia_term_relationships tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+INNER JOIN aia_em_events e ON tr.object_id = e.post_id
+
+WHERE UNIX_TIMESTAMP(e.event_start_date) > (UNIX_TIMESTAMP(NOW())-86400) 
+GROUP BY tt.term_taxonomy_id
+
+
+
+ */

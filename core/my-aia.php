@@ -927,7 +927,7 @@ class MY_AIA {
 
 		$search = "";
 		if (isset($_GET['search']) && !empty($_GET['search'])) $search = "and post_title LIKE('%".rawurlencode($_GET['search'])."%')";
-		$documents = $wpdb->get_results(sprintf("SELECT * FROM {$wpdb->prefix}posts INNER JOIN {$wpdb->prefix}postmeta pm on pm.post_id = aia_posts.ID where post_type='wpdmpro' and meta_key='product_id' and meta_value ='' %s", $search));
+		$documents = $wpdb->get_results(sprintf("SELECT * FROM {$wpdb->prefix}posts INNER JOIN {$wpdb->prefix}postmeta pm on pm.post_id = aia_posts.ID where post_type='wpdmpro' and meta_key='product_id' and meta_value ='' %s ORDER BY post_title", $search));
 
 		// retrieve all posts where product_id in PAID orders
 		//$documents = $wpdb->get_results($querystr, OBJECT);

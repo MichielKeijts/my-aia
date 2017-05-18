@@ -1,13 +1,13 @@
 <?php
-/** 
- * MY AIA 
+/**
+ * MY AIA
  * @Package my-aia
  * @Author Michiel Keijts (c)2015
  */
 
 // This script is made to include all files in this and parent directories
 
-// my-aia definitions (e.g. MY_AIA_..) 
+// my-aia definitions (e.g. MY_AIA_..)
 // .. and helper functions
 include_once ('config/my-aia-definitions.php');
 include_once ('core/lib/my-aia-functions.php');
@@ -38,6 +38,7 @@ include_once ( 'addons/buddypress/my-aia-buddypress.php' );
 include_once ( 'addons/events-manager/my-aia-events-manager.php' );
 include_once ( 'addons/ninja-forms/my-aia-ninja-forms.php' );
 include_once ( 'addons/members-page-only-for-logged-in-users/members_page_only_for_logged_in_users.php' );
+include_once ( 'addons/jquery-select/my-aia-jquery-select.php' );
 
 // All other necessary files
 include_once ( 'core/crmsync/iso3166.php');	// conversion for country names to 2-char or 3-char abbreviations

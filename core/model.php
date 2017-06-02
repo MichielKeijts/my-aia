@@ -84,7 +84,7 @@ class MY_AIA_MODEL {
 		
 		$this->merge_fields();
 	}
-	
+	 
 	/**
 	 * Get the post data based on input and applies to object
 	 * @param mixed $post WP_Post|ID 
@@ -141,7 +141,8 @@ class MY_AIA_MODEL {
 				$returnObj = array();
 				foreach ($posts as $post) {
 					$this->get($post);
-					array_push($returnObj, $this);
+					// had to use clonse as reference remained the same somehow...
+					array_push($returnObj, clone $this);
 				}
 				// return as MY_AIA_<TYPE> array
 				return $returnObj;

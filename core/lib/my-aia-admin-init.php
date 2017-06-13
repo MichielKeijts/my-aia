@@ -7,7 +7,7 @@
 // Define actions
 
 $_counter_for_post_filter =0 ;
-add_action( 'pre_get_posts', 'posts_filter', 99, 1);
+//add_action( 'pre_get_posts', 'posts_filter', 99, 1);
 /**
  * Filter out all posts with a inherit_from value NOT NULL
  * @return Void

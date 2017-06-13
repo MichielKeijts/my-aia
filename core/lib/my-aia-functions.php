@@ -277,6 +277,15 @@ function my_aia_wpdmpro() {
 	return MY_AIA::$controllers[MY_AIA_POST_TYPE_DOCUMENT];
 }
 
+/**
+ * Shorthand to return the controller of MY_AIA_INVOICE declared in 
+ * MY_AIA::$post_types[MY_AIA_POST_TYPE_PAYMENT]
+ * @return MY_AIA_WPDMPRO_CONTROLLER Payment Instace
+ */
+function my_aia_product() {
+	return MY_AIA::$controllers[MY_AIA_POST_TYPE_PRODUCT];
+}
+
 
 
 
@@ -465,3 +474,13 @@ function my_aia_autoloader($classname) {
 		include_once($filename);
 }
 spl_autoload_register('my_aia_autoloader');
+
+
+/**
+ * Return a cleaned String. Remove all non characters
+ * @param string $string
+ * @return string
+ */
+function cleanstring($string) {
+	return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+}

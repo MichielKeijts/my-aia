@@ -383,8 +383,8 @@ function my_aia_wp_profile_sync_xprofile( $user_id =0 , $old_user_data = NULL) {
 function my_aia_redirect_to_profile() {
 	global $post;
 
-	if (get_current_user_id() > 0) {
-		if ($_SERVER['REQUEST_URI'] =='/mijn-aia/' || $_SERVER['REQUEST_URI'] == '/mijn-aia') {
+	if ($_SERVER['REQUEST_URI'] =='/mijn-aia/' || $_SERVER['REQUEST_URI'] == '/mijn-aia') {
+		if (get_current_user_id() > 0) {
 			// redirect to profile page
 			header(sprintf('Location: /%s/%s/%s', MY_AIA_BP_ROOT, MY_AIA_BP_MEMBERS,  bp_core_get_username( get_current_user_id() )));
 			exit(); // redirect..

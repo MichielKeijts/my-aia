@@ -29,11 +29,18 @@ class MY_AIA_PRODUCT_CONTROLLER extends MY_AIA_CONTROLLER {
 	public $classname = 'product';
 	
 	/**
+	 * @var MY_AIA_PRODUCT
+	 */
+	public $PRODUCT;
+
+
+	/**
 	 * Before Filter function
 	 * called before most of the wordpress logic happens.
 	 */
 	public function before_filter(){
-
+		add_action( 'pre_get_posts', 'posts_filter', 99, 1);
+		parent::before_filter();
 	}
 	
 	public function index() {
@@ -45,7 +52,17 @@ class MY_AIA_PRODUCT_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * Set the meta boxes
 	 */
 	public function set_meta_boxes() {
+		global $post;
+		
+		$this->PRODUCT->get($post);
+		
+		if (!empty($this->PRODUCT->inherit_from))
+			add_meta_box('my-aia-'.$this->classname.'-display-warning-inherit-from', __('Waarschuwing!','my-aia'), array($this, 'display_meta_box_product_warning_inherit_from'), $this->classname, 'side', 'high');
+		
 		add_meta_box('my-aia-'.$this->classname.'-display-add-box', __('Download (Webshop)','my-aia'), array($this, 'display_meta_box_product_add_wpdmpro'), $this->classname, 'side', 'high');
+		
+		if (!empty($this->PRODUCT->group_by_name))
+			add_meta_box('my-aia-'.$this->classname.'-display-add-product-group-box', __('Productgroep (Maat/Kleur/..)','my-aia'), array($this, 'display_meta_box_product_add_product_group'), $this->classname, 'side', 'high');
 	}
 	
 	/** Meta Box Display Functions */
@@ -59,5 +76,35 @@ class MY_AIA_PRODUCT_CONTROLLER extends MY_AIA_CONTROLLER {
 		wp_enqueue_script( 'my-aia-admin-custom-post-ui', MY_AIA_PLUGIN_URL . 'assets/js/my-aia-custom-post-ui.js', '', MY_AIA_VERSION );
 		
 		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
+	
+	/** Meta Box Display Functions */
+	public function display_meta_box_product_add_product_group() {
+	
+		// get all the version of this post
+		$versions = $this->PRODUCT->get_versions();
+		
+		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
+	
+	/**
+	 * Show a warning box showing that this post is inherit from. If the master post is saved.. 
+	 * all is overwritten
+	 */
+	public function display_meta_box_product_warning_inherit_from() {
+		global $post;
+		include(MY_AIA_PLUGIN_DIR . "/views/post_type_templates/" . __FUNCTION__ . '.ctp');
+	}
+	
+	
+	/**
+	 * Filter out all posts with a inherit_from value NOT NULL
+	 * @return Void
+	 */
+	public function posts_filter( $query ){
+		
+		$query->query_vars['meta_key'] = 'inherit_from';
+		$query->query_vars['meta_value'] = NULL;
+			
 	}
 }

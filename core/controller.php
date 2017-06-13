@@ -76,7 +76,7 @@ class MY_AIA_CONTROLLER {
 		
 		if (!$this->get_model()->ID && $post && $post->ID)	$this->get_model()->get($post);		
 		
-		$displayed_fields = array('ID','name', 'description','assigned_user_id','order_items','_order_items','total_order_price','parent_type'); // hide
+		$displayed_fields = array('ID','name', 'description','assigned_user_id','order_items','_order_items','total_order_price','parent_type', 'inherit_from'); // hide
 		$displayed_fields = array_merge($displayed_fields, $this->additional_fields_hidden_on_attribute_form);// hide other
 		
 		

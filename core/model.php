@@ -90,7 +90,9 @@ class MY_AIA_MODEL {
 	 * @param mixed $post WP_Post|ID 
 	 */
 	public function get($post) {
-		if (is_numeric($post)) {
+		if ($post instanceof WP_Post && $post->post_type == $this->post_type) {
+			//nothing.
+		} elseif (is_numeric($post)) {
 			$post = get_post($post);
 		} elseif (is_array($post)) {
 			$post = get_post();
@@ -100,11 +102,8 @@ class MY_AIA_MODEL {
 		if (!($post instanceof WP_Post) || $post->post_type != $this->post_type) 
 			return FALSE;
 		
-		//if (is_a($post,'WP_Post') || is_a($this, 'MY_AIA_BASE')) {
-		 //if && $post->post_type = $this->post_type
-			$this->apply($post);
-		//}
-		
+		$this->apply($post);
+	
 		$this->get_meta();
 	}
 	
@@ -132,6 +131,8 @@ class MY_AIA_MODEL {
 	 * @param $returnAsType (TRUE) return as same object as $this
 	 */
 	public function find($args, $returnAsType = TRUE) {
+		global $post; 
+		
 		$args['post_type'] = $this->post_type;
 		$args['post_status'] = 'any';
 		$posts = get_posts($args);
@@ -139,10 +140,12 @@ class MY_AIA_MODEL {
 		if ($posts) {
 			if ($returnAsType) {
 				$returnObj = array();
-				foreach ($posts as $post) {
-					$this->get($post);
+				foreach ($posts as $_post) {
+					$className = get_class($this);
+					$entity = new $className($_post);
+					
 					// had to use clonse as reference remained the same somehow...
-					array_push($returnObj, clone $this);
+					array_push($returnObj, $entity);
 				}
 				// return as MY_AIA_<TYPE> array
 				return $returnObj;

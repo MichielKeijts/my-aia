@@ -20,6 +20,7 @@ define('MY_AIA_POST_TYPE_PARTNER','partner');
 define('MY_AIA_POST_TYPE_PARTNER_SLUG','partner');
 define('MY_AIA_POST_TYPE_CONTRACT', 'contract');			// a partner has a contract
 define('MY_AIA_POST_TYPE_PRODUCT', 'product');				// products to sell
+define('MY_AIA_POST_TYPE_COUPON', 'coupon');				// coupon to sell
 define('MY_AIA_POST_TYPE_PRODUCT_SLUG','product');
 define('MY_AIA_TAXONOMY_PRODUCT_CATEGORIE_SLUG', 'shop');
 define('MY_AIA_POST_TYPE_ORDER', 'order');				// order has products

@@ -36,6 +36,8 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public $total_amount_ex_btw;
 	public $total_amount_btw6;
 	public $total_amount_btw21;
+	public $total_amount_ex_coupon;
+	public $coupon_value;		// obtained via coupon relation
 	public $order_status;		// Prefix use MY_AIA_ORDER_STATUS
 	public $assigned_user_id;
 	
@@ -62,11 +64,14 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		'invoice_country'	=> array('name'=>'invoice_country','type'=>'%s'),
 		'order_status'		=> array('name'=>'order_status', 'type'=>'%s'),
 		'total_amount'		=> array('name'=>'total_amount', 'type'=>'%d'),
+		'total_amount_ex_coupon'=>	array('name'=>'total_amount_ex_coupon', 'type'=>'%d'),
 		'total_amount_ex_btw'	=>	array('name'=>'total_amount_ex_btw', 'type'=>'%d'),
 		'total_amount_btw6'		=>	array('name'=>'total_amount_btw6', 'type'=>'%d'),
 		'total_amount_btw21'	=>	array('name'=>'total_amount_btw21', 'type'=>'%d'),
 		'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
 		'order_items'		=> array('name'=>'_order_items', 'type'=>'%a'),	// type is array!
+		'coupon_id'			=> array('name'=>'coupon_id', 'type'=>'%d'),	// type is array!
+		'coupon_value'		=> array('name'=>'coupon_value', 'type'=>'%d'),	// type is array!
 		'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
 	);
 	
@@ -87,6 +92,13 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	 * @var \MY_AIA_INVOICE
 	 */
 	public $invoice;
+	
+	/**
+	 * Coupon
+	 * @var MY_AIA_COUPON 
+	 */
+	public $coupon;
+	
 	
 	/**
 	 * 
@@ -195,6 +207,38 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	}
 	
 	/**
+	 * Parse function called by get_post_meta
+	 * NB: we do not actually update coupon_id, 
+	 */
+	public function parse_coupon_id($name) {
+		if (empty($name) || empty($name[0])) {
+			$this->coupon = NULL;
+			$this->coupon_value = "";
+			return NULL;
+		}
+		
+		if (is_array($name)) $name = reset($name); // $name is post_meta, returned as array!
+		
+		$coupon = new MY_AIA_COUPON();
+		$coupon->get($name);
+		
+		if ($coupon->ID) { 
+			// if coupon is worth more..
+			if ($coupon->getCurrentValue($this->ID) >= $this->total_amount_ex_coupon) {
+				$this->coupon_value = $this->total_amount_ex_coupon;
+			} else {
+				$this->coupon_value = $coupon->getCurrentValue($this->ID);
+			}
+			
+			$this->total_amount = $this->total_amount_ex_coupon - $this->coupon_value;
+			$this->coupon = $coupon;
+			return $name[0];
+		} else {
+			return NULL;
+		}
+	}
+	
+	/**
 	 * Either gets or creates a new invoice.
 	 * @param bool $create (default true) create when not exists
 	 * @return MY_AIA_INVOICE FALSE|MY_AIA_INVOICE
@@ -203,7 +247,8 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		$invoice = new MY_AIA_INVOICE();
 		$invoices = $invoice->find(array('meta_query'=>array(array('key'=>'order_id', 'value'=>$this->ID))));
 		if ($invoices && count($invoices) > 0 ) {
-			$invoice->get($invoices[0]);	// set data
+			$invoice->apply($invoices[0]);	// set data
+			$invoice->parse_coupon_id($invoice->coupon->ID);
 			return $invoice;
 		} 
 		
@@ -218,7 +263,9 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		$invoice->create();
 		$invoice->order_id = $order_id;
 		$invoice->post_type = MY_AIA_POST_TYPE_INVOICE;
-		$invoice->total_amount = $this->total_amount;
+		$invoice->total_amount = $this->total_amount_ex_coupon;
+		$invoice->coupon_value = $this->coupon_value;
+		$invoice->coupon_id = isset($this->coupon->ID) ? $this->coupon->ID : NULL;
 		$invoice->save(FALSE);
 		
 		return $invoice;
@@ -255,6 +302,7 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public function prepare_shopping_cart_items($shopping_cart) {
 		$this->order_items = array();
 		$this->total_amount = 0.0;
+		$this->total_amount_ex_coupon = 0.0;
 		$this->total_amount_btw6 = 0.0;
 		$this->total_amount_btw21 = 0.0;
 		$this->total_amount_ex_btw = 0.0;
@@ -279,10 +327,12 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 				$this->total_amount_btw21 += $subtotal / (1+$btw) * $btw;
 			}
 			
-			$this->total_amount += $subtotal;
+			$this->total_amount_ex_coupon += $subtotal;
 			$this->total_amount_ex_btw += $subtotal / (1 + $btw);
 		}
-
+		
+		$this->total_amount = $this->total_amount_ex_coupon;
+		
 		$this->assigned_user_id = $user_id;
 		$this->set_user_data_from_id();
 	

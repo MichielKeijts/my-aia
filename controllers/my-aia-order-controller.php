@@ -122,6 +122,9 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		if (!($this->ORDER->invoice instanceof MY_AIA_INVOICE)) 
 			$this->ORDER->invoice = $this->ORDER->get_invoice(TRUE); // gets or creates invoice
 			
+		// get a template_id
+		$template_id = $this->get_invoice_template_id($template_id);
+		
 		// get the option data
 		$this->ORDER->invoice->invoice_template = $template_id;
 		$this->ORDER->invoice->parent_id = $this->ORDER->ID;
@@ -141,6 +144,22 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		}		
 		
 		return FALSE;
+	}
+	
+	private function get_invoice_template_id ($template_id = 0) {
+		if ($template_id != 0) 
+			return $template_id;
+		
+		$templates = new MY_AIA_TEMPLATE();
+		$templates = $templates->find(array(
+			'meta_query' =>array(array('key'=>'parent_type', 'value' =>	'invoice'))
+		));
+		
+		if(!empty($templates)) {
+			return $templates[0]->ID; 
+		}
+		
+		throw new Exception('Could not find template');
 	}
 	
 	/**
@@ -275,26 +294,67 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		 * 2) show adres/bank information, ask for proceed to payment
 		 * 3) show thank you information
 		 */
-		
+			
 		// first get all the order items from cookie variable
 		if (isset($_COOKIE['my_aia_shopping_cart']) && (isset($_REQUEST['create']) || filter_input(INPUT_POST, '_method')!=FALSE)) {
 			$shopping_cart = json_decode(stripslashes($_COOKIE['my_aia_shopping_cart']));
 			if (count($shopping_cart->items) <= 0) {
 				$this->view->set_flash('Selecteer eerst een aantal producten voor je verder gaat', $type);
 			}
-			
+
 			$this->ORDER->prepare_shopping_cart_items($shopping_cart);
 		}
+				
 		return TRUE;
+	}
+	
+	/**
+	 * Updates and sets the coupon code
+	 */
+	public function update_coupon($order_id = NULL) {
+		if (empty($order_id)) {
+			$order_id = filter_input(INPUT_GET, 'order_id');
+		}
+		
+		// get the order by ID
+		$this->ORDER->get($order_id);
+		
+		// if no order found..
+		if (!is_numeric($this->ORDER->ID)) 
+			return FALSE;
+		
+		if (isset($_REQUEST['coupon_code'])) {
+			$_REQUEST['coupon_code'] = substr($_REQUEST['coupon_code'],0,12);
+			$changed = $_REQUEST['coupon_code'] != $_SESSION['coupon_code'];
+			
+			$_SESSION['coupon_code'] = $_REQUEST['coupon_code'];
+			
+			$coupon = new MY_AIA_COUPON();
+			$coupon = $coupon->getByCode($_REQUEST['coupon_code']);
+			if (empty($coupon)) {
+				$this->view->set_flash('U heeft geen juiste (of een verlopen) coupon gebruikt','warning');
+				$changed = TRUE; // force a save!
+			} else 
+				$changed = TRUE;
+		}
+		
+		// if modified coupon, update order and reload!
+		if ($changed) {
+			$this->ORDER->coupon_id = (isset($coupon) && !empty($coupon)) ? $coupon->ID : 0;
+			$this->ORDER->coupon = NULL;
+			$this->ORDER->coupon_value = 0;
+			$this->ORDER->parse_coupon_id((isset($coupon) && !empty($coupon)) ? $coupon->ID : 0);
+			$this->ORDER->save();
+		}
 	}
 	
 	/**
 	 * Function to retun an array of order items of the current order. 
 	 */
-	public function create_and_place_order($user_id = NULL) {
+	public function create_and_place_order($user_id = NULL, $order_id = NULL) {
 		if (!$user_id) $user_id = get_current_user_id();
 	
-		// check variables
+
 		if (count($this->ORDER->order_items) <= 0)			return false;
 		
 		// check all
@@ -312,23 +372,26 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		}
 		if ($this->error) return false;
 		
-		// check if there is an old draft status order
-		$draft_post = $this->ORDER->find(array(
-			'numberposts'	=> 1,
-			'post_name'		=> '',
-			'name'			=> '',
-			'meta_query'	=> array(
-				array('key'=>'assigned_user_id', 'value'=>$user_id),
-				array('key'=>'order_status', 'value'=>MY_AIA_ORDER_STATUS_AWAITING_PAYMENT)
-			)
-		));
-		// if not finalized order exists, update		
-		if ($draft_post) {
-			$this->ORDER->ID = $draft_post[0]->ID;
-			delete_post_meta($this->ORDER->ID, '_order_items');
-			$this->prepare_shopping_cart_items($user_id);
+		// get order if not set..
+		if (empty($order_id)) {
+			// check if there is an old draft status order
+			$draft_post = $this->ORDER->find(array(
+				'numberposts'	=> 1,
+				'post_name'		=> '',
+				'name'			=> '',
+				'meta_query'	=> array(
+					array('key'=>'assigned_user_id', 'value'=>$user_id),
+					array('key'=>'order_status', 'value'=>MY_AIA_ORDER_STATUS_AWAITING_PAYMENT)
+				)
+			));
+			// if not finalized order exists, update		
+			if ($draft_post) {
+				$this->ORDER->ID = $draft_post[0]->ID;
+				delete_post_meta($this->ORDER->ID, '_order_items');
+				$this->prepare_shopping_cart_items($user_id);
+			}
 		}
-				
+		
 		// first get all the order items from cookie variable
 		if (!$this->ORDER->ID) {
 			$this->ORDER->name			=	$this->ORDER->set_order_nr(TRUE);
@@ -347,46 +410,56 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	* Controller for the event views in BP (using mvc terms here)
 	*/
    function my_aia_bp_my_order_edit() {
-	   global $bp;
-	   do_action( 'bp_my_aia_my_orders' );
+		global $bp;
+		do_action( 'bp_my_aia_my_orders' );
 
-	   add_action( 'bp_template_title', array($this, 'my_aia_bp_my_order_edit_title') );
-	   add_action( 'bp_template_content', array($this, 'my_aia_bp_my_order_edit_content' ));
+		add_action( 'bp_template_title', array($this, 'my_aia_bp_my_order_edit_title') );
+		add_action( 'bp_template_content', array($this, 'my_aia_bp_my_order_edit_content' ));
 
-	   // check for make payment
-	   if (filter_input(INPUT_GET, 'make_payment') === '') {
-		   if ($order_id = filter_input(INPUT_GET, 'order_id', FILTER_SANITIZE_NUMBER_INT)) {
-			   $this->ORDER->get($order_id);
-			   if ($this->ORDER->assigned_user_id == bp_current_user_id()) {
-				   if (!$this->ORDER->invoice) $this->create_invoice(4936);
-				   if (!$this->ORDER->invoice->check_payment_status()) {
-					   // remove cookie
-					   unset($_COOKIE['my_aia_shopping_cart']);
-					   setcookie('my_aia_shopping_cart', NULL, time()-36000);
-					   
-					   $url = $this->ORDER->invoice->create_payment_link();
-					   header('Location: '.$url);
-					   exit();
-				   }
-			   }
-		   }
-	   }
+		// check for make payment
+		if (filter_input(INPUT_GET, 'make_payment') === '') {
+			if ($order_id = filter_input(INPUT_GET, 'order_id', FILTER_SANITIZE_NUMBER_INT)) {
+				$this->ORDER->get($order_id);
+				if ($this->ORDER->assigned_user_id == bp_current_user_id()) {
+					if (!$this->ORDER->invoice) $this->create_invoice();
+					if (!$this->ORDER->invoice->check_payment_status()) {
+						// remove cookie
+						unset($_COOKIE['my_aia_shopping_cart']);
+						unset($_SESSION['coupon_code']);
+						setcookie('my_aia_shopping_cart', NULL, time()-36000);
 
-	   // get contents
-	   MY_AIA::$controllers[MY_AIA_POST_TYPE_ORDER]->prepare_shopping_cart_items(bp_current_user_id());
+						$url = $this->ORDER->invoice->create_payment_link();
+						header('Location: '.$url);
+						exit();
+					}
+				}
+			}
+		}
 
-	   if (filter_input(INPUT_POST, '_method') === 'create') {
-		   $this->create_and_place_order();
-	   }
+		// get contents
+		$this->prepare_shopping_cart_items(bp_current_user_id());
+		
+		$this->update_coupon();
 
-	   // hide header
-	   MY_AIA::hide_buddypressheader();
+		// check if we need to update order
+		if (filter_input(INPUT_POST, '_method') === 'create' || is_numeric(filter_input(INPUT_GET, 'order_id'))) {
+			// check variables
+			if (is_numeric(filter_input(INPUT_GET, 'order_id'))) {
+				if (empty($this->ORDER) && empty($this->ORDER->ID))
+					$this->ORDER->get(filter_input(INPUT_GET, 'order_id')); // preload order only if not done!
+			} else {			
+				$this->create_and_place_order(NULL, filter_input(INPUT_GET, 'order_id') );
+			}
+		}
 
-	   MY_AIA::set_navigationbar(array(
-		   'current_title' =>	__( 'Mijn Bestelling', 'my-aia'),
-		   'nav'			=>	NULL,
-		   'title'			=>	'Winkelwagen',
-	   ));
+		// hide header
+		MY_AIA::hide_buddypressheader();
+
+		MY_AIA::set_navigationbar(array(
+			'current_title' =>	__( 'Mijn Bestelling', 'my-aia'),
+			'nav'			=>	NULL,
+			'title'			=>	'Winkelwagen',
+		));
 
 
 	   /* Finally load the plugin template file. */

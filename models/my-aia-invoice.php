@@ -35,6 +35,8 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	
 	public $total_amount;
 	public $total_amount_ex_btw;
+	public $total_amount_btw;
+	public $total_amount_ex_coupon;
 	
 	public $order_items;
 	
@@ -75,6 +77,16 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	public $order;
 	
 	/**
+	 *
+	 * @var MY_AIA_COUPON 
+	 */
+	public $coupon;
+	
+	public $coupon_value = 0;
+	
+	public $btw; //placeholder to call function in template
+	
+	/**
 	 * @var array List of Fields saved into database. Same list as class variables
 	 */
 	public $fields = array(
@@ -95,9 +107,12 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		'order_id'			=> array('name'=>'order_id', 'type'=>'%d'),
 		'total_amount'		=> array('name'=>'total_amount', 'type'=>'%d'),
 		'total_amount_ex_btw'	=> array('name'=>'total_amount_ex_btw', 'type'=>'%d'),
+		'total_amount_ex_coupon'	=> array('name'=>'total_amount_ex_coupon', 'type'=>'%d'),
 		'attachment'		=> array('name'=>'attachment', 'type'=>'%d'),
 		'assigned_user_id'	=> array('name'=>'assigned_user_id','type'=>'%d'),
-		//'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
+		'coupon_id'			=> array('name'=>'coupon_id', 'type'=>'%d'),
+		'coupon_value'		=> array('name'=>'coupon_value', 'type'=>'%d'),
+		
 	);
 	
 	/**
@@ -280,4 +295,46 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 			return $this->order->total_amount_ex_btw;
 		}
 	} 
+	
+	/**
+	 * Template parse function 
+	 * @return string
+	 */
+	public function template_btw() {
+		return $this->total_amount_ex_coupon - $this->total_amount_ex_btw;
+	} 
+	
+	/**
+	 * Parse function called by get_post_meta
+	 * get the coupon
+	 */
+	public function parse_coupon_id($id) {
+		if (empty($id) || empty($id[0])) {
+			$this->coupon = NULL;
+			$this->coupon_value = "";
+			return NULL;
+		}
+		
+		if (is_array($id)) $id = reset($id); // $name is post_meta, returned as array!
+		
+		$coupon = new MY_AIA_COUPON();
+		$coupon->get($id);
+		
+		if ($coupon->getCurrentValue($this->order_id) > 0) {
+		
+			// if coupon is worth more..
+			if ($coupon->getCurrentValue($this->order_id) >= $this->total_amount_ex_coupon) {
+				$this->coupon_value = $this->total_amount_ex_coupon;
+			} else {
+				$this->coupon_value = $coupon->getCurrentValue($this->order_id);
+			}
+			
+			$this->total_amount = $this->total_amount_ex_coupon - $this->coupon_value;
+			
+			$this->coupon = $coupon;
+			return $coupon;
+		} else {
+			return NULL;
+		}
+	}
 }

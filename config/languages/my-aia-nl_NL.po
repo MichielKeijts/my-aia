@@ -1418,7 +1418,7 @@ msgstr "Bestel Items Toevoegen"
 
 #: controllers/my-aia-order-controller.php:301
 msgid "Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder kunt."
-msgstr "Nog Niet alle velden Zijn Juist Ingevoerd, pas aan this for DAT je verder Kunt."
+msgstr "Nog niet alle velden zijn juist ingevoerd, pas dit aan voor dat je verder kunt."
 
 #: controllers/my-aia-processflow-controller.php:69
 #: controllers/my-aia-profile-controller.php:69

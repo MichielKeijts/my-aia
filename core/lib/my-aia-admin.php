@@ -256,6 +256,7 @@ class MY_AIA_ADMIN {
 		add_submenu_page('my-aia-admin',__('Hooks Overzicht','my-aia'),	__('Hooks Overzicht','my-aia'), 'manage_options', 'my-aia-admin&controller=processflow', 	array($this, 'request_render'));
 		add_submenu_page('my-aia-admin',__('Products','my-aia'),	__('Products','my-aia'), MY_AIA_POST_TYPE_PRODUCT, 'edit.php?post_type='.MY_AIA_POST_TYPE_PRODUCT, 	NULL);
 		add_submenu_page('my-aia-admin',__('Orders','my-aia'),	__('Orders','my-aia'), MY_AIA_POST_TYPE_ORDER, 'edit.php?post_type='.MY_AIA_POST_TYPE_ORDER, 	NULL);
+		add_submenu_page('my-aia-admin',__('Coupon codes','my-aia'),	__('Coupons','my-aia'), MY_AIA_POST_TYPE_COUPON, 'edit.php?post_type='.MY_AIA_POST_TYPE_COUPON, 	NULL);
 		add_submenu_page('my-aia-admin',__('Partners','my-aia'),	__('Partners','my-aia'), MY_AIA_POST_TYPE_PARTNER, 'edit.php?post_type='.MY_AIA_POST_TYPE_PARTNER, 	NULL);
 		add_submenu_page('my-aia-admin',__('Templates','my-aia'),	__('Templates','my-aia'), MY_AIA_POST_TYPE_TEMPLATE, 'edit.php?post_type='.MY_AIA_POST_TYPE_TEMPLATE, 	NULL);
 		

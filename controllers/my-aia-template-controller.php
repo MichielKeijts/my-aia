@@ -81,7 +81,13 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * @return boolean
 	 */
 	public function parse($id, $parent_id, $path = WP_CONTENT_DIR) {
-		if (!is_numeric($this->TEMPLATE->ID)) return FALSE;
+		if (!is_numeric($this->TEMPLATE->ID)) {
+			$this->TEMPLATE->get($id);
+		}
+		
+		// if not a valid template...
+		if (!is_numeric($this->TEMPLATE->ID))
+			return FALSE;
 		
 		$this->parent_id = $parent_id;
 		
@@ -146,10 +152,22 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 */
 	private function parse_parent_type($parent = array()) {
 		foreach ($parent as $key=>$value) {
+			if ($key=='btw') {
+				echo "";
+			}
 			// if is a property/method of the parent
 			if (method_exists($parent, sprintf('template_%s', strtolower($key)))) {
-				$this->_template_fields[sprintf('%%%s%%',  strtoupper($key))] = $parent->{sprintf('template_%s', strtolower($key))}($value);	// set 
+				$value =  $parent->{sprintf('template_%s', strtolower($key))}($value);	// set
+				if (is_numeric($value)) {
+					$val = $value * 1.0;
+					$value = number_format($val,2,",",".");
+				}
+				$this->_template_fields[sprintf('%%%s%%',  strtoupper($key))] = $value;
 			} elseif (property_exists($parent, $key) && !is_object($parent->{$key}) && !is_array($parent->{$key})) {
+				if (is_numeric($value)) {
+					$val = $value * 1.0;
+					$value = number_format($val,2,",",".");
+				}
 				$this->_template_fields[sprintf('%%%s%%',  strtoupper($key))] = $value;	// set 
 			}
 		}
@@ -177,7 +195,7 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 
 		// set default header data
 		//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 006', PDF_HEADER_STRING);
-		$pdf->SetHeaderData('', '', 'Athletes in Action Sportkampen', '');
+		$pdf->SetHeaderData('', '', 'Athletes in Action', '');
 
 		// set header and footer fonts
 		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));

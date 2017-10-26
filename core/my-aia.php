@@ -35,6 +35,7 @@ class MY_AIA {
 		MY_AIA_POST_TYPE_PAYMENT,
 		MY_AIA_POST_TYPE_TEMPLATE,
 		MY_AIA_POST_TYPE_BOOKING,
+		MY_AIA_POST_TYPE_COUPON,
 		//MY_AIA_POST_TYPE_DOCUMENT,
 
 		'wpdmpro'
@@ -703,6 +704,9 @@ class MY_AIA {
 				|| current_user_can('moderate',$post_id)) {
 
 			// get download link
+			if (!empty($post->attachment)) {
+				$post->create_invoice_pdf();
+			}
 			MY_AIA_WPFB_Download::SendFile($post->attachment);
 		}
 

@@ -1,0 +1,8 @@
+<p>Coupon huidige waarde: <b>€<?= round($this->COUPON->value-$this->COUPON->value_used),2); ?></b></p>
+<p>Coupon gebruikte waarde: €<?= round($this->COUPON->value_used,2); ?></p>
+<p>Coupon begin waarde: €<?= round($this->COUPON->value,2); ?></p>
+<hr>
+<p>De coupon is in de volgende bestellingen gebruikt: </p>
+<?php foreach ($this->COUPON->getInvoices as $invoice): ?>
+<a href="<?= get_edit_post_link($invoice->ID); ?>"><?= $invoice->post_title; ?></a> <?= $invoice->post_date; ?>
+

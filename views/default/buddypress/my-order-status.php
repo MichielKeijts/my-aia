@@ -28,6 +28,15 @@
 					<td width="20%"><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count);; ?></span></td>
 				</tr>
 				<?php endforeach; //$order_items ?>
+				<?php 
+				if ($this->ORDER->coupon_value >0): ?>
+				<tr class="">
+					<td><div class="product-image"></div></td>
+					<td colspan="1"><span class="name"><?= __('Gebruikte coupon waarde');?>:</td>
+					<td colspan="1"></td>
+					<td><span class="count">&euro; -<?= number_format($this->ORDER->coupon_value, 2, ',','.'); ?></span></td>
+				</tr>
+				<?php endif; ?>
 			</tbody>
 			<tfoot>
 				<tr>

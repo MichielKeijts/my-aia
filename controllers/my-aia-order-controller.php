@@ -426,7 +426,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 						// remove cookie
 						unset($_COOKIE['my_aia_shopping_cart']);
 						unset($_SESSION['coupon_code']);
-						setcookie('my_aia_shopping_cart', NULL, time()-36000);
+						setcookie('my_aia_shopping_cart', NULL, -1);
 
 						$url = $this->ORDER->invoice->create_payment_link();
 						header('Location: '.$url);

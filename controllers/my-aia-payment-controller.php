@@ -82,28 +82,37 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 		}		
 		
 		// try and find order
-		include_once MY_AIA_PLUGIN_DIR . 'vendor/Mollie/API/Autoloader.php';
-		$mollie = new Mollie_API_Client;
 		
-		$mollie->setApiKey(MY_AIA::$settings['mollie_key']);
-		
-		$pmt    = $mollie->payments->get($this->PAYMENT->payment_id);
-		
-		if ($pmt) {
-			$this->PAYMENT->post_content = $pmt->status;
+		// get mollie payments, if payment total higher than 0
+		if ($this->PAYMENT->total_amount > 0 ) {
+			include_once MY_AIA_PLUGIN_DIR . 'vendor/Mollie/API/Autoloader.php';
+			$mollie = new Mollie_API_Client;
+
+			$mollie->setApiKey(MY_AIA::$settings['mollie_key']);
+
+			$pmt    = $mollie->payments->get($this->PAYMENT->payment_id);
+
+			if ($pmt) {
+				$this->PAYMENT->post_content = $pmt->status;
+				$invoice = new MY_AIA_INVOICE($this->PAYMENT->invoice_id);
+				if ($invoice) $order = new MY_AIA_ORDER($invoice->order_id);
+				if (isset($order) && $order) {
+					if ($pmt->isPaid()) {
+						wp_publish_post($invoice->order_id);
+						$order->order_status = MY_AIA_ORDER_STATUS_PAID;
+					} else {
+						$order->order_status = MY_AIA_ORDER_STATUS_AWAITING_PAYMENT;
+					}
+				}
+				$order->update_post_meta(FALSE);	// not update via $_POST
+				$this->PAYMENT->save(FALSE);		// not update via $_POST
+				return $order->ID;
+			}
+		} else {
 			$invoice = new MY_AIA_INVOICE($this->PAYMENT->invoice_id);
 			if ($invoice) $order = new MY_AIA_ORDER($invoice->order_id);
-			if (isset($order) && $order) {
-				if ($pmt->isPaid()) {
-					wp_publish_post($invoice->order_id);
-					$order->order_status = MY_AIA_ORDER_STATUS_PAID;
-				} else {
-					$order->order_status = MY_AIA_ORDER_STATUS_AWAITING_PAYMENT;
-				}
-			}
+			$order->order_status = MY_AIA_ORDER_STATUS_PAID;
 			$order->update_post_meta(FALSE);	// not update via $_POST
-			$this->PAYMENT->save(FALSE);		// not update via $_POST
-			return $order->ID;
 		}
 		return $order->ID;
 		//

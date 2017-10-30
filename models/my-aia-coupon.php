@@ -61,10 +61,17 @@ class MY_AIA_COUPON extends MY_AIA_MODEL {
 			
 			// get a new coupon code
 			$this->post_title = $this->getNewCouponCode($this->coupon_length);
+			$_POST['post_title'] = $this->post_title; // update this to not update post_title again
 			
-			return $this->save(false);	// update fields by post data
+			return $this->save(true);	// update fields by post data
 		}
 		parent::save_post($post_id, $post, $update);
+	}
+	
+	public function parse_value_used($id) {
+		$v = $this->value - $this->getCurrentValue();
+		$this->value_used = $v;
+		return $v;
 	}
 	
 

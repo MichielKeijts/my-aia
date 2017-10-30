@@ -34,12 +34,46 @@ class MY_AIA_COUPON_CONTROLLER extends MY_AIA_CONTROLLER {
 	public $COUPON;
 
 
+	public function __construct() {
+		parent::__construct();
+				
+		add_filter( 'manage_'.MY_AIA_POST_TYPE_COUPON.'_posts_columns', array($this,'add_new_columns'));
+		add_action( 'manage_'.MY_AIA_POST_TYPE_COUPON.'_posts_custom_column' , array($this,'custom_columns'), 10, 2  );
+	}
+
+
 	/**
 	 * Before Filter function
 	 * called before most of the wordpress logic happens.
 	 */
 	public function before_filter(){
 		parent::before_filter();
+	}
+	
+	/**
+	* Add new columns to the post table
+	*
+	* @param Array $columns - Current columns on the list post
+	*/
+   function add_new_columns( $columns ) {
+	   $column_meta1 = array( 'value' => __('Value') );
+	   $column_meta2 = array( 'value_used' => __('Value Used') );
+	   $columns = array_slice( $columns, 0, 2, true ) + $column_meta1 + $column_meta2 + array_slice( $columns, 2, NULL, true );
+	   return $columns;
+   }
+   
+	function custom_columns( $column, $post_id ) {
+		if (!$this->COUPON->ID || $this->COUPON->ID != $post_id) {
+			$this->COUPON->get($post_id);
+		}
+		switch ( $column ) {
+		  case 'value':
+			echo '€', number_format($this->COUPON->value, 2, ',', '.');
+			break;
+		  case 'value_used':
+			echo '€', number_format($this->COUPON->value - $this->COUPON->getCurrentValue(), ',', '.');
+			break;
+		}
 	}
 	
 	public function index() {

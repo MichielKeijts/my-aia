@@ -127,6 +127,17 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	}
 	
 	/**
+	 * Save the current model
+	 * @param Bool $prepare_post_data
+	 */
+	public function save($prepare_post_data = true) {
+		if ($this->coupon && $this->coupon->ID) {
+			$this->coupon->save(false);
+		}
+		parent::save($prepare_post_data);
+	}
+	
+	/**
 	 * Set order nr. Post Name (post-title) is order nr
 	 */
 	public function set_order_nr($override=FALSE) {
@@ -266,6 +277,7 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		$invoice->total_amount = $this->total_amount_ex_coupon;
 		$invoice->coupon_value = $this->coupon_value;
 		$invoice->coupon_id = isset($this->coupon->ID) ? $this->coupon->ID : NULL;
+		$invoice->parse_coupon_id($invoice->coupon->ID);
 		$invoice->save(FALSE);
 		
 		return $invoice;

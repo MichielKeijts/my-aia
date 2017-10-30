@@ -168,12 +168,13 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 	 */
 	public function save_post($post_id, $post, $update) {
 		if ($post_id >0 && $this->ID != $post_id) {
-			//$this->get($post_id);
+			$this->get($post_id);
 			$this->apply($post);
 		}
 		if (!preg_match("/[0-9]+/",$post->post_title)) {
 			$this->post_title = $this->get_invoice_nr();
-			return $this->save(false);
+			$_POST['post_title'] = $this->post_title;
+			return $this->save(true);
 		}
 		parent::save_post($post_id, $post, $update);
 	}
@@ -229,7 +230,15 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		$payment->save();
 		
 		// get mollie_link
-		$url = $payment->get_mollie_link();
+		if ($payment->total_amount <=0) {
+			$payment->post_content = MY_AIA_ORDER_STATUS_PAID;
+			$payment->name = 'total amount less or equal than zero. Possibly used a coupon?';
+			$payment->save(false);
+			$url = $payment->getOrderStatusUriByPaymentID(); // get a redirect url for the flow
+		} else {
+			$url = $payment->get_mollie_link();
+		}
+		
 		if ($url) return $url;
 		return FALSE;
 	}
@@ -271,7 +280,7 @@ class MY_AIA_INVOICE extends MY_AIA_MODEL {
 		}
 		
 		// check total amount done
-		return $total_amount_done >= $this->total_amount;
+		return $total_amount_done >= (float)$this->total_amount && $this->total_amount!=0;
 	}
 	
 	/**

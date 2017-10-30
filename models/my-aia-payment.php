@@ -97,7 +97,7 @@ class MY_AIA_PAYMENT extends MY_AIA_MODEL {
 		$payment = $mollie->payments->create(array(
 			"amount"		=> $amount,
 			"description"	=> "Betalen voor je bestelling bij Athletes in Action met ID ".$this->invoice_id,
-			"redirectUrl"	=> "http://www.athletesinaction.local/mijn-aia/members/".$user->user_nicename."/orders/status/?payment_id=".$this->ID,
+			"redirectUrl"	=> $this->getOrderStatusUriByPaymentID(),
 			"metadata"		=> array(
 				'invoice_id'	=> $this->invoice_id
 			)
@@ -117,6 +117,17 @@ class MY_AIA_PAYMENT extends MY_AIA_MODEL {
 		
 		//FAIL.
 		return FALSE;		
+	}
+	
+	/**
+	 * 
+	 * Returns the redirect URL to the order status by payment reference
+	 * @return string
+	 */
+	public function getOrderStatusUriByPaymentID() {
+		$user = new WP_User(get_current_user_id());
+		
+		return "http://www.athletesinaction.local/mijn-aia/members/".$user->user_nicename."/orders/status/?payment_id=".$this->ID;
 	}
 	
 }

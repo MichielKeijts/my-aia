@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: my-aia\n"
 "POT-Creation-Date: 2016-12-07 12:51+0100\n"
-"PO-Revision-Date: 2016-12-29 16:00+0100\n"
+"PO-Revision-Date: 2017-10-30 16:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: Normit <michiel@normit.nl>\n"
 "Language: nl_NL\n"
@@ -1939,3 +1939,43 @@ msgstr "tiener_korting"
 
 msgid "uitschrijf_datum"
 msgstr "uitschrijf_datum"
+
+#: views/default/buddypress/my-order-edit.php:116
+msgid "shipping_name"
+msgstr "Verzenden aan"
+
+#: views/default/buddypress/my-order-edit.php:119
+msgid "shipping_address"
+msgstr "Verzend adres"
+
+#: views/default/buddypress/my-order-edit.php:120
+msgid "shipping_postcode"
+msgstr "Verzend postcode"
+
+#: views/default/buddypress/my-order-edit.php:123
+msgid "shipping_city"
+msgstr "Verzend plaats"
+
+#: views/default/buddypress/my-order-status.php:77
+msgid "shipping_country"
+msgstr "Verzend naar land"
+
+#: views/default/buddypress/my-order-edit.php:116
+msgid "invoice_name"
+msgstr "Factuur naam"
+
+#: views/default/buddypress/my-order-edit.php:119
+msgid "invoice_address"
+msgstr "Factuur adres"
+
+#: views/default/buddypress/my-order-edit.php:120
+msgid "invoice_postcode"
+msgstr "Factuur postcode"
+
+#: views/default/buddypress/my-order-edit.php:123
+msgid "invoice_city"
+msgstr "Factuur plaats"
+
+#: views/default/buddypress/my-order-status.php:77
+msgid "invoice_country"
+msgstr "Factuur land"

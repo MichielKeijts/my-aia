@@ -421,7 +421,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		$user_info = get_userdata($this->ORDER->assigned_user_id);
 		$to = $user_info->user_email;
-		$subject = $template->TEMPLATE->post_title;
+		$subject = $template->TEMPLATE->subject;
 		$message = $template->parse($template_id, $invoice->ID);
 		
 		// attachment is created in create_invoice function

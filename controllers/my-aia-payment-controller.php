@@ -141,7 +141,7 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		$user_info = get_userdata($order->assigned_user_id);
 		$to = $user_info->user_email;
-		$subject = $template->TEMPLATE->post_title;
+		$subject = $template->TEMPLATE->subject;
 		$message = $template->parse($template_id, $this->PAYMENT->ID);
 		
 		$headers = array();

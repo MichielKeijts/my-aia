@@ -281,17 +281,15 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		
 		// create an invoice
 		$order_id = $this->ID;
-		$invoice->get($this->ID); // prepare from post data
-		$invoice->apply($this);
-		$invoice->ID = NULL;
-		$invoice->order_id = $order_id;
 		$invoice->create();
+		$invoice->get($this->ID); // prepare from post data
 		$invoice->order_id = $order_id;
 		$invoice->post_type = MY_AIA_POST_TYPE_INVOICE;
 		$invoice->total_amount = $this->total_amount_ex_coupon;
 		$invoice->coupon_value = $this->coupon_value;
 		$invoice->coupon_id = isset($this->coupon->ID) ? $this->coupon->ID : NULL;
 		$invoice->parse_coupon_id($invoice->coupon->ID);
+		$invoice->assigned_user_id = $this->assigned_user_id;
 		$invoice->save(FALSE);
 		
 		return $invoice;

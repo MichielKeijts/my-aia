@@ -68,6 +68,8 @@ class MY_AIA {
 		'mollie_test_mode' => '',
 		'webshop_verzendkosten' => 4.95,
 		'event_sugar_sync' => 0,
+		'email_order_confirmation' => 'info@athletesinaction.nl',
+		'email_payment_confirmation' => 'info@athletesinaction.nl'
 		//'' => '',
 	);
 

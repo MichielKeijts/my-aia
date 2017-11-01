@@ -65,4 +65,45 @@
 		</table>
 		
 	</div>
+	
+	<div class="rtm-option-wrapper">
+		<h3 class="rtm-option-title">Email Adressen</h3>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th>Orderbevestiging (inclusief factuur) sturen naar</th>
+				<td>
+					<fieldset>
+						<span class="rtm-field-wrap"><input id="rtm-form-number-0" name="my_aia_options[email_order_confirmation]" class="rtm-form-number rtmedia-setting-text-box" type="text" value="<?= $my_aia_options['email_order_confirmation']; ?>"></span>
+						<span class="rtm-tooltip">
+							<i class="dashicons dashicons-info rtmicon"></i>
+							<span class="rtm-tip">
+								De orderbevestiging met factuur wordt altijd naar het account emailadres gestuurd en ook met BCC naar dit adres
+							</span>
+						</span>
+					</fieldset>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class="form-table">
+			<tbody>
+			<tr>
+				<th>Kopie betaalbevestiging sturen naar</th>
+				<td>
+					<fieldset>
+						<span class="rtm-field-wrap"><input id="rtm-form-number-0" name="my_aia_options[email_payment_confirmation]" class="rtm-form-number rtmedia-setting-text-box" type="text" value="<?= $my_aia_options['email_payment_confirmation']; ?>"></span>
+						<span class="rtm-tooltip">
+							<i class="dashicons dashicons-info rtmicon"></i>
+							<span class="rtm-tip">
+								De betaalbevestiging wordt altijd naar het account emailadres gestuurd en ook met BCC naar dit adres
+							</span>
+						</span>
+					</fieldset>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		
+	</div>
 </div>

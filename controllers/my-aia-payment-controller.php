@@ -106,7 +106,6 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 				}
 				$order->update_post_meta(FALSE);	// not update via $_POST
 				$this->PAYMENT->save(FALSE);		// not update via $_POST
-				return $order->ID;
 			}
 		} else {
 			$invoice = new MY_AIA_INVOICE($this->PAYMENT->invoice_id);
@@ -114,9 +113,46 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 			$order->order_status = MY_AIA_ORDER_STATUS_PAID;
 			$order->update_post_meta(FALSE);	// not update via $_POST
 		}
+		
+		// send confirmation email
+		if (empty($order->payment_confirmation_send_to) || !$order->payment_confirmation_send_to) {
+			$confirmation_send_to = $this->send_payment_confirmation_email($order);
+			if ($confirmation_send_to !== FALSE) {
+				$order->payment_confirmation_send_to = $confirmation_send_to;
+				$order->save();
+			}
+		}
+		
 		return $order->ID;
 		//
 		return $this->PAYMENT->get_invoice();
+	}
+	
+	/**
+	 * Send the payment confirmation email
+	 * @param MY_AIA_ORDER $order
+	 */
+	public function send_payment_confirmation_email($order) {
+		// get a template_id
+		$template_id = $order->get_email_payment_confirmation_template_id();
+		
+		$template = new MY_AIA_TEMPLATE_CONTROLLER();
+		$template->TEMPLATE->get($template_id);
+		
+		$user_info = get_userdata($order->assigned_user_id);
+		$to = $user_info->user_email;
+		$subject = $template->TEMPLATE->post_title;
+		$message = $template->parse($template_id, $this->PAYMENT->ID);
+		
+		$headers = array();
+		$headers[] = 'Bcc: ' . MY_AIA::$settings['email_payment_confirmation'];
+		$headers[] = 'Content-Type: text/html; charset=UTF-8';
+				
+		// send mail!
+		if (wp_mail($to, $subject, $message, $headers, $attachments)) 
+			return $to;
+		
+		return false;
 	}
 	
 		

@@ -152,6 +152,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		$templates = new MY_AIA_TEMPLATE();
 		$templates = $templates->find(array(
+			's' => 'Factuur PDF',
 			'meta_query' =>array(array('key'=>'parent_type', 'value' =>	'invoice'))
 		));
 		
@@ -407,6 +408,38 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 	}
 	
 	/**
+	 * Send the order confirmation email
+	 */
+	public function send_order_confirmation_email() {
+		// get a template_id
+		$template_id = $this->ORDER->get_email_order_confirmation_template_id();
+		
+		$template = new MY_AIA_TEMPLATE_CONTROLLER();
+		$template->TEMPLATE->get($template_id);
+		
+		$invoice = $this->create_invoice();
+		
+		$user_info = get_userdata($this->ORDER->assigned_user_id);
+		$to = $user_info->user_email;
+		$subject = $template->TEMPLATE->post_title;
+		$message = $template->parse($template_id, $invoice->ID);
+		
+		// attachment is created in create_invoice function
+		$attachments = array(  $invoice->attachment );
+		
+		$headers = array();
+		$headers[] = 'Bcc: ' . MY_AIA::$settings['email_order_confirmation'];
+		$headers[] = 'Content-Type: text/html; charset=UTF-8';
+				
+		// send mail!
+		if (wp_mail($to, $subject, $message, $headers, $attachments)) 
+			return $to;
+		
+		return false;
+	}
+
+	
+	/**
 	* Controller for the event views in BP (using mvc terms here)
 	*/
    function my_aia_bp_my_order_edit() {
@@ -422,6 +455,17 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 				$this->ORDER->get($order_id);
 				if ($this->ORDER->assigned_user_id == bp_current_user_id()) {
 					if (!$this->ORDER->invoice) $this->create_invoice();
+					
+					// we have a confirmation for the order, send email
+					// only once
+					if (empty($this->ORDER->order_confirmation_send_to) || !$this->ORDER->order_confirmation_send_to) {
+						$confirmation_send_to = $this->send_order_confirmation_email();
+						if ($confirmation_send_to !== FALSE) {
+							$this->ORDER->order_confirmation_send_to = $confirmation_send_to;
+							$this->ORDER->save();
+						}
+					}
+					
 					if (!$this->ORDER->invoice->check_payment_status()) {
 						// remove cookie
 						unset($_COOKIE['my_aia_shopping_cart']);

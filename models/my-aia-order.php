@@ -40,7 +40,7 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	public $coupon_value;		// obtained via coupon relation
 	public $order_status;		// Prefix use MY_AIA_ORDER_STATUS
 	public $assigned_user_id;
-	
+		
 	
 	
 	/**
@@ -73,6 +73,8 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		'coupon_id'			=> array('name'=>'coupon_id', 'type'=>'%d'),	// type is array!
 		'coupon_value'		=> array('name'=>'coupon_value', 'type'=>'%d'),	// type is array!
 		'bp_group_id'		=> array('name'=>'bp_group_id','type'=>'%d'),
+		'order_confirmation_send_to'   => array('name'=>'order_confirmation_send_to','type'=>'%s'),
+		'payment_confirmation_send_to' => array('name'=>'payment_confirmation_send_to','type'=>'%s'),
 	);
 	
 	/**
@@ -98,6 +100,18 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 	 * @var MY_AIA_COUPON 
 	 */
 	public $coupon;
+	
+	/**
+	 * The email adres which received the order confirmation (if send)
+	 * @var type 
+	 */
+	public $order_confirmation_send_to = "";
+	
+	/**
+	 * The emal adres which received the payment confirmation (if send)
+	 * @var type 
+	 */
+	public $payment_confirmation_send_to = "";
 	
 	
 	/**
@@ -349,6 +363,52 @@ class MY_AIA_ORDER extends MY_AIA_MODEL {
 		$this->set_user_data_from_id();
 	
 		return TRUE;
+	}
+	
+	/**
+	 * Get the template for the order email confirmation
+	 * @param int $template_id
+	 * @return int Tempate ID
+	 * @throws Exception
+	 */
+	public function get_email_order_confirmation_template_id ($template_id = 0) {
+		if ($template_id != 0) 
+			return $template_id;
+		
+		$templates = new MY_AIA_TEMPLATE();
+		$templates = $templates->find(array(
+			's' => 'order',
+			'meta_query' =>array(array('key'=>'parent_type', 'value' =>	MY_AIA_POST_TYPE_INVOICE))
+		));
+		
+		if(!empty($templates)) {
+			return $templates[0]->ID; 
+		}
+		
+		throw new Exception('Could not find template');
+	}
+	
+	/**
+	 * Get the template for the order email confirmation
+	 * @param int $template_id
+	 * @return int Tempate ID
+	 * @throws Exception
+	 */
+	public function get_email_payment_confirmation_template_id ($template_id = 0) {
+		if ($template_id != 0) 
+			return $template_id;
+		
+		$templates = new MY_AIA_TEMPLATE();
+		$templates = $templates->find(array(
+			's' => 'payment',
+			'meta_query' =>array(array('key'=>'parent_type', 'value' =>	MY_AIA_POST_TYPE_PAYMENT))
+		));
+		
+		if(!empty($templates)) {
+			return $templates[0]->ID; 
+		}
+		
+		throw new Exception('Could not find template');
 	}
 }
 

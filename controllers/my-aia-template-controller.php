@@ -78,7 +78,7 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 	 * @param int $id
 	 * @param int $parent_id
 	 * @param string $path to save template, without trailing slash
-	 * @return boolean
+	 * @return string
 	 */
 	public function parse($id, $parent_id, $path = WP_CONTENT_DIR) {
 		if (!is_numeric($this->TEMPLATE->ID)) {
@@ -95,9 +95,9 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 		$this->parse_content();
 		
 		// auto parse
-		switch (strtoupper($this->document_type)) {
+		switch (strtoupper($this->TEMPLATE->document_type)) {
 			case "EMAIL":
-				$this->parse_pdf();
+				return $this->TEMPLATE->post_content_filtered;
 				break;
 			case 'PDF':
 			default:
@@ -133,7 +133,7 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 		
 		if ($user_id) {
 			$user = get_user_by('id', $user_id);
-			$this->parse_parent_type($user);
+			$this->parse_parent_type($user->data);
 		}
 		
 		$this->TEMPLATE->post_content_filtered = apply_filters('the_content', $this->TEMPLATE->post_content);
@@ -164,7 +164,7 @@ class MY_AIA_TEMPLATE_CONTROLLER extends MY_AIA_CONTROLLER {
 				}
 				$this->_template_fields[sprintf('%%%s%%',  strtoupper($key))] = $value;
 			} elseif (property_exists($parent, $key) && !is_object($parent->{$key}) && !is_array($parent->{$key})) {
-				if (is_numeric($value)) {
+				if (is_numeric($value) && strpos($key,'id') ===FALSE) {
 					$val = $value * 1.0;
 					$value = number_format($val,2,",",".");
 				}

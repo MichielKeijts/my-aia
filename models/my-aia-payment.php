@@ -126,8 +126,8 @@ class MY_AIA_PAYMENT extends MY_AIA_MODEL {
 	 */
 	public function getOrderStatusUriByPaymentID() {
 		$user = new WP_User(get_current_user_id());
-		
-		return "http://www.athletesinaction.local/mijn-aia/members/".$user->user_nicename."/orders/status/?payment_id=".$this->ID;
+				
+		return sprintf('%s://%s/mijn-aia/members/%s/orders/status/?payment_id=%s', $_SERVER['REQUEST_SCHEME'], $_SERVER['HTTP_HOST'], $user->user_nicename,$this->ID);
 	}
 	
 }

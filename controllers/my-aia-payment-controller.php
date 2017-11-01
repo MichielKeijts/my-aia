@@ -77,7 +77,7 @@ class MY_AIA_PAYMENT_CONTROLLER extends MY_AIA_CONTROLLER {
 		$this->PAYMENT->get(filter_input(INPUT_GET, 'payment_id', FILTER_SANITIZE_NUMBER_INT));
 		
 		// no acces
-		if (!(bp_current_user_id() == $this->PAYMENT->assigned_user_id || is_admin())) {
+		if (!(bp_current_user_id() == $this->PAYMENT->assigned_user_id)) {
 			wp_die('No Access');
 		}		
 		

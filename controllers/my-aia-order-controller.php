@@ -418,7 +418,7 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		$shipping_cost = new MY_AIA_PRODUCT();
 		$products = $shipping_cost->find(array('s'=>'verzendkosten'));
 		if (count($products)!=1) {
-			die ('Could not find shipping costs in database');
+			die ('Could not find shipping costs in database or there is more than one.');
 		}
 		$costs = reset($products);
 		$found = FALSE;

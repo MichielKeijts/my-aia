@@ -302,6 +302,9 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 			if (count($shopping_cart->items) <= 0) {
 				$this->view->set_flash('Selecteer eerst een aantal producten voor je verder gaat', $type);
 			}
+			
+			// makes sure the shipping costs are added
+			$shopping_cart = $this->add_shipping_costs($shopping_cart);
 
 			$this->ORDER->prepare_shopping_cart_items($shopping_cart);
 		}
@@ -405,6 +408,37 @@ class MY_AIA_ORDER_CONTROLLER extends MY_AIA_CONTROLLER {
 		$this->ORDER->assigned_user_id = $user_id;
 		
 		$this->ORDER->save();		
+	}
+	
+	/**
+	 * Function checks and adds shipping costs to each order 
+	 * @return object shopping_cart
+	 */
+	public function add_shipping_costs($shopping_cart) {
+		$shipping_cost = new MY_AIA_PRODUCT();
+		$products = $shipping_cost->find(array('s'=>'verzendkosten'));
+		if (count($products)!=1) {
+			die ('Could not find shipping costs in database');
+		}
+		$costs = reset($products);
+		$found = FALSE;
+		foreach ($shopping_cart->items as $product) {
+			if ($costs->ID == $product->id) {
+				$found = true;
+				break;
+			}
+		}
+		
+		if (!$found) {
+			$shipping = new stdClass();
+			$shipping->id = $costs->ID;
+			$shipping->count = 1;
+			$shipping->name = $costs->post_title;
+			$shipping->price = $costs->price;
+			$shopping_cart->items[] = $shipping;
+		}
+		
+		return $shopping_cart;
 	}
 	
 	/**

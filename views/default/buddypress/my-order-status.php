@@ -25,7 +25,7 @@
 					<td width="10%"><div class="product-image"><?= get_the_post_thumbnail($item->product_id, array('width'=>150, 'height'=>150)); ?></div></td>
 					<td width="50%"><span class="name"><?= $item->post_title; ?></span></td>
 					<td width="10%"><span class="count"><?= $item->count; ?></span></td>
-					<td width="20%"><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count);; ?></span></td>
+					<td width="20%"><span class="count">&euro; <?= number_format($item->get_product()->price * $item->count, 2, ',', '.');; ?></span></td>
 				</tr>
 				<?php endforeach; //$order_items ?>
 				<?php 

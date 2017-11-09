@@ -94,4 +94,9 @@
 			</div>
 		</div>
 	</section>
+		
+	<script>
+		reset_shopping_cart(); 
+	</script>
+		
 </div>

@@ -71,7 +71,7 @@ class MY_AIA_COUPON_CONTROLLER extends MY_AIA_CONTROLLER {
 			echo '€', number_format($this->COUPON->value, 2, ',', '.');
 			break;
 		  case 'value_used':
-			echo '€', number_format($this->COUPON->value - $this->COUPON->getCurrentValue(), ',', '.');
+			echo '€', number_format($this->COUPON->value - $this->COUPON->getCurrentValue(), 2, ',', '.');
 			break;
 		}
 	}

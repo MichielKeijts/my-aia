@@ -36,7 +36,7 @@ $coupon_insertable = isset(my_aia_order()->ORDER) && my_aia_order()->ORDER->ID >
 				<tr class="">
 					<form method="POST" action="?order_id=<?= my_aia_order()->ORDER->ID; ?>">
 					<td><div class="product-image"></div></td>
-					<td colspan="1"><span class="name"><?= __('Als u een coupon code heeft, kunt u deze hier invullen');?>:</td>
+					<td colspan="1"><span class="name"><?= __('Als u een coupon code heeft, kunt u deze hier invullen');?>: <?php if (!empty(my_aia_order()->ORDER->coupon)): echo '<i>',__('Restwaarde ingevulde coupon:') ?>&euro; <?= number_format(my_aia_order()->ORDER->coupon->getCurrentValue(), 2, ',','.'); ?></i><?php endif; ?></td>
 					<td colspan="1"><span class="count"><input type="text" maxlength="12" minlength="12" style="width: 120px;" placeholder="EG34AB3.." value="<?= isset($_SESSION['coupon_code'])?$_SESSION['coupon_code']:""; ?>" name="coupon_code"></span></td>
 					<td><span class="count"><?php if (!empty(my_aia_order()->ORDER->coupon)): ?>&euro; -<?= number_format(my_aia_order()->ORDER->coupon_value, 2, ',','.'); ?><?php endif; ?></span></td>
 					<td><button type="submit" class="button-update-order"><?= __('Update'); ?></button></td>

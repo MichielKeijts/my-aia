@@ -372,7 +372,8 @@ function my_aia_events_manager_group_recurrence($conditions, $args=NULL) {
 	}
 	
 	// group recurrence, grouped events are in $event_id
-	$conditions['recurrence'] =	sprintf("(recurrence_interval = 0 OR recurrence_interval IS NULL OR	event_id IN(%s))",$event_ids);
+	$conditions['recurrence'] =	sprintf("(recurrence_interval = 0 OR recurrence_interval IS NULL %s)",
+			$event_ids?sprintf('OR	event_id IN(%s)',$event_ids) : "");
 		
 	return $conditions;
 }
